@@ -28,22 +28,23 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,500,100&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --color-bg: #12120f;
-    --color-surface: #1b1b17;
-    --color-surface-raised: #23231d;
+    --color-bg: #111110;
+    --color-surface: #1c1c18;
+    --color-surface-raised: #242420;
     --color-surface-contrast: #f3efe5;
-    --color-surface-accent: #191b16;
+    --color-surface-accent: #171711;
     --color-overlay: rgba(8, 8, 7, 0.72);
     --color-text-primary: #f8f5ef;
     --color-text-secondary: rgba(248, 245, 239, 0.82);
     --color-text-muted: rgba(248, 245, 239, 0.58);
-    --color-text-accent: #f4aa2a;
+    --color-text-accent: #f5a623;
     --color-text-dark: #1d1b16;
     --color-border-subtle: rgba(248, 245, 239, 0.09);
     --color-border-strong: rgba(248, 245, 239, 0.18);
-    --color-accent: #f4aa2a;
-    --color-accent-hover: #dc951c;
-    --color-accent-soft: rgba(244, 170, 42, 0.14);
+    --color-accent: #f5a623;
+    --color-accent-hover: #df9518;
+    --color-accent-soft: rgba(245, 166, 35, 0.14);
+    --color-brand-bronze: #b86c08;
     --color-success: #79c7a2;
     --color-success-soft: rgba(121, 199, 162, 0.14);
     --color-danger: #ff8d85;
@@ -82,7 +83,7 @@
     margin: 0;
     font-family: var(--font-body);
     background:
-      radial-gradient(circle at top left, rgba(244, 170, 42, 0.12), transparent 34%),
+      radial-gradient(circle at top left, rgba(245, 166, 35, 0.14), transparent 34%),
       linear-gradient(180deg, #171611 0%, var(--color-bg) 24%, #0f100d 100%);
     color: var(--color-text-secondary);
     font-size: 16px;
@@ -243,7 +244,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(18, 18, 15, 0.84);
+    background: rgba(17, 17, 16, 0.86);
     backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--color-border-subtle);
   }
@@ -261,40 +262,22 @@
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
     text-decoration: none;
   }
 
-  .brand-mark {
-    width: 38px;
-    height: 38px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ffe39c, #f4aa2a 55%, #9d5f08 100%);
-    color: var(--color-text-dark);
-    font-weight: 700;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+  .brand-logo {
+    display: block;
+    width: 244px;
+    max-width: 100%;
+    height: auto;
   }
 
-  .brand-wordmark {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  .brand-logo.mobile {
+    width: 222px;
   }
 
-  .brand-wordmark strong {
-    font-family: var(--font-brand);
-    font-size: 1.22rem;
-    letter-spacing: -0.04em;
-    color: var(--color-text-primary);
-  }
-
-  .brand-wordmark span {
-    color: var(--color-text-muted);
-    font-size: 0.74rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+  .brand-logo.footer {
+    width: 262px;
   }
 
   .nav-links,
@@ -610,7 +593,7 @@
   .offer-card.featured {
     border-color: rgba(244, 170, 42, 0.35);
     background:
-      linear-gradient(180deg, rgba(244, 170, 42, 0.08), transparent 36%),
+      linear-gradient(180deg, rgba(245, 166, 35, 0.08), transparent 36%),
       var(--color-surface);
   }
 
@@ -767,7 +750,7 @@
   }
 
   .compare {
-    background: linear-gradient(180deg, rgba(244, 170, 42, 0.06), transparent 24%);
+    background: linear-gradient(180deg, rgba(245, 166, 35, 0.07), transparent 24%);
   }
 
   .compare-grid {
@@ -781,7 +764,7 @@
 
   .compare-card.alt {
     background:
-      linear-gradient(180deg, rgba(244, 170, 42, 0.11), rgba(244, 170, 42, 0.03)),
+      linear-gradient(180deg, rgba(245, 166, 35, 0.12), rgba(245, 166, 35, 0.03)),
       #181712;
     border-color: rgba(244, 170, 42, 0.28);
   }
@@ -885,7 +868,7 @@
   }
 
   .scheme {
-    background: linear-gradient(180deg, rgba(244, 170, 42, 0.04), transparent 20%);
+    background: linear-gradient(180deg, rgba(245, 166, 35, 0.05), transparent 20%);
   }
 
   .scheme-grid {
@@ -1050,7 +1033,7 @@
     overflow: hidden;
     padding: var(--space-7);
     background:
-      radial-gradient(circle at top center, rgba(244, 170, 42, 0.17), transparent 40%),
+      radial-gradient(circle at top center, rgba(245, 166, 35, 0.18), transparent 40%),
       var(--color-surface);
   }
 
@@ -1309,6 +1292,10 @@
       width: min(calc(100% - 28px), var(--max-width));
     }
 
+    .brand-logo {
+      width: 206px;
+    }
+
     .section,
     .hero {
       padding: var(--space-7) 0;
@@ -1350,11 +1337,7 @@
 <nav class="site-nav" aria-label="Primary">
   <div class="site-nav-inner">
     <a class="brand" href="#top" aria-label="Thermova home">
-      <span class="brand-mark">T</span>
-      <span class="brand-wordmark">
-        <strong>THERM<span style="color: var(--color-text-accent);">OVA</span></strong>
-        <span>Heat Pump &amp; Solar</span>
-      </span>
+      <img class="brand-logo" src="assets/thermova-logo.svg" alt="Thermova">
     </a>
     <ul class="nav-links" role="list">
       <li><a href="#compare">Heat pump vs boiler</a></li>
@@ -1371,10 +1354,7 @@
   <button class="mobile-nav-backdrop" type="button" aria-label="Close menu"></button>
   <aside class="mobile-nav-panel" id="mobile-nav-panel" tabindex="-1">
     <div class="mobile-nav-head">
-      <div class="brand-wordmark">
-        <strong>THERM<span style="color: var(--color-text-accent);">OVA</span></strong>
-        <span>Heat Pump &amp; Solar</span>
-      </div>
+      <img class="brand-logo mobile" src="assets/thermova-logo.svg" alt="Thermova">
       <button class="close-menu" type="button" aria-label="Close menu">×</button>
     </div>
     <ul class="mobile-links" role="list">
@@ -1961,11 +1941,7 @@
     <div class="footer-grid">
       <div>
         <a class="brand" href="#top" aria-label="Thermova home">
-          <span class="brand-mark">T</span>
-          <span class="brand-wordmark">
-            <strong>THERM<span style="color: var(--color-text-accent);">OVA</span></strong>
-            <span>Heat Pump &amp; Solar</span>
-          </span>
+          <img class="brand-logo footer" src="assets/thermova-logo.svg" alt="Thermova">
         </a>
         <p style="margin-top: 18px; max-width: 28ch;">Heat pumps, solar and battery systems for homeowners and landlords who are ready to move on from gas.</p>
       </div>

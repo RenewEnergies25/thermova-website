@@ -1,0 +1,46 @@
+<svg width="560" height="160" viewBox="0 0 560 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="core" cx="42%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#FFE49A"/>
+      <stop offset="35%" stop-color="#F5A623"/>
+      <stop offset="100%" stop-color="#B86C08"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="30%" stop-color="#F5A623" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#F5A623" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g>
+    <circle cx="80" cy="80" r="78" fill="url(#halo)"/>
+    <g fill="#F5A623">
+      <rect x="78" y="4" width="4" height="20" rx="2" opacity="0.9"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(22.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="17" rx="2" opacity="0.75" transform="rotate(45 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(67.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="20" rx="2" opacity="0.9" transform="rotate(90 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(112.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="17" rx="2" opacity="0.75" transform="rotate(135 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(157.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="20" rx="2" opacity="0.9" transform="rotate(180 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(202.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="17" rx="2" opacity="0.75" transform="rotate(225 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(247.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="20" rx="2" opacity="0.9" transform="rotate(270 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(292.5 80 80)"/>
+      <rect x="78" y="4" width="4" height="17" rx="2" opacity="0.75" transform="rotate(315 80 80)"/>
+      <rect x="78" y="4" width="3" height="13" rx="1.5" opacity="0.5" transform="rotate(337.5 80 80)"/>
+    </g>
+    <circle cx="80" cy="80" r="60" fill="none" stroke="#F5A623" stroke-width="0.75" opacity="0.2"/>
+    <circle cx="80" cy="80" r="42" fill="#1C1C18"/>
+    <circle cx="80" cy="80" r="40" fill="#B86C08" opacity="0.6"/>
+    <circle cx="80" cy="80" r="38" fill="url(#core)"/>
+    <circle cx="80" cy="80" r="38" fill="none" stroke="#FFE49A" stroke-width="0.6" opacity="0.25"/>
+  </g>
+  <g transform="translate(182 28)">
+    <text x="0" y="56" font-family="Outfit, Arial, sans-serif" font-weight="700" font-size="64" letter-spacing="-1.5" fill="#FFFFFF">THERM</text>
+    <text x="226" y="56" font-family="Outfit, Arial, sans-serif" font-weight="700" font-size="64" letter-spacing="-1.5" fill="#F5A623">OVA</text>
+    <text x="2" y="92" font-family="Outfit, Arial, sans-serif" font-weight="300" font-size="13" letter-spacing="5" fill="#FFFFFF">HEAT PUMP &amp; SOLAR</text>
+    <line x1="0" y1="109" x2="312" y2="109" stroke="#F5A623" stroke-opacity="0.3"/>
+    <text x="0" y="130" font-family="Outfit, Arial, sans-serif" font-weight="300" font-size="10.5" letter-spacing="2.5" fill="#FFFFFF" fill-opacity="0.5">SMARTER ENERGY FOR YOUR HOME</text>
+  </g>
+</svg>

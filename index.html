@@ -551,12 +551,21 @@
     transition: box-shadow 0.18s ease, transform 0.18s ease;
   }
 
-  .decision-icon svg,
-  .solar-icon svg {
+  .decision-icon svg {
     width: 22px;
     height: 22px;
     stroke: currentColor;
     stroke-width: 1.75;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .solar-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 1.8;
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -725,7 +734,10 @@
   .contact-list {
     display: grid;
     gap: 10px;
-    margin-top: 18px;
+    width: 100%;
+    margin-top: 16px;
+    padding-left: 0;
+    align-self: stretch;
   }
 
   .audience-list li,
@@ -733,21 +745,27 @@
   .contact-list li {
     display: flex;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: 10px;
     text-align: left;
   }
 
   .list-arrow {
-    flex: 0 0 auto;
+    width: 14px;
+    flex: 0 0 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
     color: var(--color-brand);
     font-weight: 700;
-    line-height: 1.45;
+    line-height: 1;
   }
 
   .list-copy {
+    flex: 1;
     max-width: 100%;
     color: #D6E2F0;
     line-height: 1.45;
+    text-align: left;
   }
 
   .compare-wrap {
@@ -882,6 +900,8 @@
     background: var(--color-surface-2);
     text-align: center;
     box-shadow: 0 0 40px var(--color-glow-soft);
+    display: grid;
+    justify-items: center;
   }
 
   .diagram-node strong {
@@ -889,13 +909,15 @@
     color: var(--color-text-primary);
     font-size: 1.02rem;
     font-weight: 650;
+    margin-top: 0;
   }
 
   .diagram-node span {
     display: block;
-    margin-top: 8px;
+    margin-top: 10px;
     color: var(--color-text-secondary);
     font-size: 0.92rem;
+    max-width: 16ch;
   }
 
   .solar-panel + .solar-panel {
@@ -903,15 +925,17 @@
   }
 
   .solar-icon {
-    width: 36px;
-    height: 36px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 14px;
-    border-radius: 10px;
-    background: rgba(255, 106, 26, 0.08);
+    margin: 0 auto 16px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(255, 106, 26, 0.16), rgba(255, 106, 26, 0.05));
+    border: 1px solid rgba(255, 106, 26, 0.22);
     color: var(--color-brand);
+    box-shadow: 0 0 18px rgba(255, 106, 26, 0.18);
   }
 
   .solar-stats {
@@ -1700,21 +1724,21 @@
           <div class="diagram-flow">
             <div class="diagram-node">
               <span class="solar-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M12 3v2.5"/><path d="M12 18.5V21"/><path d="M4.9 4.9l1.8 1.8"/><path d="M17.3 17.3l1.8 1.8"/><path d="M3 12h2.5"/><path d="M18.5 12H21"/><path d="M4.9 19.1l1.8-1.8"/><path d="M17.3 6.7l1.8-1.8"/><circle cx="12" cy="12" r="4.2"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M5 15h14"/><path d="M6.5 15 8 20"/><path d="M18 15l-1.5 5"/><path d="M9 10.5 10.5 8"/><path d="M12 10.5 13.5 8"/><path d="M15 10.5 16.5 8"/><path d="M7 15V9a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v6"/><path d="M12 3v2"/><path d="M4.5 5.5 6 7"/><path d="M19.5 5.5 18 7"/></svg>
               </span>
               <strong>Solar</strong>
               <span>Generates during the day.</span>
             </div>
             <div class="diagram-node">
               <span class="solar-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><rect x="3" y="8" width="15" height="8" rx="2"/><path d="M18 10h2"/><path d="M6 18v2"/><path d="M15 18v2"/></svg>
+                <svg viewBox="0 0 24 24"><rect x="3" y="7" width="16" height="10" rx="2"/><path d="M19 10h2"/><path d="M6 10h4"/><path d="M6 13h7"/><path d="M7 17v2"/><path d="M15 17v2"/></svg>
               </span>
               <strong>Battery</strong>
               <span>Stores value for later.</span>
             </div>
             <div class="diagram-node">
               <span class="solar-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9 7 7"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/><path d="M12 8.5a3.5 3.5 0 0 1 3.5 3.5"/><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12"/></svg>
               </span>
               <strong>Heat Pump</strong>
               <span>Uses more of your own power.</span>

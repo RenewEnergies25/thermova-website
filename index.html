@@ -31,6 +31,7 @@
     --color-brand: #FF6A1A;
     --color-brand-hover: #FF7F3A;
     --color-brand-glow: rgba(255, 106, 26, 0.25);
+    --color-glow-soft: rgba(255, 106, 26, 0.06);
     --color-bg: #050B14;
     --color-surface: #0A1420;
     --color-surface-2: #0F1C2A;
@@ -107,7 +108,19 @@
   }
 
   .section {
+    position: relative;
+    isolation: isolate;
     padding: var(--space-8) 0;
+  }
+
+  .section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 10%, rgba(255, 106, 26, 0.08), transparent 60%);
+    opacity: 0.72;
+    pointer-events: none;
+    z-index: -1;
   }
 
   .section-dark {
@@ -128,6 +141,7 @@
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.14em;
+    opacity: 0.85;
     text-transform: uppercase;
   }
 
@@ -398,20 +412,6 @@
     align-content: start;
   }
 
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 14px;
-    border-radius: 999px;
-    background: rgba(255, 106, 26, 0.08);
-    color: var(--color-brand);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
   .hero-sub {
     max-width: 520px;
     color: var(--color-text-secondary);
@@ -523,40 +523,49 @@
     min-height: 184px;
     padding: 24px;
     border-radius: var(--radius-md);
-    background: var(--color-surface-2);
+    background: linear-gradient(180deg, #0A1420 0%, #0D1826 100%);
     text-decoration: none;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), 0 0 40px var(--color-glow-soft);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
   }
 
   .decision-card:hover,
   .decision-card:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: 0 24px 52px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 106, 26, 0.16), 0 0 28px rgba(255, 106, 26, 0.14);
+    transform: translateY(-6px);
+    box-shadow: 0 28px 58px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 106, 26, 0.18), 0 0 36px rgba(255, 106, 26, 0.18);
     background: #122133;
   }
 
   .decision-icon {
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 18px;
-    border-radius: 10px;
-    background: rgba(255, 106, 26, 0.12);
+    margin-bottom: 16px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(255, 106, 26, 0.15), rgba(255, 106, 26, 0.05));
+    border: 1px solid rgba(255, 106, 26, 0.25);
     color: var(--color-brand);
+    box-shadow: 0 0 12px rgba(255, 106, 26, 0.25);
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
   }
 
   .decision-icon svg,
   .solar-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     stroke: currentColor;
-    stroke-width: 1.5;
+    stroke-width: 1.75;
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  .decision-card:hover .decision-icon,
+  .decision-card:focus-visible .decision-icon {
+    box-shadow: 0 0 18px rgba(255, 106, 26, 0.32);
+    transform: translateY(-1px);
   }
 
   .decision-card strong {
@@ -565,6 +574,7 @@
     font-family: var(--font-display);
     font-size: 1.16rem;
     line-height: 1.14;
+    font-weight: 650;
   }
 
   .decision-card span {
@@ -586,7 +596,7 @@
     border-radius: var(--radius-md);
     background: linear-gradient(180deg, rgba(15, 28, 42, 0.96), rgba(10, 20, 32, 0.96));
     text-decoration: none;
-    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.24);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.24), 0 0 40px var(--color-glow-soft);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
 
@@ -599,8 +609,12 @@
     background:
       linear-gradient(180deg, rgba(255, 106, 26, 0.08), transparent 34%),
       linear-gradient(180deg, rgba(18, 31, 46, 0.98), rgba(10, 20, 32, 0.98));
-    box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32), 0 0 24px rgba(255, 106, 26, 0.14);
+    box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32), 0 0 28px rgba(255, 106, 26, 0.18);
     outline: 1px solid rgba(255, 106, 26, 0.4);
+  }
+
+  .offer-card h3 {
+    font-weight: 650;
   }
 
   .offer-chip {
@@ -663,7 +677,7 @@
     height: 10px;
     border-radius: 50%;
     background: var(--color-brand);
-    box-shadow: 0 0 0 7px rgba(255, 106, 26, 0.08);
+    box-shadow: 0 0 0 7px rgba(255, 106, 26, 0.08), 0 0 12px rgba(255, 106, 26, 0.25);
   }
 
   .process-step-number {
@@ -684,7 +698,7 @@
     padding: 24px;
     border-radius: var(--radius-md);
     background: rgba(10, 20, 32, 0.76);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
   }
 
   .audience-tag {
@@ -694,7 +708,12 @@
     font-size: 0.76rem;
     font-weight: 700;
     letter-spacing: 0.12em;
+    opacity: 0.85;
     text-transform: uppercase;
+  }
+
+  .audience-card h3 {
+    font-weight: 650;
   }
 
   .audience-card p {
@@ -718,12 +737,17 @@
     text-align: left;
   }
 
-  .audience-list li::before,
-  .diagram-list li::before,
-  .contact-list li::before {
-    content: "→";
+  .list-arrow {
+    flex: 0 0 auto;
     color: var(--color-brand);
     font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .list-copy {
+    max-width: 100%;
+    color: #D6E2F0;
+    line-height: 1.45;
   }
 
   .compare-wrap {
@@ -737,7 +761,7 @@
     gap: 0;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md), 0 0 40px var(--color-glow-soft);
   }
 
   .compare-column {
@@ -812,6 +836,7 @@
     padding: 24px;
     border-radius: var(--radius-md);
     background: rgba(10, 20, 32, 0.72);
+    box-shadow: 0 0 40px var(--color-glow-soft);
   }
 
   .stat-block strong {
@@ -837,7 +862,7 @@
     padding: 24px;
     border-radius: var(--radius-md);
     background: rgba(10, 20, 32, 0.82);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
   }
 
   .diagram-card {
@@ -856,12 +881,14 @@
     border-radius: 18px;
     background: var(--color-surface-2);
     text-align: center;
+    box-shadow: 0 0 40px var(--color-glow-soft);
   }
 
   .diagram-node strong {
     display: block;
     color: var(--color-text-primary);
     font-size: 1.02rem;
+    font-weight: 650;
   }
 
   .diagram-node span {
@@ -919,7 +946,7 @@
     padding: 24px;
     border-radius: var(--radius-md);
     background: rgba(10, 20, 32, 0.82);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
   }
 
   .scheme-amount {
@@ -974,6 +1001,7 @@
 
   .testimonial {
     padding: 8px 0;
+    box-shadow: 0 0 40px var(--color-glow-soft);
   }
 
   .testimonial-context {
@@ -1396,7 +1424,6 @@
   <header class="hero">
     <div class="shell hero-grid">
       <div class="hero-copy">
-        <span class="hero-badge">MCS Accredited Installer</span>
         <h1>Still using gas? <span style="color: var(--color-brand);">That decision is getting more expensive every year.</span></h1>
         <p class="hero-sub">Get up to £7,500 off and reduce reliance on rising costs with a heat pump, solar panels, or a whole-home energy upgrade designed around your property.</p>
         <div class="hero-actions">
@@ -1560,10 +1587,10 @@
           <h3>Your boiler is ageing and you do not want another short-term replacement.</h3>
           <p>Make the switch before the old system forces your hand.</p>
           <ul class="audience-list">
-            <li>£7,500 support for eligible installs</li>
-            <li>More stable comfort</li>
-            <li>Lower gas exposure</li>
-            <li>Cleaner future path</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">£7,500 support for eligible installs</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">More stable comfort</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Lower gas exposure</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Cleaner future path</span></li>
           </ul>
         </article>
         <article class="audience-card">
@@ -1571,10 +1598,10 @@
           <h3>Plan the rental upgrade path now instead of reacting later.</h3>
           <p>Use property-by-property planning, practical sequencing, and a clearer view of how the grant can support the route.</p>
           <ul class="audience-list">
-            <li>Portfolio planning for multiple properties</li>
-            <li>Grant support on eligible domestic rentals</li>
-            <li>Less reactive maintenance pressure</li>
-            <li>Stronger preparation for 2030</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Portfolio planning for multiple properties</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Grant support on eligible domestic rentals</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Less reactive maintenance pressure</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Stronger preparation for 2030</span></li>
           </ul>
         </article>
         <article class="audience-card">
@@ -1582,10 +1609,10 @@
           <h3>Move away from oil or LPG and stop building around fuel deliveries.</h3>
           <p>Off-gas properties are often where the heat-pump case becomes easier to justify both practically and financially.</p>
           <ul class="audience-list">
-            <li>Replace oil or LPG dependency</li>
-            <li>Longer system life</li>
-            <li>Battery and solar resilience</li>
-            <li>Better energy control</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Replace oil or LPG dependency</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Longer system life</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Battery and solar resilience</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Better energy control</span></li>
           </ul>
         </article>
         <article class="audience-card">
@@ -1593,10 +1620,10 @@
           <h3>Use the roof to power more of the home instead of exporting cheap and buying back expensive.</h3>
           <p>Particularly relevant for EV owners, work-from-home households, and homes preparing for all-electric heating.</p>
           <ul class="audience-list">
-            <li>Daytime demand offset</li>
-            <li>Battery value retention</li>
-            <li>Heat-pump-ready logic</li>
-            <li>Better use of your own generation</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Daytime demand offset</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Battery value retention</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Heat-pump-ready logic</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Better use of your own generation</span></li>
           </ul>
         </article>
       </div>
@@ -1694,10 +1721,10 @@
             </div>
           </div>
           <ul class="diagram-list">
-            <li>Solar powers the heat pump during the day.</li>
-            <li>The battery stores value for later use.</li>
-            <li>Cheap off-peak charging helps on grey days.</li>
-            <li>EV charging can sit inside the same setup.</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Solar powers the heat pump during the day.</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">The battery stores value for later use.</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Cheap off-peak charging helps on grey days.</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">EV charging can sit inside the same setup.</span></li>
           </ul>
         </div>
       </div>
@@ -1718,10 +1745,10 @@
         <div class="solar-panel">
           <h3>Best-fit homes</h3>
           <ul class="diagram-list">
-            <li>Homes with strong daytime electricity use</li>
-            <li>EV owners and work-from-home households</li>
-            <li>Properties planning a heat pump upgrade</li>
-            <li>Roofs with good orientation and limited shading</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Homes with strong daytime electricity use</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">EV owners and work-from-home households</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Properties planning a heat pump upgrade</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Roofs with good orientation and limited shading</span></li>
           </ul>
         </div>
         <div class="solar-panel">
@@ -1750,7 +1777,7 @@
           <li><span class="step-pill">1</span><div><strong>We assess the property</strong><p>Eligibility, system fit, EPC position, and the right upgrade route.</p></div></li>
           <li><span class="step-pill">2</span><div><strong>We submit the grant application</strong><p>No forms passed back to you and no uncertainty about what happens next.</p></div></li>
           <li><span class="step-pill">3</span><div><strong>The grant comes off the invoice</strong><p>No rebate wait and no confusion about where the discount lands.</p></div></li>
-          <li><span class="step-pill">4</span><div><strong>The install is certified and handed over properly</strong><p>MCS-certified delivery and a clear finish to the job.</p></div></li>
+          <li><span class="step-pill">4</span><div><strong>The install is completed and handed over properly</strong><p>A clear finish to the job, with the system explained properly from day one.</p></div></li>
         </ol>
       </aside>
     </div>
@@ -1896,9 +1923,9 @@
         </div>
         <div>
           <ul class="contact-list">
-            <li>Homeowners, landlords, and mixed portfolios welcome</li>
-            <li>Heat pumps, solar, battery, or the combined route</li>
-            <li>Grant support explained upfront</li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Homeowners, landlords, and mixed portfolios welcome</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Heat pumps, solar, battery, or the combined route</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Grant support explained upfront</span></li>
           </ul>
         </div>
       </div>
@@ -2014,7 +2041,7 @@
       </div>
     </div>
     <div class="footer-meta">
-      <span>© 2025 Thermova Ltd. MCS certified installer. Grant amounts per GOV.UK. Eligible properties in England and Wales only.</span>
+      <span>© 2025 Thermova Ltd. Grant amounts per GOV.UK. Eligible properties in England and Wales only.</span>
       <span><a href="/privacy">Privacy policy</a> • <a href="/terms">Terms</a> • <a href="/cookies">Cookies</a></span>
     </div>
   </div>

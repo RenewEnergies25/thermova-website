@@ -537,15 +537,26 @@
   }
 
   .decision-icon {
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 18px;
-    border-radius: 14px;
+    border-radius: 10px;
     background: rgba(255, 106, 26, 0.12);
     color: var(--color-brand);
-    font-size: 1.2rem;
+  }
+
+  .decision-icon svg,
+  .solar-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .decision-card strong {
@@ -584,12 +595,12 @@
   }
 
   .offer-card.featured {
-    transform: scale(1.03);
+    transform: scale(1.04);
     background:
       linear-gradient(180deg, rgba(255, 106, 26, 0.08), transparent 34%),
       linear-gradient(180deg, rgba(18, 31, 46, 0.98), rgba(10, 20, 32, 0.98));
-    box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32);
-    outline: 1px solid rgba(255, 106, 26, 0.24);
+    box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32), 0 0 24px rgba(255, 106, 26, 0.14);
+    outline: 1px solid rgba(255, 106, 26, 0.4);
   }
 
   .offer-chip {
@@ -633,7 +644,8 @@
     display: grid;
     gap: 32px;
     padding-left: 28px;
-    border-left: 1px solid rgba(255, 106, 26, 0.3);
+    border-left: 1px solid transparent;
+    border-image: linear-gradient(to bottom, rgba(255, 106, 26, 0.65), rgba(255, 106, 26, 0.08)) 1;
   }
 
   .process-step {
@@ -647,11 +659,11 @@
     position: absolute;
     left: -34px;
     top: 8px;
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--color-brand);
-    box-shadow: 0 0 0 8px rgba(255, 106, 26, 0.08);
+    box-shadow: 0 0 0 7px rgba(255, 106, 26, 0.08);
   }
 
   .process-step-number {
@@ -703,6 +715,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
+    text-align: left;
   }
 
   .audience-list li::before,
@@ -771,8 +784,8 @@
     display: grid;
     grid-template-columns: 150px 1fr;
     gap: 18px;
-    padding: 18px 0;
-    border-top: 1px solid var(--color-divider);
+    padding: 20px 0;
+    border-top: 1px solid rgba(184, 196, 210, 0.24);
   }
 
   .compare-row:first-child {
@@ -862,6 +875,18 @@
     margin-top: 20px;
   }
 
+  .solar-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    background: rgba(255, 106, 26, 0.08);
+    color: var(--color-brand);
+  }
+
   .solar-stats {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -879,7 +904,7 @@
     display: block;
     color: var(--color-brand);
     font-family: var(--font-display);
-    font-size: 1.8rem;
+    font-size: 28px;
   }
 
   .scheme-wrap {
@@ -1412,24 +1437,32 @@
       </div>
       <div class="decision-grid">
         <a class="decision-card" href="#offers">
-          <span class="decision-icon">↺</span>
+          <span class="decision-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3c2.8 0 5 2 5 4.8 0 3.1-2.4 5-5 7.6-2.6-2.6-5-4.5-5-7.6C7 5 9.2 3 12 3Z"/><path d="M12 15.4V21"/></svg>
+          </span>
           <strong>Replace my boiler</strong>
-          <span>See the alternative before another gas boiler becomes the default decision.</span>
+          <span>Avoid another short-term fix. Plan the system that actually reduces running costs.</span>
         </a>
         <a class="decision-card" href="#compare">
-          <span class="decision-icon">£</span>
+          <span class="decision-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 18h11"/><path d="M8 14c1.6 1.1 3.1 1.7 4.9 1.7 2.4 0 4.1-1.2 4.1-3.2 0-1.7-1.1-2.6-3.6-3.1l-2-.4c-2.5-.5-3.6-1.4-3.6-3.1 0-2 1.7-3.3 4.1-3.3 1.8 0 3.3.5 4.7 1.6"/><path d="M12 2v14"/><path d="M8 22l8-8"/></svg>
+          </span>
           <strong>Reduce bills</strong>
-          <span>Compare running-cost logic, grant value, and what actually changes the economics.</span>
+          <span>Understand what actually lowers your bills — not just what looks cheaper upfront.</span>
         </a>
         <a class="decision-card" href="#landlords">
-          <span class="decision-icon">⌂</span>
+          <span class="decision-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
+          </span>
           <strong>Upgrade rental</strong>
-          <span>Plan for 2030 before you get forced into rushed portfolio decisions.</span>
+          <span>Stay ahead of regulation and avoid reactive, last-minute upgrades.</span>
         </a>
         <a class="decision-card" href="#solar">
-          <span class="decision-icon">☼</span>
+          <span class="decision-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3v2.5"/><path d="M12 18.5V21"/><path d="M4.9 4.9l1.8 1.8"/><path d="M17.3 17.3l1.8 1.8"/><path d="M3 12h2.5"/><path d="M18.5 12H21"/><path d="M4.9 19.1l1.8-1.8"/><path d="M17.3 6.7l1.8-1.8"/><circle cx="12" cy="12" r="4.2"/></svg>
+          </span>
           <strong>Add solar</strong>
-          <span>Use your roof to offset electricity use and support a future heat pump route.</span>
+          <span>Use your roof to power more of your home instead of buying it back.</span>
         </a>
       </div>
     </div>
@@ -1439,8 +1472,7 @@
     <div class="shell">
       <div class="section-head">
         <p class="section-label">Whole-home upgrade paths</p>
-        <h2 id="offers-h">The page should make the next decision feel obvious.</h2>
-        <p class="section-intro">Each path keeps the offer intact, but it now has clearer hierarchy, stronger urgency, and a more premium visual rhythm.</p>
+        <h2 id="offers-h">Choose the upgrade path that actually fits your home.</h2>
       </div>
       <div class="offers-grid">
         <a class="offer-card featured" href="#assessment">
@@ -1488,28 +1520,28 @@
       <div class="process-copy">
         <p class="section-label">How it works</p>
         <h2 id="process-h">No paperwork. No chasing. No confusion.</h2>
-        <p class="section-intro">The process should feel like a guided experience, not a boxy UI block. Thermova handles the moving parts so the first next step is all you need to take.</p>
+        <p class="section-intro">Thermova handles the moving parts so the next step feels simple, clear, and properly managed from the start.</p>
         <a class="button" href="#assessment">Check what my home qualifies for</a>
       </div>
       <div class="process-line">
         <div class="process-step">
           <span class="process-step-number">1 — Enquiry</span>
-          <h3>Tell us what you are trying to solve.</h3>
+          <h3>Tell us what you're trying to fix.</h3>
           <p>Boiler replacement, lower bills, landlord planning, or a solar-first route.</p>
         </div>
         <div class="process-step">
           <span class="process-step-number">2 — Survey</span>
-          <h3>We assess the property and design the right system.</h3>
+          <h3>We design the system around your home.</h3>
           <p>Heat loss, roof potential, current setup, and likely grant fit are handled together.</p>
         </div>
         <div class="process-step">
           <span class="process-step-number">3 — Grant</span>
-          <h3>We handle the grant application and project detail.</h3>
+          <h3>We handle the grant and paperwork.</h3>
           <p>The discount lands on the invoice instead of becoming another admin task for you.</p>
         </div>
         <div class="process-step">
           <span class="process-step-number">4 — Install</span>
-          <h3>The system is installed, certified, and handed over properly.</h3>
+          <h3>Your system is installed and ready.</h3>
           <p>Heat pump, solar, battery, or the combined route, with a clear finish to the job.</p>
         </div>
       </div>
@@ -1526,7 +1558,7 @@
         <article class="audience-card">
           <span class="audience-tag">Homeowners</span>
           <h3>Your boiler is ageing and you do not want another short-term replacement.</h3>
-          <p>Compare comfort, grant support, running-cost logic, and long-term fit before the old system dictates the timeline.</p>
+          <p>Make the switch before the old system forces your hand.</p>
           <ul class="audience-list">
             <li>£7,500 support for eligible installs</li>
             <li>More stable comfort</li>
@@ -1576,7 +1608,7 @@
       <div class="section-head">
         <p class="section-label">Heat pump vs gas boiler</p>
         <h2 id="compare-h">Why people switch even when electricity costs more.</h2>
-        <p class="section-intro">This should read like an authority section, not a generic card layout. The comparison now uses structure, spacing, and strong row dividers instead of decorative boxes.</p>
+        <p class="section-intro">Compare the numbers that matter: efficiency, running-cost logic, lifespan, carbon, and long-term fit.</p>
       </div>
       <div class="compare-grid">
         <section class="compare-column" aria-label="Gas boiler">
@@ -1635,28 +1667,37 @@
         <div class="section-head">
           <p class="section-label">Solar panels and battery storage</p>
           <h2 id="solar-h">Your roof could power your heat pump and more of your home.</h2>
-          <p class="section-intro">This section should feel more visual and lighter than the rest of the page, with less text density and clearer stat-led blocks.</p>
+          <p class="section-intro">Turn more of your own generation into usable power instead of exporting it cheaply and buying it back later.</p>
         </div>
         <div class="diagram-card">
           <div class="diagram-flow">
             <div class="diagram-node">
+              <span class="solar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 3v2.5"/><path d="M12 18.5V21"/><path d="M4.9 4.9l1.8 1.8"/><path d="M17.3 17.3l1.8 1.8"/><path d="M3 12h2.5"/><path d="M18.5 12H21"/><path d="M4.9 19.1l1.8-1.8"/><path d="M17.3 6.7l1.8-1.8"/><circle cx="12" cy="12" r="4.2"/></svg>
+              </span>
               <strong>Solar</strong>
-              <span>Generates during the day</span>
+              <span>Generates during the day.</span>
             </div>
             <div class="diagram-node">
+              <span class="solar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="3" y="8" width="15" height="8" rx="2"/><path d="M18 10h2"/><path d="M6 18v2"/><path d="M15 18v2"/></svg>
+              </span>
               <strong>Battery</strong>
-              <span>Stores value for later</span>
+              <span>Stores value for later.</span>
             </div>
             <div class="diagram-node">
+              <span class="solar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+              </span>
               <strong>Heat Pump</strong>
-              <span>Uses more of your own power</span>
+              <span>Uses more of your own power.</span>
             </div>
           </div>
           <ul class="diagram-list">
-            <li>Solar powers the heat pump during the day for near-zero marginal cost.</li>
-            <li>The battery stores surplus generation for evening use.</li>
-            <li>Cheap off-peak charging improves the economics on grey days.</li>
-            <li>EV charging can sit inside the same system logic too.</li>
+            <li>Solar powers the heat pump during the day.</li>
+            <li>The battery stores value for later use.</li>
+            <li>Cheap off-peak charging helps on grey days.</li>
+            <li>EV charging can sit inside the same setup.</li>
           </ul>
         </div>
       </div>

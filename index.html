@@ -592,6 +592,20 @@
     background: #122133;
   }
 
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-box svg {
+    display: block;
+    width: 26px;
+    height: 26px;
+    margin: auto;
+    transform: translateY(-0.5px);
+  }
+
   .decision-icon {
     width: 48px;
     height: 48px;
@@ -605,17 +619,6 @@
     color: var(--color-brand);
     box-shadow: 0 0 12px rgba(255, 106, 26, 0.25);
     transition: box-shadow 0.18s ease, transform 0.18s ease;
-  }
-
-  .decision-icon svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  .solar-icon svg {
-    width: 24px;
-    height: 24px;
-    overflow: visible;
   }
 
   .decision-card:hover .decision-icon,
@@ -1533,29 +1536,39 @@
 <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute; width:0; height:0; overflow:hidden">
   <defs>
     <symbol id="icon-flame" viewBox="0 0 24 24">
-      <path d="M12 4C9 7 7.5 9 7.5 12C7.5 15 9.5 17 12 17C14.5 17 16.5 15 16.5 12C16.5 9 15 7 12 4Z" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="5" y="6" width="6.5" height="9" rx="2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8.25 9V12" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13 10.5C14.5 8.5 16.5 8 18.5 8" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16.5 6.5L19 8L17.5 10.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13.2 15C14.5 16.5 16 17 18 17" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16.5 14.5L19 17L16.5 19.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="icon-pound" viewBox="0 0 24 24">
-      <path d="M14.5 6.5C13.5 5.5 11 5.5 10 7C9 8.5 10.5 9.5 12.5 10C14.5 10.5 16 11.5 15 13C14 14.5 11.5 14.5 10.5 13.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12 4V20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M12 4.5V19.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15.2 7.5C14.2 6.5 12.5 6.2 11.2 6.5C9.8 6.8 8.8 7.7 8.8 9C8.8 10.2 9.8 10.9 11.8 11.3C13.8 11.7 14.8 12.4 14.8 13.8C14.8 15.2 13.5 16 11.5 16C10.2 16 9 15.6 8 14.7" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M18 6.5L16 8.5L14 6.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 8.5V5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="icon-property" viewBox="0 0 24 24">
-      <path d="M4 10L12 5L20 10" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <rect x="6" y="10" width="12" height="8" rx="2" stroke="#FF6A1A" stroke-width="1.8"/>
+      <path d="M4.5 10L12 5L19.5 10" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="6" y="10" width="12" height="8" rx="2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9 18V20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15 18V20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="icon-solar" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="3.2" stroke="#FF6A1A" stroke-width="1.8"/>
-      <path d="M12 4V6.5M12 17.5V20M4 12H6.5M17.5 12H20M6.2 6.2L7.8 7.8M16.2 16.2L17.8 17.8M6.2 17.8L7.8 16.2M16.2 7.8L17.8 6.2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="3.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 4V6.5M12 17.5V20M4 12H6.5M17.5 12H20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6.5 6.5L8 8M16 16L17.5 17.5M6.5 17.5L8 16M16 8L17.5 6.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="icon-battery" viewBox="0 0 24 24">
-      <rect x="4" y="7" width="14" height="10" rx="2" stroke="#FF6A1A" stroke-width="1.8"/>
+      <rect x="4" y="7" width="14" height="10" rx="2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       <rect x="18.5" y="10" width="1.5" height="4" rx="0.5" fill="#FF6A1A"/>
-      <path d="M7 12H15" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M7 12H15" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
     <symbol id="icon-heat-pump" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="6" stroke="#FF6A1A" stroke-width="1.8"/>
-      <path d="M12 6.5C14.5 6.5 16 8.5 16 10.5C16 13 13.5 14.5 12 14.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M12 17.5C9.5 17.5 8 15.5 8 13.5C8 11 10.5 9.5 12 9.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="6" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 6.5C14.5 6.5 16 8.5 16 10.5C16 13 13.5 14.5 12 14.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 17.5C9.5 17.5 8 15.5 8 13.5C8 11 10.5 9.5 12 9.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
   </defs>
 </svg>
@@ -1636,25 +1649,25 @@
       <div class="trust-strip-panel">
         <div class="trust-strip-grid">
           <div class="trust-strip-item">
-            <span class="decision-icon" aria-hidden="true">
+            <span class="decision-icon icon-box" aria-hidden="true">
               <svg viewBox="0 0 24 24"><use href="#icon-property"/></svg>
             </span>
             <span>UK-based installation service</span>
           </div>
           <div class="trust-strip-item">
-            <span class="decision-icon" aria-hidden="true">
+            <span class="decision-icon icon-box" aria-hidden="true">
               <svg viewBox="0 0 24 24"><use href="#icon-property"/></svg>
             </span>
             <span>Serving homeowners and landlords</span>
           </div>
           <div class="trust-strip-item">
-            <span class="decision-icon" aria-hidden="true">
+            <span class="decision-icon icon-box" aria-hidden="true">
               <svg viewBox="0 0 24 24"><use href="#icon-heat-pump"/></svg>
             </span>
             <span>System design, installation, and support</span>
           </div>
           <div class="trust-strip-item">
-            <span class="decision-icon" aria-hidden="true">
+            <span class="decision-icon icon-box" aria-hidden="true">
               <svg viewBox="0 0 24 24"><use href="#icon-pound"/></svg>
             </span>
             <span>Structured upgrade planning approach</span>
@@ -1672,28 +1685,28 @@
       </div>
       <div class="decision-grid">
         <a class="decision-card" href="#offers">
-          <span class="decision-icon" aria-hidden="true">
+          <span class="decision-icon icon-box" aria-hidden="true">
             <svg viewBox="0 0 24 24"><use href="#icon-flame"/></svg>
           </span>
           <strong>Replace my boiler</strong>
           <span>Avoid another short-term fix. Plan the system that reduces gas reliance and improves long-term cost control.</span>
         </a>
         <a class="decision-card" href="#compare">
-          <span class="decision-icon" aria-hidden="true">
+          <span class="decision-icon icon-box" aria-hidden="true">
             <svg viewBox="0 0 24 24"><use href="#icon-pound"/></svg>
           </span>
           <strong>Reduce bills</strong>
           <span>Understand what actually lowers your bills — not just what looks cheaper upfront.</span>
         </a>
         <a class="decision-card" href="#landlords">
-          <span class="decision-icon" aria-hidden="true">
+          <span class="decision-icon icon-box" aria-hidden="true">
             <svg viewBox="0 0 24 24"><use href="#icon-property"/></svg>
           </span>
           <strong>Upgrade rental</strong>
           <span>Stay ahead of regulation and avoid reactive, last-minute upgrades.</span>
         </a>
         <a class="decision-card" href="#solar">
-          <span class="decision-icon" aria-hidden="true">
+          <span class="decision-icon icon-box" aria-hidden="true">
             <svg viewBox="0 0 24 24"><use href="#icon-solar"/></svg>
           </span>
           <strong>Add solar</strong>
@@ -1952,21 +1965,21 @@
         <div class="diagram-card">
           <div class="diagram-flow">
             <div class="diagram-node">
-              <span class="solar-icon" aria-hidden="true">
+              <span class="solar-icon icon-box" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><use href="#icon-solar"/></svg>
               </span>
               <strong>Solar</strong>
               <span>Generates during the day.</span>
             </div>
             <div class="diagram-node">
-              <span class="solar-icon" aria-hidden="true">
+              <span class="solar-icon icon-box" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><use href="#icon-battery"/></svg>
               </span>
               <strong>Battery</strong>
               <span>Stores value for later.</span>
             </div>
             <div class="diagram-node">
-              <span class="solar-icon" aria-hidden="true">
+              <span class="solar-icon icon-box" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><use href="#icon-heat-pump"/></svg>
               </span>
               <strong>Heat Pump</strong>

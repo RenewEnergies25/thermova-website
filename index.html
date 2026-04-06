@@ -6,7 +6,7 @@
 <title>Thermova | Heat Pumps, Solar &amp; Battery Systems | Get £7,500 Off</title>
 <meta name="description" content="Thermova installs air source heat pumps, solar panels and battery systems for homeowners and landlords across England and Wales. Check what your home qualifies for and get a free home assessment.">
 <meta name="keywords" content="air source heat pump installer, boiler upgrade scheme, heat pump grant £7500, solar battery installer, landlord EPC upgrade 2030">
-<link rel="canonical" href="https://www.thermova.co.uk/">
+<link rel="canonical" href="https://www.thermova.uk/">
 <meta property="og:title" content="Get £7,500 Off a Heat Pump | Thermova">
 <meta property="og:description" content="Heat pumps, solar and battery systems that help homeowners and landlords cut reliance on gas. Check what your home qualifies for.">
 <meta property="og:type" content="website">
@@ -17,7 +17,17 @@
   "@type": "LocalBusiness",
   "name": "Thermova",
   "description": "Heat pump, solar and battery installers for homeowners and landlords in England and Wales",
-  "url": "https://www.thermova.co.uk",
+  "url": "https://www.thermova.uk",
+  "email": "info@thermova.uk",
+  "telephone": "+447976015890",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Harbury, Derby Road",
+    "addressLocality": "Poulton-le-Fylde",
+    "postalCode": "FY6 7AF",
+    "addressCountry": "GB"
+  },
+  "identifier": "17135215",
   "areaServed": ["England", "Wales"],
   "serviceType": ["Air Source Heat Pump Installation", "Solar Panel Installation", "Battery Storage Installation"],
   "priceRange": "££"
@@ -316,6 +326,7 @@
     background: var(--color-brand);
     color: #fff;
     font-weight: 700;
+    white-space: nowrap;
   }
 
   .menu-toggle {
@@ -506,6 +517,51 @@
     border-radius: 50%;
     background: var(--color-brand);
     box-shadow: 0 0 0 8px rgba(255, 106, 26, 0.08);
+  }
+
+  .claim-disclaimer {
+    margin-top: 12px;
+    color: rgba(184, 196, 210, 0.68);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .trust-strip {
+    padding-top: 0;
+  }
+
+  .trust-strip-panel {
+    padding: 20px 24px;
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(circle at top center, rgba(255, 106, 26, 0.12), transparent 48%),
+      rgba(10, 20, 32, 0.84);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .trust-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .trust-strip-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .trust-strip-item .decision-icon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 0;
+    flex: 0 0 42px;
+  }
+
+  .trust-strip-item span {
+    color: var(--color-text-primary);
+    font-size: 0.94rem;
+    line-height: 1.45;
   }
 
   .decision-wrap {
@@ -764,6 +820,41 @@
     gap: 28px;
   }
 
+  .comparison-tool {
+    display: grid;
+    gap: 18px;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.82);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .comparison-tool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .comparison-tool-output {
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--color-surface-2);
+    color: var(--color-text-secondary);
+  }
+
+  .comparison-tool-output p {
+    margin: 0;
+  }
+
+  .comparison-tool-output p + p {
+    margin-top: 10px;
+  }
+
+  .comparison-cta {
+    display: flex;
+    justify-content: flex-start;
+  }
+
   .compare-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -993,6 +1084,13 @@
     font-size: 1.8rem;
   }
 
+  .scheme-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 22px;
+  }
+
   .scheme-steps {
     display: grid;
     gap: 20px;
@@ -1025,11 +1123,19 @@
   }
 
   .testimonial {
-    padding: 8px 0;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.74);
     box-shadow: 0 0 40px var(--color-glow-soft);
   }
 
   .testimonial-context {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 106, 26, 0.1);
     color: var(--color-brand);
     font-size: 0.76rem;
     font-weight: 700;
@@ -1052,6 +1158,11 @@
   .testimonial-meta span {
     color: var(--color-text-muted);
     font-size: 0.92rem;
+  }
+
+  .testimonial-meta-line {
+    display: block;
+    margin-top: 6px;
   }
 
   .faq-grid {
@@ -1297,7 +1408,9 @@
     .audience-grid,
     .testimonials-grid,
     .stats-grid,
-    .footer-grid {
+    .footer-grid,
+    .trust-strip-grid,
+    .comparison-tool-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -1360,11 +1473,13 @@
     .offers-grid,
     .audience-grid,
     .stats-grid,
+    .trust-strip-grid,
     .diagram-flow,
     .solar-stats,
     .testimonials-grid,
     .footer-grid,
-    .field-grid {
+    .field-grid,
+    .comparison-tool-grid {
       grid-template-columns: 1fr;
     }
 
@@ -1373,6 +1488,10 @@
     .submit-btn,
     .nav-links .nav-cta {
       width: 100%;
+    }
+
+    .mobile-nav .button {
+      white-space: nowrap;
     }
 
     .hero-actions,
@@ -1450,7 +1569,7 @@
       <li><a href="#solar">Solar &amp; battery</a></li>
       <li><a href="#landlords">Landlords</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a class="nav-cta" href="#assessment">Check what my home qualifies for</a></li>
+      <li><a class="nav-cta" href="#assessment">Book assessment</a></li>
     </ul>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav-panel" aria-label="Open menu">☰</button>
   </div>
@@ -1470,7 +1589,7 @@
       <li><a href="#scheme">£7,500 grant</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a class="button" href="#assessment">Check what my home qualifies for</a>
+    <a class="button mobile-nav-cta" href="#assessment">Book assessment</a>
   </aside>
 </div>
 
@@ -1479,13 +1598,14 @@
     <div class="shell hero-grid">
       <div class="hero-copy">
         <h1>Still using gas? <span style="color: var(--color-brand);">That decision is getting more expensive every year.</span></h1>
-        <p class="hero-sub">Get up to £7,500 off and reduce reliance on rising costs with a heat pump, solar panels, or a whole-home energy upgrade designed around your property.</p>
+        <p class="hero-sub">Get clarity on whether a heat pump, solar panels, or a full system upgrade is the right long-term route for your property.</p>
+        <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         <div class="hero-actions">
-          <a class="button" href="#assessment">Check what my home qualifies for</a>
-          <a class="button-secondary" href="#compare">Get my upgrade estimate</a>
+          <a class="button" href="#assessment">Get my upgrade estimate</a>
+          <a class="button-secondary" href="#compare">Get my running-cost comparison</a>
         </div>
         <ul class="hero-points">
-          <li>Approved BUS installer</li>
+          <li>We design and manage the Boiler Upgrade Scheme route as part of your system</li>
           <li>England &amp; Wales coverage</li>
           <li>Homeowners and landlords</li>
           <li>5-star customer stories</li>
@@ -1497,18 +1617,52 @@
             <span class="hero-panel-kicker">Boiler Upgrade Scheme</span>
             <strong class="hero-panel-amount">£7,500</strong>
           </div>
-          <p>Off an air source heat pump for eligible properties in England and Wales, with Thermova handling the survey, design, and application process.</p>
+          <p>Available for eligible properties in England and Wales, with Thermova planning the survey, design, and grant route around the wider system.</p>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
           <ul class="trust-list">
             <li>Available to eligible homeowners and landlords replacing fossil-fuel heating.</li>
-            <li>No paperwork. No chasing. No confusion.</li>
+            <li>We design and manage the Boiler Upgrade Scheme route as part of your system.</li>
             <li>Waiting could mean paying full price later if the boiler fails first.</li>
             <li>Heat pump, solar, and battery planning can be designed together from the start.</li>
           </ul>
-          <a class="button" href="#assessment">Check what my home qualifies for</a>
+          <a class="button" href="#scheme">Check my grant route</a>
         </aside>
       </div>
     </div>
   </header>
+
+  <section class="section trust-strip" aria-label="Thermova service highlights">
+    <div class="shell">
+      <div class="trust-strip-panel">
+        <div class="trust-strip-grid">
+          <div class="trust-strip-item">
+            <span class="decision-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><use href="#icon-property"/></svg>
+            </span>
+            <span>UK-based installation service</span>
+          </div>
+          <div class="trust-strip-item">
+            <span class="decision-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><use href="#icon-property"/></svg>
+            </span>
+            <span>Serving homeowners and landlords</span>
+          </div>
+          <div class="trust-strip-item">
+            <span class="decision-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><use href="#icon-heat-pump"/></svg>
+            </span>
+            <span>System design, installation, and support</span>
+          </div>
+          <div class="trust-strip-item">
+            <span class="decision-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><use href="#icon-pound"/></svg>
+            </span>
+            <span>Structured upgrade planning approach</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section section-mid" aria-labelledby="decision-h">
     <div class="shell decision-wrap">
@@ -1522,7 +1676,7 @@
             <svg viewBox="0 0 24 24"><use href="#icon-flame"/></svg>
           </span>
           <strong>Replace my boiler</strong>
-          <span>Avoid another short-term fix. Plan the system that actually reduces running costs.</span>
+          <span>Avoid another short-term fix. Plan the system that reduces gas reliance and improves long-term cost control.</span>
         </a>
         <a class="decision-card" href="#compare">
           <span class="decision-icon" aria-hidden="true">
@@ -1560,25 +1714,26 @@
           <span class="offer-chip">Most urgent path</span>
           <h3>Replace your boiler before it fails and avoid paying full price later.</h3>
           <p>Get the heat-pump route assessed while the £7,500 grant is still available and before a breakdown forces a rushed install.</p>
-          <span class="offer-link">Check what my home qualifies for</span>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
+          <span class="offer-link">Check my grant route</span>
         </a>
         <a class="offer-card" href="#compare">
           <span class="offer-chip">Comparison</span>
           <h3>Compare the upgrade before another gas boiler becomes the easy default.</h3>
           <p>See why people switch even when electricity costs more per unit and where the long-term value actually sits.</p>
-          <span class="offer-link">Get my upgrade estimate</span>
+          <span class="offer-link">Get my running-cost comparison</span>
         </a>
         <a class="offer-card" href="#landlords">
           <span class="offer-chip">Landlord route</span>
           <h3>Upgrade rental stock before the market gets crowded and reactive.</h3>
           <p>Use property-by-property planning, grant support, and practical sequencing instead of last-minute fixes.</p>
-          <span class="offer-link">Check what my home qualifies for</span>
+          <span class="offer-link">Book a home assessment</span>
         </a>
         <a class="offer-card" href="#solar">
           <span class="offer-chip">Electricity savings</span>
           <h3>Cut grid reliance with solar and battery instead of exporting value away.</h3>
           <p>Store more of your own generation, use more of it in the home, and improve the future heat-pump economics.</p>
-          <span class="offer-link">Get my upgrade estimate</span>
+          <span class="offer-link">See my upgrade options</span>
         </a>
         <a class="offer-card" href="#solar">
           <span class="offer-chip">Whole-home system</span>
@@ -1590,7 +1745,7 @@
           <span class="offer-chip">Low-friction start</span>
           <h3>Start with a 60-second enquiry and let Thermova route the right path.</h3>
           <p>If you know the problem but not the right system, the assessment is where the decision gets specific.</p>
-          <span class="offer-link">Check what my home qualifies for</span>
+          <span class="offer-link">Book assessment</span>
         </a>
       </div>
     </div>
@@ -1601,8 +1756,8 @@
       <div class="process-copy">
         <p class="section-label">How it works</p>
         <h2 id="process-h">No paperwork. No chasing. No confusion.</h2>
-        <p class="section-intro">Thermova handles the moving parts so the next step feels simple, clear, and properly managed from the start.</p>
-        <a class="button" href="#assessment">Check what my home qualifies for</a>
+        <p class="section-intro">Thermova handles the moving parts so the next step feels specific, clear, and properly managed from the start.</p>
+        <a class="button" href="#assessment">Book assessment</a>
       </div>
       <div class="process-line">
         <div class="process-step">
@@ -1641,7 +1796,7 @@
           <h3>Your boiler is ageing and you do not want another short-term replacement.</h3>
           <p>Make the switch before the old system forces your hand.</p>
           <ul class="audience-list">
-            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">£7,500 support for eligible installs</span></li>
+            <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Grant support for eligible installs</span></li>
             <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">More stable comfort</span></li>
             <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Lower gas exposure</span></li>
             <li><span class="list-arrow" aria-hidden="true">→</span><span class="list-copy">Cleaner future path</span></li>
@@ -1689,7 +1844,42 @@
       <div class="section-head">
         <p class="section-label">Heat pump vs gas boiler</p>
         <h2 id="compare-h">Why people switch even when electricity costs more.</h2>
-        <p class="section-intro">Compare the numbers that matter: efficiency, running-cost logic, lifespan, carbon, and long-term fit.</p>
+        <p class="section-intro">Compare the practical trade-offs that matter: system efficiency, running-cost logic, lifespan, carbon impact, and long-term fit.</p>
+      </div>
+      <div class="comparison-tool" aria-label="Indicative comparison tool">
+        <div class="comparison-tool-grid">
+          <div class="field">
+            <label for="calc-size">Property size</label>
+            <select id="calc-size" name="calc-size">
+              <option value="small">Small</option>
+              <option value="medium" selected>Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="calc-heating">Current heating type</label>
+            <select id="calc-heating" name="calc-heating">
+              <option value="gas" selected>Gas</option>
+              <option value="oil">Oil</option>
+              <option value="electric">Electric</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="calc-solar">Solar interest</label>
+            <select id="calc-solar" name="calc-solar">
+              <option value="yes">Yes</option>
+              <option value="no" selected>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="calc-battery">Battery interest</label>
+            <select id="calc-battery" name="calc-battery">
+              <option value="yes">Yes</option>
+              <option value="no" selected>No</option>
+            </select>
+          </div>
+        </div>
+        <div class="comparison-tool-output" id="comparison-output" aria-live="polite"></div>
       </div>
       <div class="compare-grid">
         <section class="compare-column" aria-label="Gas boiler">
@@ -1705,6 +1895,7 @@
             <div class="compare-row"><span>Carbon</span><strong>High and tied to fossil fuel</strong></div>
             <div class="compare-row"><span>Future fit</span><strong>Weak as heating moves away from gas</strong></div>
           </div>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </section>
         <section class="compare-column thermova" aria-label="Thermova heat pump route">
           <div class="compare-column-head">
@@ -1719,25 +1910,33 @@
             <div class="compare-row"><span>Carbon</span><strong>Lower now and improving as the grid greens</strong></div>
             <div class="compare-row"><span>Future fit</span><strong>Better aligned with where home energy is heading</strong></div>
           </div>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </section>
       </div>
       <div class="stats-grid">
         <div class="stat-block">
           <strong>3-4x</strong>
           <p>More heat out per unit of energy in than a boiler can deliver.</p>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </div>
         <div class="stat-block">
           <strong>£7,500</strong>
-          <p>Grant support that changes the decision immediately.</p>
+          <p>Grant support that can materially change the upgrade route.</p>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </div>
         <div class="stat-block">
           <strong>2 tonnes</strong>
           <p>Typical annual carbon reduction versus gas.</p>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </div>
         <div class="stat-block">
           <strong>15-25 yrs</strong>
           <p>Typical lifespan when designed and installed properly.</p>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </div>
+      </div>
+      <div class="comparison-cta">
+        <a class="button-secondary" href="#assessment">Get my running-cost comparison</a>
       </div>
     </div>
   </section>
@@ -1784,17 +1983,18 @@
       </div>
       <div>
         <div class="solar-panel">
-          <h3>Typical savings</h3>
+          <h3>Indicative savings scenarios</h3>
           <div class="solar-stats">
             <div class="solar-stat">
               <strong>£400-£800</strong>
-              <p>Solar alone for a typical home.</p>
+              <p>Solar alone for a typical home with steady daytime usage.</p>
             </div>
             <div class="solar-stat">
               <strong>£800-£1,400</strong>
-              <p>Solar plus battery with more self-use.</p>
+              <p>Solar plus battery where more of that generation is used at home.</p>
             </div>
           </div>
+          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         </div>
         <div class="solar-panel">
           <h3>Best-fit homes</h3>
@@ -1807,9 +2007,9 @@
         </div>
         <div class="solar-panel">
           <h3>Waiting has a cost here too.</h3>
-          <p>Every year you delay, you buy more expensive grid electricity and miss the chance to offset more of your own heating and household load.</p>
+          <p>Every year you delay, you stay more exposed to grid electricity costs and miss the chance to use more of your own generation on site.</p>
           <div class="hero-actions" style="margin-top: 20px;">
-            <a class="button" href="#assessment">Get my upgrade estimate</a>
+            <a class="button" href="#assessment">See my upgrade options</a>
           </div>
         </div>
       </div>
@@ -1820,16 +2020,21 @@
     <div class="shell scheme-wrap">
       <section class="scheme-panel">
         <p class="section-label">Boiler Upgrade Scheme</p>
-        <h2 id="scheme-h">£7,500 off and we handle the paperwork.</h2>
+        <h2 id="scheme-h">£7,500 off and we manage the route with you.</h2>
         <p>The Boiler Upgrade Scheme is property-based, not means-tested, and available to eligible homeowners and landlords in England and Wales replacing fossil-fuel heating with a heat pump.</p>
         <div class="scheme-amount"><span>Air source heat pump</span><strong>£7,500</strong></div>
+        <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
         <p>Waiting could mean paying full price later. The scheme is open until 31 December 2027, but delay still carries a practical cost when boilers fail or install schedules tighten.</p>
+        <p>We design and manage the Boiler Upgrade Scheme route as part of your system.</p>
+        <div class="scheme-actions">
+          <a class="button" href="#assessment">Check my grant route</a>
+        </div>
       </section>
       <aside class="scheme-rail" aria-label="Grant process">
         <h3>How we keep it simple</h3>
         <ol class="scheme-steps">
           <li><span class="step-pill">1</span><div><strong>We assess the property</strong><p>Eligibility, system fit, EPC position, and the right upgrade route.</p></div></li>
-          <li><span class="step-pill">2</span><div><strong>We submit the grant application</strong><p>No forms passed back to you and no uncertainty about what happens next.</p></div></li>
+          <li><span class="step-pill">2</span><div><strong>We manage the grant route</strong><p>We design and manage the Boiler Upgrade Scheme route as part of your system.</p></div></li>
           <li><span class="step-pill">3</span><div><strong>The grant comes off the invoice</strong><p>No rebate wait and no confusion about where the discount lands.</p></div></li>
           <li><span class="step-pill">4</span><div><strong>The install is completed and handed over properly</strong><p>A clear finish to the job, with the system explained properly from day one.</p></div></li>
         </ol>
@@ -1845,27 +2050,30 @@
       </div>
       <div class="testimonials-grid">
         <article class="testimonial">
-          <span class="testimonial-context">Boiler replacement</span>
-          <p class="testimonial-quote">"We were replacing our old combi boiler and were not sure whether to go like-for-like or try a heat pump. Thermova walked us through the comparison properly with no pressure. We took the heat pump with the £7,500 grant and could not be happier."</p>
+          <span class="testimonial-context">Boiler replacement route</span>
+          <p class="testimonial-quote">"We were replacing our old combi boiler and were not sure whether to go like-for-like or try a heat pump. Thermova walked us through the comparison properly with no pressure. We took the heat pump with the grant in place and could not be happier."</p>
           <div class="testimonial-meta">
             <strong>Sarah R.</strong>
-            <span>Worcestershire • Homeowner</span>
+            <span class="testimonial-meta-line">Worcestershire</span>
+            <span class="testimonial-meta-line">Homeowner</span>
           </div>
         </article>
         <article class="testimonial">
-          <span class="testimonial-context">Portfolio planning</span>
+          <span class="testimonial-context">Landlord upgrade planning</span>
           <p class="testimonial-quote">"As a landlord with four properties, the 2030 compliance question was weighing on me. Thermova audited all four, told me which to prioritise, and gave me a clear plan. That was the professional advice I needed, not a sales pitch."</p>
           <div class="testimonial-meta">
             <strong>Mark K.</strong>
-            <span>Herefordshire • Private landlord</span>
+            <span class="testimonial-meta-line">Herefordshire</span>
+            <span class="testimonial-meta-line">Landlord</span>
           </div>
         </article>
         <article class="testimonial">
-          <span class="testimonial-context">Off-gas home</span>
-          <p class="testimonial-quote">"We are off the gas grid and had been on oil for 20 years. Thermova were the first to actually understand the situation and design something that made sense. The heat pump transformed the house and the battery gives us confidence even on overcast days."</p>
+          <span class="testimonial-context">Solar + battery install</span>
+          <p class="testimonial-quote">"We are off the gas grid and had been on oil for years. Thermova were the first to actually understand the situation and design something that made sense. The heat pump transformed the house and the battery gives us confidence even on overcast days."</p>
           <div class="testimonial-meta">
-            <strong>Jane &amp; David L.</strong>
-            <span>Shropshire • Rural homeowners</span>
+            <strong>J. L.</strong>
+            <span class="testimonial-meta-line">Shropshire</span>
+            <span class="testimonial-meta-line">Homeowner</span>
           </div>
         </article>
       </div>
@@ -1888,11 +2096,11 @@
             </details>
             <details>
               <summary>Do I have to apply for the grant myself?</summary>
-              <div class="faq-body">No. As an approved BUS installer, Thermova applies on your behalf through the Ofgem portal. The £7,500 is deducted from your installation invoice.</div>
+              <div class="faq-body">We design and manage the Boiler Upgrade Scheme route as part of your system. The £7,500 is deducted from your installation invoice.<p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p></div>
             </details>
           </div>
           <div class="faq-actions">
-            <a class="button" href="#assessment">Check what my home qualifies for</a>
+            <a class="button" href="#assessment">Book a home assessment</a>
           </div>
         </section>
         <section class="faq-group" aria-labelledby="faq-heat">
@@ -1911,9 +2119,6 @@
               <div class="faq-body">Yes, and it is often the strongest whole-home route. Solar reduces the running cost of the pump and the battery helps carry more of that value into the evening.</div>
             </details>
           </div>
-          <div class="faq-actions">
-            <a class="button-secondary" href="#compare">Get my upgrade estimate</a>
-          </div>
         </section>
         <section class="faq-group" aria-labelledby="faq-solar">
           <h3 id="faq-solar">Solar concerns</h3>
@@ -1924,11 +2129,11 @@
             </details>
             <details>
               <summary>What are the typical savings from solar panels and a battery?</summary>
-              <div class="faq-body">For a typical 3-bedroom home, solar alone can save around £400-£800 per year. Adding a battery can increase that to roughly £800-£1,400 depending on usage, roof orientation, and tariff.</div>
+              <div class="faq-body">For a typical 3-bedroom home, solar alone can save around £400-£800 per year. Adding a battery can increase that to roughly £800-£1,400 depending on usage, roof orientation, and tariff.<p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p></div>
             </details>
           </div>
           <div class="faq-actions">
-            <a class="button" href="#assessment">Get my upgrade estimate</a>
+            <a class="button" href="#assessment">Book a home assessment</a>
           </div>
         </section>
         <section class="faq-group" aria-labelledby="faq-landlord">
@@ -1943,9 +2148,6 @@
               <div class="faq-body">No. The route to compliance is not limited to one technology. We help landlords understand the most practical and cost-effective path for each property rather than forcing one template onto the whole portfolio.</div>
             </details>
           </div>
-          <div class="faq-actions">
-            <a class="button-secondary" href="#assessment">Check what my home qualifies for</a>
-          </div>
         </section>
       </div>
     </div>
@@ -1957,11 +2159,11 @@
         <div>
           <p class="section-label">Next step</p>
           <h2 id="cta-h">The next move should feel easy, valuable, and low risk.</h2>
-          <p class="section-intro" style="margin-bottom: 0;">Book the assessment and get clarity on what the property qualifies for, what the right system looks like, and whether the numbers stack up. No obligation.</p>
+          <p class="section-intro" style="margin-bottom: 0;">Book the assessment and get clarity on what the property needs, what the right system looks like, and how the route would work in practice. No obligation.</p>
         </div>
         <div class="hero-actions" style="margin: 0;">
-          <a class="button" href="#assessment">Check what my home qualifies for</a>
-          <a class="button-secondary" href="tel:+441234000000">Call us: 01234 000 000</a>
+          <a class="button" href="#assessment">Get my upgrade estimate</a>
+          <a class="button-secondary" href="tel:+447976015890">Call us: 07976 015890</a>
         </div>
       </div>
     </div>
@@ -2023,32 +2225,32 @@
               <div class="field-error" data-error-for="property-type"></div>
             </div>
             <div class="field">
-              <label for="interest">Main interest</label>
+              <label for="interest">What are you interested in?</label>
               <select id="interest" name="interest">
-                <option value="">What are you looking to do?</option>
-                <option value="ashp">Air source heat pump (+ £7,500 grant)</option>
-                <option value="boiler-compare">Replacing boiler and want to compare options</option>
-                <option value="solar">Solar panels and battery storage</option>
-                <option value="whole-home">Heat pump + solar + battery whole-home system</option>
-                <option value="landlord-plan">Landlord retrofit plan for 2030</option>
+                <option value="">Select one (optional)</option>
+                <option value="heat-pump">Heat pump</option>
+                <option value="solar">Solar</option>
+                <option value="battery">Battery</option>
+                <option value="full-upgrade">Full upgrade</option>
+                <option value="not-sure">Not sure</option>
               </select>
               <div class="field-error" data-error-for="interest"></div>
             </div>
             <div class="field full">
               <label for="heating">Current heating system</label>
               <select id="heating" name="heating">
-                <option value="">Current heating type</option>
+                <option value="">Select one (optional)</option>
                 <option value="gas">Gas boiler</option>
-                <option value="oil">Oil boiler</option>
-                <option value="lpg">LPG boiler</option>
+                <option value="oil">Oil</option>
+                <option value="lpg">LPG</option>
                 <option value="electric">Electric heating</option>
-                <option value="other">Other or not sure</option>
+                <option value="not-sure">Not sure</option>
               </select>
               <div class="field-error" data-error-for="heating"></div>
             </div>
           </div>
           <div class="form-actions">
-            <button class="submit-btn" type="submit">Check what my home qualifies for</button>
+            <button class="submit-btn" type="submit">Get my upgrade estimate</button>
             <div class="form-status" id="form-status" aria-live="polite"></div>
             <p class="form-small">For eligible properties in England and Wales. By submitting, you agree to us contacting you about your enquiry. We will not pass your details to third parties.</p>
           </div>
@@ -2082,20 +2284,21 @@
           <li><a href="#scheme">£7,500 Boiler Upgrade Scheme</a></li>
           <li><a href="#compare">Heat pump vs boiler</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="https://www.gov.uk/apply-boiler-upgrade-scheme" target="_blank" rel="noopener">Official BUS guidance</a></li>
+          <li><a href="https://www.gov.uk/apply-boiler-upgrade-scheme" target="_blank" rel="noopener">GOV.UK Boiler Upgrade Scheme guidance</a></li>
         </ul>
       </div>
       <div>
         <h4>Contact</h4>
         <ul class="footer-list">
           <li><a href="#assessment">Book an assessment</a></li>
-          <li><a href="tel:+441234000000">01234 000 000</a></li>
-          <li><a href="mailto:hello@thermova.co.uk">hello@thermova.co.uk</a></li>
+          <li><a href="tel:+447976015890">07976 015890</a></li>
+          <li><a href="mailto:info@thermova.uk">info@thermova.uk</a></li>
+          <li>Harbury, Derby Road, Poulton-le-Fylde, FY6 7AF</li>
         </ul>
       </div>
     </div>
     <div class="footer-meta">
-      <span>© 2025 Thermova Ltd. Grant amounts per GOV.UK. Eligible properties in England and Wales only.</span>
+      <span>© 2025 Thermova Ltd. Company number 17135215. Grant amounts per GOV.UK. Eligible properties in England and Wales only.</span>
       <span><a href="/privacy">Privacy policy</a> • <a href="/terms">Terms</a> • <a href="/cookies">Cookies</a></span>
     </div>
   </div>
@@ -2147,6 +2350,13 @@
   const form = document.getElementById("lead-form");
   const submitButton = form.querySelector(".submit-btn");
   const statusNode = document.getElementById("form-status");
+  const comparisonOutput = document.getElementById("comparison-output");
+  const comparisonFields = {
+    size: document.getElementById("calc-size"),
+    heating: document.getElementById("calc-heating"),
+    solar: document.getElementById("calc-solar"),
+    battery: document.getElementById("calc-battery")
+  };
 
   function clearErrors() {
     form.querySelectorAll(".field-error").forEach((node) => {
@@ -2183,9 +2393,41 @@
     else if (payload.phone.replace(/[^0-9+]/g, "").length < 10) errors.phone = "Enter a valid phone number.";
     if (!payload.postcode) errors.postcode = "Postcode is required.";
     if (!payload.propertyType) errors["property-type"] = "Please choose the property type.";
-    if (!payload.interest) errors.interest = "Please choose the main interest.";
-    if (!payload.heating) errors.heating = "Please choose the current heating type.";
     return errors;
+  }
+
+  function updateComparisonOutput() {
+    if (!comparisonOutput) return;
+
+    const size = comparisonFields.size.value;
+    const heating = comparisonFields.heating.value;
+    const solar = comparisonFields.solar.value;
+    const battery = comparisonFields.battery.value;
+    const sizeLabel = size.charAt(0).toUpperCase() + size.slice(1);
+
+    const paragraphs = [
+      "For a " + sizeLabel.toLowerCase() + " property, this gives a quick view of how the upgrade route may behave in practice."
+    ];
+
+    if (heating === "gas") {
+      paragraphs.push("Gas appears cheaper per unit, but rising costs and inefficiency mean long-term costs are often higher");
+    } else if (heating === "oil") {
+      paragraphs.push("Oil systems can bring volatile fuel pricing and delivery dependency, so planned upgrades often improve long-term control.");
+    } else {
+      paragraphs.push("Electric heating can be simple to run, but better system design and on-site generation often improve comfort and long-term value.");
+    }
+
+    if (solar === "yes") {
+      paragraphs.push("Solar offsets electricity usage, significantly improving system economics");
+    }
+
+    if (battery === "yes") {
+      paragraphs.push("Battery storage increases usage of your own energy and reduces grid reliance");
+    }
+
+    paragraphs.push("This is an indicative comparison. A home assessment gives an accurate system design and cost.");
+
+    comparisonOutput.innerHTML = paragraphs.map((text) => "<p>" + text + "</p>").join("");
   }
 
   async function submitLead(payload) {
@@ -2223,6 +2465,11 @@
     statusNode.textContent = result.ok ? result.message : result.error;
   }
 
+  Object.values(comparisonFields).forEach((field) => {
+    if (field) field.addEventListener("change", updateComparisonOutput);
+  });
+  updateComparisonOutput();
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearErrors();
@@ -2254,7 +2501,7 @@
       void error;
     } finally {
       submitButton.disabled = false;
-      submitButton.textContent = "Check what my home qualifies for";
+      submitButton.textContent = "Get my upgrade estimate";
     }
   });
 </script>

@@ -950,6 +950,199 @@
     font-size: 2rem;
   }
 
+  /* ── Live fuel price table ──────────────────────────────────────────── */
+
+  .price-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 8px;
+  }
+
+  .price-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .price-status--live .price-status__dot { background: #22c55e; }
+  .price-status--cached .price-status__dot { background: #f59e0b; }
+
+  .cost-table {
+    width: 100%;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 24px;
+  }
+
+  .cost-table__head,
+  .cost-table__row {
+    display: grid;
+    grid-template-columns: 2fr 1.1fr 1fr 1.2fr 2fr;
+    gap: 0;
+    align-items: center;
+  }
+
+  .cost-table__head {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--color-divider);
+  }
+
+  .cost-table__head span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .cost-table__row {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s;
+  }
+
+  .cost-table__row:last-child { border-bottom: 0; }
+
+  .cost-table__row--hp {
+    background: var(--color-brand-glow);
+    border-left: 3px solid var(--color-brand);
+    padding-left: 17px;
+  }
+
+  .cost-table__cell { font-size: 0.875rem; color: var(--color-text-secondary); }
+  .cost-table__cell--name { font-weight: 600; color: var(--color-text-primary); }
+  .cost-table__cell--eff { color: var(--color-text-muted); font-size: 0.8rem; }
+
+  .cost-table__cell--effective {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .cost-table__row--hp .cost-table__cell--effective { color: var(--color-brand); }
+
+  .cost-bar-wrap {
+    height: 8px;
+    background: var(--color-surface-3);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .cost-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--color-text-muted);
+    transition: width 0.6s ease;
+  }
+
+  .cost-table__row--hp .cost-bar { background: var(--color-brand); }
+
+  /* Loading skeleton shimmer */
+  @keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+
+  .cost-skeleton {
+    display: inline-block;
+    width: 60px;
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-surface-3) 25%, var(--color-surface-2) 50%, var(--color-surface-3) 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  /* LPG custom rate notice */
+  .lpg-custom-wrap {
+    padding: 10px 20px 14px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+
+  .lpg-custom-label {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lpg-custom-input {
+    width: 70px;
+    padding: 4px 8px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    text-align: center;
+  }
+
+  .lpg-custom-input:focus {
+    outline: 2px solid rgba(255, 106, 26, 0.72);
+    outline-offset: 2px;
+  }
+
+  .lpg-custom-error {
+    font-size: 0.72rem;
+    color: #f87171;
+    display: none;
+    width: 100%;
+    margin-top: 2px;
+  }
+
+  .lpg-clear-btn {
+    background: none;
+    border: none;
+    color: var(--color-brand);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    display: none;
+  }
+
+  .cost-footnote {
+    margin-top: 16px;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .cost-footnote p { margin: 2px 0; }
+
+  /* Responsive: stack table on small screens */
+  @media (max-width: 640px) {
+    .cost-table__head { display: none; }
+
+    .cost-table__row {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 4px 12px;
+      padding: 12px 16px;
+    }
+
+    .cost-table__row--hp { padding-left: 13px; }
+
+    .cost-table__cell--name { grid-column: 1 / -1; font-size: 0.9rem; }
+    .cost-table__cell--raw::before { content: "Raw: "; color: var(--color-text-muted); font-size: 0.7rem; }
+    .cost-table__cell--eff::before { content: "Eff: "; color: var(--color-text-muted); font-size: 0.7rem; }
+    .cost-table__cell--effective::before { content: "Cost/kWh heat: "; color: var(--color-text-muted); font-size: 0.7rem; font-weight: 400; }
+    .cost-table__cell--bar { grid-column: 1 / -1; }
+    .cost-bar-wrap { height: 6px; }
+  }
+
+  /* ── End live fuel price table ──────────────────────────────────────── */
+
   .solar-wrap {
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
@@ -1857,101 +2050,63 @@
   <section class="section section-mid" id="compare" aria-labelledby="compare-h">
     <div class="shell compare-wrap">
       <div class="section-head">
-        <p class="section-label">Heat pump vs gas boiler</p>
-        <h2 id="compare-h">Why people switch even when electricity costs more.</h2>
-        <p class="section-intro">Compare the practical trade-offs that matter: system efficiency, running-cost logic, lifespan, carbon impact, and long-term fit.</p>
-      </div>
-      <div class="comparison-tool" aria-label="Indicative comparison tool">
-        <div class="comparison-tool-grid">
-          <div class="field">
-            <label for="calc-size">Property size</label>
-            <select id="calc-size" name="calc-size">
-              <option value="small">Small</option>
-              <option value="medium" selected>Medium</option>
-              <option value="large">Large</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="calc-heating">Current heating type</label>
-            <select id="calc-heating" name="calc-heating">
-              <option value="gas" selected>Gas</option>
-              <option value="oil">Oil</option>
-              <option value="electric">Electric</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="calc-solar">Solar interest</label>
-            <select id="calc-solar" name="calc-solar">
-              <option value="yes">Yes</option>
-              <option value="no" selected>No</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="calc-battery">Battery interest</label>
-            <select id="calc-battery" name="calc-battery">
-              <option value="yes">Yes</option>
-              <option value="no" selected>No</option>
-            </select>
-          </div>
-        </div>
-        <div class="comparison-tool-output" id="comparison-output" aria-live="polite"></div>
-      </div>
-      <div class="compare-grid">
-        <section class="compare-column" aria-label="Gas boiler">
-          <div class="compare-column-head">
-            <h3>Gas boiler</h3>
-            <span class="compare-pill">Like-for-like default</span>
-          </div>
-          <div class="compare-table">
-            <div class="compare-row"><span>Efficiency</span><strong>Up to 90%</strong></div>
-            <div class="compare-row"><span>Fuel cost</span><strong>About 7p/kWh gas</strong></div>
-            <div class="compare-row"><span>Running cost</span><strong>About £800-£900 per year</strong></div>
-            <div class="compare-row"><span>Lifespan</span><strong>10-15 years</strong></div>
-            <div class="compare-row"><span>Carbon</span><strong>High and tied to fossil fuel</strong></div>
-            <div class="compare-row"><span>Future fit</span><strong>Weak as heating moves away from gas</strong></div>
-          </div>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
-        </section>
-        <section class="compare-column thermova" aria-label="Thermova heat pump route">
-          <div class="compare-column-head">
-            <h3>Air source heat pump</h3>
-            <span class="compare-pill">Thermova route</span>
-          </div>
-          <div class="compare-table">
-            <div class="compare-row"><span>Efficiency</span><strong>250-400% with proper design</strong></div>
-            <div class="compare-row"><span>Fuel cost</span><strong>About 25p/kWh electricity</strong></div>
-            <div class="compare-row"><span>Running cost</span><strong>Often comparable, and cheaper with solar or smart tariffs</strong></div>
-            <div class="compare-row"><span>Lifespan</span><strong>15-25 years</strong></div>
-            <div class="compare-row"><span>Carbon</span><strong>Lower now and improving as the grid greens</strong></div>
-            <div class="compare-row"><span>Future fit</span><strong>Better aligned with where home energy is heading</strong></div>
-          </div>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
-        </section>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-block">
-          <strong>3-4x</strong>
-          <p>More heat out per unit of energy in than a boiler can deliver.</p>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
-        </div>
-        <div class="stat-block">
-          <strong>£7,500</strong>
-          <p>Grant support that can materially change the upgrade route.</p>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
-        </div>
-        <div class="stat-block">
-          <strong>2 tonnes</strong>
-          <p>Typical annual carbon reduction versus gas.</p>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
-        </div>
-        <div class="stat-block">
-          <strong>15-25 yrs</strong>
-          <p>Typical lifespan when designed and installed properly.</p>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
+        <p class="section-label">Live running cost comparison</p>
+        <h2 id="compare-h">What does it actually cost per unit of heat?</h2>
+        <p class="section-intro">Every heating system delivers heat at a different cost per kWh. This table shows the effective cost of heat — accounting for system efficiency and seasonal performance — so you can compare like for like.</p>
+        <div id="price-status" class="price-status" aria-live="polite">
+          <span class="price-status__dot"></span>
+          <span class="price-status__text">Loading prices…</span>
         </div>
       </div>
+
+      <div class="cost-table" role="table" aria-label="Heating system cost comparison">
+        <div class="cost-table__head" role="row">
+          <span role="columnheader">System</span>
+          <span role="columnheader">Raw p/kWh</span>
+          <span role="columnheader">Efficiency</span>
+          <span role="columnheader">Effective p/kWh heat</span>
+          <span role="columnheader"></span>
+        </div>
+        <div id="cost-table-body">
+          <!-- JS renders rows here -->
+          <div class="cost-table__row" role="row" aria-label="Loading">
+            <span class="cost-table__cell cost-table__cell--name"><span class="cost-skeleton"></span></span>
+            <span class="cost-table__cell cost-table__cell--raw"><span class="cost-skeleton"></span></span>
+            <span class="cost-table__cell cost-table__cell--eff"><span class="cost-skeleton"></span></span>
+            <span class="cost-table__cell cost-table__cell--effective"><span class="cost-skeleton"></span></span>
+            <span class="cost-table__cell cost-table__cell--bar"><div class="cost-bar-wrap"><div class="cost-bar" style="width:0%"></div></div></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lpg-custom-wrap" id="lpg-custom-wrap">
+        <label class="lpg-custom-label">
+          <span>Using bulk or tank LPG? Calor bottle rates are shown by default — your rate may differ.</span>
+          <span>Enter your rate:</span>
+          <input
+            type="number"
+            id="lpg-custom-input"
+            class="lpg-custom-input"
+            placeholder="p/kWh"
+            min="1"
+            max="200"
+            step="0.01"
+            aria-label="Your LPG rate in pence per kWh"
+          >
+          <span>p/kWh</span>
+          <button type="button" id="lpg-clear-btn" class="lpg-clear-btn" aria-label="Clear custom LPG rate">Clear</button>
+        </label>
+        <p class="lpg-custom-error" id="lpg-custom-error" role="alert">Please enter a value between 1 and 200</p>
+      </div>
+
+      <div class="cost-footnote" id="cost-footnote" aria-live="polite"></div>
+
+      <p class="claim-disclaimer" style="margin-top: 12px;">
+        Fuel prices are updated automatically. Performance figures are based on typical system assumptions. Actual running costs depend on property insulation, system design, tariff and usage. Gas and electricity prices reflect the Ofgem price cap for England and Wales (Direct Debit customers — prepayment rates are slightly higher). LPG shown is Calor 5kg propane refill price — bulk tank rates are typically lower.
+      </p>
+
       <div class="comparison-cta">
-        <a class="button-secondary" href="#assessment">Get my running-cost comparison</a>
+        <a class="button-secondary" href="https://renewenergies.heatio.app/" target="_blank" rel="noopener noreferrer">Get my running-cost comparison</a>
       </div>
     </div>
   </section>
@@ -2322,6 +2477,7 @@
 <script>
   const supabaseConfig = {
     functionUrl: "https://cyjbzemzjmfjsloogixw.supabase.co/functions/v1/lead-enquiry",
+    fuelPricesUrl: "https://cyjbzemzjmfjsloogixw.supabase.co/functions/v1/fuel-prices",
     transportReady: true
   };
 
@@ -2519,6 +2675,210 @@
       submitButton.textContent = "Get my upgrade estimate";
     }
   });
+
+  // ── Live fuel price table ────────────────────────────────────────────
+
+  (function () {
+    const EFFICIENCY = { gas: 0.90, oil: 0.90, lpg: 0.90 };
+    const SCOP = { hp35: 3.5, hp40: 4.0 };
+    const HHRSH_FIXED = 17.0;
+    const CACHE_KEY = "thermova_fuel_prices_cache";
+    const LPG_CUSTOM_KEY = "thermova_lpg_custom_rate";
+    const STALE_HOURS = 48;
+
+    const HARDCODED_FALLBACK = {
+      gas_pence_per_kwh: 5.74,
+      electricity_pence_per_kwh: 24.67,
+      oil_pence_per_kwh: 13.56,
+      lpg_pence_per_kwh: 34.50,
+      gas_source: "Ofgem price cap Apr–Jun 2026",
+      gas_quarter: "April–June 2026",
+      electricity_source: "Ofgem price cap Apr–Jun 2026",
+      electricity_quarter: "April–June 2026",
+      oil_source: "BoilerJuice daily average",
+      lpg_source: "Calor 5kg propane refill",
+      oil_last_updated: null,
+      lpg_last_updated: null,
+      gas_last_updated: null,
+      electricity_last_updated: null,
+    };
+
+    function calcEffective(raw, divisor) {
+      return (raw / divisor).toFixed(2);
+    }
+
+    function fmt(val) {
+      return val !== null && val !== undefined ? parseFloat(val).toFixed(2) + "p" : "—";
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    }
+
+    function isStale(iso) {
+      if (!iso) return true;
+      return (Date.now() - new Date(iso).getTime()) > STALE_HOURS * 3600 * 1000;
+    }
+
+    function setStatus(live, cacheDate) {
+      const el = document.getElementById("price-status");
+      if (!el) return;
+      if (live) {
+        el.className = "price-status price-status--live";
+        el.querySelector(".price-status__text").textContent = "Prices current";
+      } else {
+        el.className = "price-status price-status--cached";
+        el.querySelector(".price-status__text").textContent =
+          cacheDate ? "Using cached data — " + cacheDate : "Using default values";
+      }
+    }
+
+    function getLpgCustomRate() {
+      const raw = localStorage.getItem(LPG_CUSTOM_KEY);
+      if (!raw) return null;
+      const v = parseFloat(raw);
+      return (!isNaN(v) && v >= 1 && v <= 200) ? v : null;
+    }
+
+    function renderTable(data) {
+      const customLpg = getLpgCustomRate();
+      const lpgRate = customLpg !== null ? customLpg : parseFloat(data.lpg_pence_per_kwh);
+      const lpgSource = customLpg !== null ? "Your rate" : data.lpg_source;
+
+      const gas = parseFloat(data.gas_pence_per_kwh);
+      const elec = parseFloat(data.electricity_pence_per_kwh);
+      const oil = parseFloat(data.oil_pence_per_kwh);
+
+      const rows = [
+        { name: "Mains gas boiler",   raw: gas,       eff: "90%",        effective: gas / EFFICIENCY.gas,    hp: false },
+        { name: "Oil boiler",          raw: oil,       eff: "90%",        effective: oil / EFFICIENCY.oil,    hp: false },
+        { name: "ASHP (SCOP 3.5)",     raw: elec,      eff: "SCOP 3.5",   effective: elec / SCOP.hp35,        hp: true  },
+        { name: "ASHP (SCOP 4.0)",     raw: elec,      eff: "SCOP 4.0",   effective: elec / SCOP.hp40,        hp: true  },
+        { name: "LPG boiler",          raw: lpgRate,   eff: "90%",        effective: lpgRate / EFFICIENCY.lpg, hp: false, lpgSource },
+        { name: "HHRSH (Economy 7)",   raw: HHRSH_FIXED, eff: "100%",     effective: HHRSH_FIXED,             hp: false, fixed: true },
+        { name: "Standard electric",   raw: elec,      eff: "100%",       effective: elec,                    hp: false },
+      ];
+
+      const maxEffective = Math.max(...rows.map((r) => r.effective));
+
+      const html = rows.map((r) => {
+        const barPct = maxEffective > 0 ? ((r.effective / maxEffective) * 100).toFixed(1) : 0;
+        const rawLabel = r.fixed ? fmt(r.raw) + " (fixed)" : fmt(r.raw);
+        return `
+          <div class="cost-table__row${r.hp ? " cost-table__row--hp" : ""}" role="row">
+            <span class="cost-table__cell cost-table__cell--name">${r.name}</span>
+            <span class="cost-table__cell cost-table__cell--raw">${rawLabel}</span>
+            <span class="cost-table__cell cost-table__cell--eff">${r.eff}</span>
+            <span class="cost-table__cell cost-table__cell--effective">${r.effective.toFixed(2)}p</span>
+            <span class="cost-table__cell cost-table__cell--bar">
+              <div class="cost-bar-wrap"><div class="cost-bar" style="width:${barPct}%"></div></div>
+            </span>
+          </div>`;
+      }).join("");
+
+      const body = document.getElementById("cost-table-body");
+      if (body) body.innerHTML = html;
+
+      // Footnote
+      const footnote = document.getElementById("cost-footnote");
+      if (footnote) {
+        footnote.innerHTML = `
+          <p><strong>Sources:</strong></p>
+          <p>Gas: ${data.gas_source} &mdash; updated ${fmtDate(data.gas_last_updated)}</p>
+          <p>Electricity: ${data.electricity_source} &mdash; updated ${fmtDate(data.electricity_last_updated)}</p>
+          <p>Heating oil: ${data.oil_source} &mdash; updated ${fmtDate(data.oil_last_updated)}</p>
+          <p>LPG: ${lpgSource}${customLpg === null ? " &mdash; updated " + fmtDate(data.lpg_last_updated) : ""}</p>`;
+      }
+
+      // LPG custom input state
+      const clearBtn = document.getElementById("lpg-clear-btn");
+      if (clearBtn) clearBtn.style.display = customLpg !== null ? "inline" : "none";
+      const input = document.getElementById("lpg-custom-input");
+      if (input && customLpg !== null) input.value = customLpg;
+    }
+
+    async function loadPrices() {
+      let data = null;
+      let isLive = false;
+
+      try {
+        const res = await fetch(supabaseConfig.fuelPricesUrl);
+        if (!res.ok) throw new Error("API error " + res.status);
+        data = await res.json();
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data, fetchedAt: new Date().toISOString() }));
+        isLive = !isStale(data.oil_last_updated);
+      } catch (_err) {
+        // Try localStorage cache
+        try {
+          const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+          if (cached && cached.data) {
+            data = cached.data;
+          }
+        } catch (_) { /* ignore */ }
+      }
+
+      if (!data) {
+        data = HARDCODED_FALLBACK;
+      }
+
+      renderTable(data);
+
+      const cacheDate = (() => {
+        try {
+          const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+          return c ? fmtDate(c.fetchedAt) : null;
+        } catch (_) { return null; }
+      })();
+
+      setStatus(isLive, isLive ? null : cacheDate);
+    }
+
+    // LPG custom rate input logic
+    function initLpgInput() {
+      const input = document.getElementById("lpg-custom-input");
+      const clearBtn = document.getElementById("lpg-clear-btn");
+      const errorEl = document.getElementById("lpg-custom-error");
+
+      if (!input || !clearBtn || !errorEl) return;
+
+      function applyCustomRate(value) {
+        const v = parseFloat(value);
+        if (value === "" || isNaN(v)) {
+          localStorage.removeItem(LPG_CUSTOM_KEY);
+          errorEl.style.display = "none";
+          clearBtn.style.display = "none";
+          loadPrices();
+          return;
+        }
+        if (v < 1 || v > 200) {
+          errorEl.style.display = "block";
+          return;
+        }
+        errorEl.style.display = "none";
+        localStorage.setItem(LPG_CUSTOM_KEY, String(v));
+        clearBtn.style.display = "inline";
+        loadPrices();
+      }
+
+      input.addEventListener("change", () => applyCustomRate(input.value.trim()));
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") applyCustomRate(input.value.trim()); });
+
+      clearBtn.addEventListener("click", () => {
+        localStorage.removeItem(LPG_CUSTOM_KEY);
+        input.value = "";
+        errorEl.style.display = "none";
+        clearBtn.style.display = "none";
+        loadPrices();
+      });
+    }
+
+    initLpgInput();
+    loadPrices();
+  })();
+
+  // ── End live fuel price table ────────────────────────────────────────
 </script>
 </body>
 </html>

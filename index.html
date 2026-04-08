@@ -982,7 +982,7 @@
   .cost-table__head,
   .cost-table__row {
     display: grid;
-    grid-template-columns: 2fr 1.1fr 1fr 1.2fr 2fr;
+    grid-template-columns: 2fr 1.1fr 1fr 1.2fr 1.3fr 2fr;
     gap: 0;
     align-items: center;
   }
@@ -1041,6 +1041,43 @@
   }
 
   .cost-table__row--hp .cost-bar { background: var(--color-brand); }
+
+  .cost-table__row--thermova {
+    background: linear-gradient(90deg, rgba(255,106,26,0.14), rgba(255,106,26,0.04));
+    border-left: 3px solid var(--color-brand);
+    padding-left: 17px;
+  }
+
+  .cost-table__cell--annual {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+  }
+
+  .cost-table__row--hp .cost-table__cell--annual { color: var(--color-brand); }
+  .cost-table__row--thermova .cost-table__cell--annual { color: var(--color-brand); font-size: 1.0rem; }
+
+  .cost-table__cell--annual small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #22c55e;
+    margin-top: 2px;
+  }
+
+  .thermova-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-brand);
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
 
   /* Loading skeleton shimmer */
   @keyframes shimmer {
@@ -1111,6 +1148,35 @@
     display: none;
   }
 
+  .annual-demand-wrap {
+    padding: 8px 20px 12px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .annual-kwh-input {
+    width: 80px;
+    padding: 4px 8px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    text-align: center;
+  }
+
+  .annual-kwh-input:focus {
+    outline: 2px solid rgba(255, 106, 26, 0.72);
+    outline-offset: 2px;
+  }
+
   .cost-footnote {
     margin-top: 16px;
     font-size: 0.72rem;
@@ -1137,7 +1203,10 @@
     .cost-table__cell--raw::before { content: "Raw: "; color: var(--color-text-muted); font-size: 0.7rem; }
     .cost-table__cell--eff::before { content: "Eff: "; color: var(--color-text-muted); font-size: 0.7rem; }
     .cost-table__cell--effective::before { content: "Cost/kWh heat: "; color: var(--color-text-muted); font-size: 0.7rem; font-weight: 400; }
+    .cost-table__cell--annual { grid-column: 1 / -1; }
+    .cost-table__cell--annual::before { content: "Annual est: "; color: var(--color-text-muted); font-size: 0.7rem; font-weight: 400; }
     .cost-table__cell--bar { grid-column: 1 / -1; }
+    .cost-table__row--thermova { padding-left: 13px; }
     .cost-bar-wrap { height: 6px; }
   }
 
@@ -2059,12 +2128,19 @@
         </div>
       </div>
 
+      <div class="annual-demand-wrap">
+        <span>Show annual cost for a home using</span>
+        <input type="number" id="annual-kwh-input" class="annual-kwh-input" min="1000" max="50000" step="500" value="12000" aria-label="Annual heat demand in kWh">
+        <span>kWh heat/yr</span>
+      </div>
+
       <div class="cost-table" role="table" aria-label="Heating system cost comparison">
         <div class="cost-table__head" role="row">
           <span role="columnheader">System</span>
           <span role="columnheader">Raw p/kWh</span>
           <span role="columnheader">Efficiency</span>
           <span role="columnheader">Effective p/kWh heat</span>
+          <span role="columnheader">Annual cost</span>
           <span role="columnheader"></span>
         </div>
         <div id="cost-table-body">
@@ -2684,6 +2760,9 @@
     const HHRSH_FIXED = 17.0;
     const CACHE_KEY = "thermova_fuel_prices_cache";
     const LPG_CUSTOM_KEY = "thermova_lpg_custom_rate";
+    const ANNUAL_KWH_KEY = "thermova_annual_kwh";
+    const DEFAULT_ANNUAL_KWH = 12000;
+    const SOLAR_OFFSET = 0.50;
     const STALE_HOURS = 48;
 
     const HARDCODED_FALLBACK = {
@@ -2705,6 +2784,19 @@
 
     function calcEffective(raw, divisor) {
       return (raw / divisor).toFixed(2);
+    }
+
+    function getAnnualKwh() {
+      const v = parseFloat(localStorage.getItem(ANNUAL_KWH_KEY));
+      return (!isNaN(v) && v >= 1000 && v <= 50000) ? v : DEFAULT_ANNUAL_KWH;
+    }
+
+    function calcAnnual(effectivePence, kwhPerYear) {
+      return Math.round(effectivePence * kwhPerYear / 100);
+    }
+
+    function fmtPounds(n) {
+      return "£" + n.toLocaleString("en-GB");
     }
 
     function fmt(val) {
@@ -2746,32 +2838,44 @@
       const customLpg = getLpgCustomRate();
       const lpgRate = customLpg !== null ? customLpg : parseFloat(data.lpg_pence_per_kwh);
       const lpgSource = customLpg !== null ? "Your rate" : data.lpg_source;
+      const annualKwh = getAnnualKwh();
 
       const gas = parseFloat(data.gas_pence_per_kwh);
       const elec = parseFloat(data.electricity_pence_per_kwh);
       const oil = parseFloat(data.oil_pence_per_kwh);
+      const blendedElec = elec * (1 - SOLAR_OFFSET);
 
       const rows = [
-        { name: "Mains gas boiler",   raw: gas,       eff: "90%",        effective: gas / EFFICIENCY.gas,    hp: false },
-        { name: "Oil boiler",          raw: oil,       eff: "90%",        effective: oil / EFFICIENCY.oil,    hp: false },
-        { name: "ASHP (SCOP 3.5)",     raw: elec,      eff: "SCOP 3.5",   effective: elec / SCOP.hp35,        hp: true  },
-        { name: "ASHP (SCOP 4.0)",     raw: elec,      eff: "SCOP 4.0",   effective: elec / SCOP.hp40,        hp: true  },
-        { name: "LPG boiler",          raw: lpgRate,   eff: "90%",        effective: lpgRate / EFFICIENCY.lpg, hp: false, lpgSource },
-        { name: "HHRSH (Economy 7)",   raw: HHRSH_FIXED, eff: "100%",     effective: HHRSH_FIXED,             hp: false, fixed: true },
-        { name: "Standard electric",   raw: elec,      eff: "100%",       effective: elec,                    hp: false },
+        { name: "Mains gas boiler",              raw: gas,         eff: "90%",                        effective: gas / EFFICIENCY.gas,     hp: false },
+        { name: "Oil boiler",                    raw: oil,         eff: "90%",                        effective: oil / EFFICIENCY.oil,     hp: false },
+        { name: "ASHP (SCOP 3.5)",               raw: elec,        eff: "SCOP 3.5",                   effective: elec / SCOP.hp35,         hp: true  },
+        { name: "ASHP (SCOP 4.0)",               raw: elec,        eff: "SCOP 4.0",                   effective: elec / SCOP.hp40,         hp: true  },
+        { name: "LPG boiler",                    raw: lpgRate,     eff: "90%",                        effective: lpgRate / EFFICIENCY.lpg, hp: false, lpgSource },
+        { name: "HHRSH (Economy 7)",             raw: HHRSH_FIXED, eff: "100%",                       effective: HHRSH_FIXED,              hp: false, fixed: true },
+        { name: "Standard electric",             raw: elec,        eff: "100%",                       effective: elec,                     hp: false },
+        { name: "ASHP + Solar &amp; Battery",    raw: blendedElec, eff: `SCOP ${SCOP.hp35} · 50% solar`, effective: blendedElec / SCOP.hp35, hp: true, thermova: true },
+        { name: "ASHP + Solar &amp; Battery",    raw: blendedElec, eff: `SCOP ${SCOP.hp40} · 50% solar`, effective: blendedElec / SCOP.hp40, hp: true, thermova: true },
       ];
 
+      const gasAnnual = calcAnnual(gas / EFFICIENCY.gas, annualKwh);
       const maxEffective = Math.max(...rows.map((r) => r.effective));
 
       const html = rows.map((r) => {
         const barPct = maxEffective > 0 ? ((r.effective / maxEffective) * 100).toFixed(1) : 0;
         const rawLabel = r.fixed ? fmt(r.raw) + " (fixed)" : fmt(r.raw);
+        const annual = calcAnnual(r.effective, annualKwh);
+        const savingVsGas = gasAnnual - annual;
+        const nameCell = r.thermova
+          ? `${r.name}<span class="thermova-badge">Thermova</span>`
+          : r.name;
+        const rowClass = r.thermova ? "cost-table__row--thermova" : (r.hp ? "cost-table__row--hp" : "");
         return `
-          <div class="cost-table__row${r.hp ? " cost-table__row--hp" : ""}" role="row">
-            <span class="cost-table__cell cost-table__cell--name">${r.name}</span>
+          <div class="cost-table__row${rowClass ? " " + rowClass : ""}" role="row">
+            <span class="cost-table__cell cost-table__cell--name">${nameCell}</span>
             <span class="cost-table__cell cost-table__cell--raw">${rawLabel}</span>
             <span class="cost-table__cell cost-table__cell--eff">${r.eff}</span>
             <span class="cost-table__cell cost-table__cell--effective">${r.effective.toFixed(2)}p</span>
+            <span class="cost-table__cell cost-table__cell--annual">${fmtPounds(annual)}/yr${r.thermova && savingVsGas > 0 ? `<small>Save ${fmtPounds(savingVsGas)}/yr vs gas</small>` : ""}</span>
             <span class="cost-table__cell cost-table__cell--bar">
               <div class="cost-bar-wrap"><div class="cost-bar" style="width:${barPct}%"></div></div>
             </span>
@@ -2874,7 +2978,23 @@
       });
     }
 
+    function initAnnualKwhInput() {
+      const input = document.getElementById("annual-kwh-input");
+      if (!input) return;
+      input.value = getAnnualKwh();
+      input.addEventListener("change", () => {
+        const v = parseFloat(input.value);
+        if (!isNaN(v) && v >= 1000 && v <= 50000) {
+          localStorage.setItem(ANNUAL_KWH_KEY, String(v));
+        } else {
+          input.value = getAnnualKwh();
+        }
+        loadPrices();
+      });
+    }
+
     initLpgInput();
+    initAnnualKwhInput();
     loadPrices();
   })();
 

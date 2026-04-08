@@ -1,5 +1,37 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+async function sendSmsAlert(message: string): Promise<void> {
+  const sid   = Deno.env.get("TWILIO_ACCOUNT_SID");
+  const token = Deno.env.get("TWILIO_AUTH_TOKEN");
+  const from  = Deno.env.get("TWILIO_PHONE_NUMBER");
+  const to    = Deno.env.get("TWILIO_ALERT_RECIPIENT");
+
+  if (!sid || !token || !from || !to) {
+    console.error("Twilio credentials missing — cannot send SMS alert");
+    return;
+  }
+
+  const body = new URLSearchParams({ From: from, To: to, Body: message });
+  try {
+    const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${btoa(`${sid}:${token}`)}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body,
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(`Twilio SMS failed (${res.status}): ${text}`);
+    } else {
+      console.log("Twilio SMS sent OK");
+    }
+  } catch (err) {
+    console.error("Twilio fetch error:", err);
+  }
+}
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -89,6 +121,10 @@ Deno.serve(async (request) => {
   if (error) {
     return json({ ok: false, error: "We could not store your enquiry. Please try again." }, 500);
   }
+
+  await sendSmsAlert(
+    `New Thermova lead: ${payload.firstName.trim()} ${payload.lastName.trim()} — ${payload.phone.trim()} — ${payload.postcode.trim().toUpperCase()} — ${payload.interest.trim()}`
+  );
 
   return json({
     ok: true,

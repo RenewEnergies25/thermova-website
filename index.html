@@ -468,6 +468,21 @@
       var(--shadow-md);
   }
 
+  .hero-video-wrap {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(255, 106, 26, 0.12), var(--shadow-md);
+    height: 100%;
+    min-height: 320px;
+  }
+
+  .hero-video-wrap video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .hero-panel-top {
     display: flex;
     align-items: center;
@@ -1932,21 +1947,11 @@
         </ul>
       </div>
       <div class="hero-side">
-        <aside class="hero-panel" aria-label="Grant summary">
-          <div class="hero-panel-top">
-            <span class="hero-panel-kicker">Boiler Upgrade Scheme</span>
-            <strong class="hero-panel-amount">£7,500</strong>
-          </div>
-          <p>Available for eligible properties in England and Wales, with Thermova planning the survey, design, and grant route around the wider system.</p>
-          <p class="claim-disclaimer">Estimates are illustrative. Actual outcomes vary based on property size, insulation, usage, system design, and energy tariffs.</p>
-          <ul class="trust-list">
-            <li>Available to eligible homeowners and landlords replacing fossil-fuel heating.</li>
-            <li>We design and manage the Boiler Upgrade Scheme route as part of your system.</li>
-            <li>Waiting could mean paying full price later if the boiler fails first.</li>
-            <li>Heat pump, solar, and battery planning can be designed together from the start.</li>
-          </ul>
-          <a class="button" href="#scheme">Check my grant route</a>
-        </aside>
+        <div class="hero-video-wrap">
+          <video autoplay muted loop playsinline>
+            <source src="https://cyjbzemzjmfjsloogixw.supabase.co/storage/v1/object/public/Website/heatloss.mp4" type="video/mp4">
+          </video>
+        </div>
       </div>
     </div>
   </header>

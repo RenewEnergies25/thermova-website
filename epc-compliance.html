@@ -1366,6 +1366,10 @@
                         <span class="field-error" data-error-for="portfolio"></span>
                     </div>
                     <div class="form-row">
+                        <label for="epc-door-number">Door / flat number</label>
+                        <input type="text" id="epc-door-number" name="door-number" autocomplete="address-line1" placeholder="e.g. 14">
+                    </div>
+                    <div class="form-row">
                         <label for="epc-postcode">Postcode (of portfolio area)</label>
                         <input type="text" id="epc-postcode" name="postcode" placeholder="e.g. FY6 7AF" autocomplete="postal-code">
                         <span class="field-error" data-error-for="postcode"></span>
@@ -1449,6 +1453,7 @@
                 firstName:    name,
                 lastName:     'EPC Enquiry',
                 phone:        phone,
+                doorNumber:   form['door-number'] ? form['door-number'].value.trim() : '',
                 postcode:     postcode.toUpperCase(),
                 propertyType: portfolio,
                 interest:     'EPC C Compliance',

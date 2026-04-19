@@ -2504,6 +2504,11 @@
               <div class="field-error" data-error-for="phone"></div>
             </div>
             <div class="field">
+              <label for="door-number">Door / flat number</label>
+              <input type="text" id="door-number" name="door-number" autocomplete="address-line1" placeholder="14">
+              <div class="field-error" data-error-for="door-number"></div>
+            </div>
+            <div class="field">
               <label for="postcode">Postcode</label>
               <input type="text" id="postcode" name="postcode" autocomplete="postal-code" placeholder="HR1 1AA">
               <div class="field-error" data-error-for="postcode"></div>
@@ -2692,6 +2697,7 @@
       firstName: form.fname.value.trim(),
       lastName: form.lname.value.trim(),
       phone: form.phone.value.trim(),
+      doorNumber: form["door-number"].value.trim(),
       postcode: form.postcode.value.trim().toUpperCase(),
       propertyType: form["property-type"].value,
       interest: form.interest.value,

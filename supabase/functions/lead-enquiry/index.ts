@@ -50,6 +50,7 @@ type LeadPayload = {
   submittedAt?: string;
   callbackDate?: string;
   callbackTime?: string;
+  doorNumber?: string;
 };
 
 function json(body: Record<string, unknown>, status = 200) {
@@ -117,6 +118,7 @@ Deno.serve(async (request) => {
     user_agent: request.headers.get("user-agent"),
     metadata: {
       submittedAt: payload.submittedAt || new Date().toISOString(),
+      doorNumber: payload.doorNumber?.trim() || null,
       callbackDate: payload.callbackDate || null,
       callbackTime: payload.callbackTime || null,
     }
@@ -126,12 +128,16 @@ Deno.serve(async (request) => {
     return json({ ok: false, error: "We could not store your enquiry. Please try again." }, 500);
   }
 
+  const addressStr = payload.doorNumber?.trim()
+    ? `${payload.doorNumber.trim()}, ${payload.postcode.trim().toUpperCase()}`
+    : payload.postcode.trim().toUpperCase();
+
   const callbackStr = payload.callbackDate
     ? ` — Callback: ${payload.callbackDate} at ${payload.callbackTime || "TBC"}`
     : "";
 
   await sendSmsAlert(
-    `New Thermova lead: ${payload.firstName.trim()} ${payload.lastName.trim()} — ${payload.phone.trim()} — ${payload.postcode.trim().toUpperCase()} — ${payload.interest.trim()}${callbackStr}`
+    `New Thermova lead: ${payload.firstName.trim()} ${payload.lastName.trim()} — ${payload.phone.trim()} — ${addressStr} — ${payload.interest.trim()}${callbackStr}`
   );
 
   return json({

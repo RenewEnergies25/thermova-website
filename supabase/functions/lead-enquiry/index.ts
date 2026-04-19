@@ -48,6 +48,8 @@ type LeadPayload = {
   heating: string;
   sourcePage?: string;
   submittedAt?: string;
+  callbackDate?: string;
+  callbackTime?: string;
 };
 
 function json(body: Record<string, unknown>, status = 200) {
@@ -114,7 +116,9 @@ Deno.serve(async (request) => {
     source_page: payload.sourcePage?.trim() || "thermova-homepage",
     user_agent: request.headers.get("user-agent"),
     metadata: {
-      submittedAt: payload.submittedAt || new Date().toISOString()
+      submittedAt: payload.submittedAt || new Date().toISOString(),
+      callbackDate: payload.callbackDate || null,
+      callbackTime: payload.callbackTime || null,
     }
   });
 
@@ -122,8 +126,12 @@ Deno.serve(async (request) => {
     return json({ ok: false, error: "We could not store your enquiry. Please try again." }, 500);
   }
 
+  const callbackStr = payload.callbackDate
+    ? ` — Callback: ${payload.callbackDate} at ${payload.callbackTime || "TBC"}`
+    : "";
+
   await sendSmsAlert(
-    `New Thermova lead: ${payload.firstName.trim()} ${payload.lastName.trim()} — ${payload.phone.trim()} — ${payload.postcode.trim().toUpperCase()} — ${payload.interest.trim()}`
+    `New Thermova lead: ${payload.firstName.trim()} ${payload.lastName.trim()} — ${payload.phone.trim()} — ${payload.postcode.trim().toUpperCase()} — ${payload.interest.trim()}${callbackStr}`
   );
 
   return json({

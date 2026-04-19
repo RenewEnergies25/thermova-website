@@ -1370,6 +1370,25 @@
                         <input type="text" id="epc-postcode" name="postcode" placeholder="e.g. FY6 7AF" autocomplete="postal-code">
                         <span class="field-error" data-error-for="postcode"></span>
                     </div>
+                    <div class="form-row">
+                        <label for="epc-callback-date">Preferred callback date</label>
+                        <input type="date" id="epc-callback-date" name="callback-date">
+                    </div>
+                    <div class="form-row">
+                        <label for="epc-callback-time">Preferred time</label>
+                        <select id="epc-callback-time" name="callback-time">
+                            <option value="" disabled selected>Select a time</option>
+                            <option>9:00am</option><option>9:30am</option>
+                            <option>10:00am</option><option>10:30am</option>
+                            <option>11:00am</option><option>11:30am</option>
+                            <option>12:00pm</option><option>12:30pm</option>
+                            <option>1:00pm</option><option>1:30pm</option>
+                            <option>2:00pm</option><option>2:30pm</option>
+                            <option>3:00pm</option><option>3:30pm</option>
+                            <option>4:00pm</option><option>4:30pm</option>
+                            <option>5:00pm</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">
                         Request a callback
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -1435,7 +1454,9 @@
                 interest:     'EPC C Compliance',
                 heating:      'other',
                 sourcePage:   'epc-compliance',
-                submittedAt:  new Date().toISOString()
+                submittedAt:  new Date().toISOString(),
+                callbackDate: document.getElementById('epc-callback-date').value || null,
+                callbackTime: document.getElementById('epc-callback-time').value || null
             };
 
             try {
@@ -1462,6 +1483,11 @@
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'Request a callback <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
         });
+        (function setMinCallbackDate() {
+            var d = new Date();
+            d.setDate(d.getDate() + 1);
+            document.getElementById('epc-callback-date').setAttribute('min', d.toISOString().split('T')[0]);
+        }());
     }());
     /* ── End EPC enquiry form ─────────────────────────────────── */
     </script>

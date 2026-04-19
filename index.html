@@ -2483,7 +2483,7 @@
 
       <div class="form-wrap">
         <div class="section-head center" style="margin-bottom: 28px;">
-          <p class="section-label">Book an enquiry</p>
+          <p class="section-label">Get started</p>
           <h2 id="form-h">Check what your home qualifies for.</h2>
         </div>
         <form id="lead-form" novalidate>
@@ -2543,9 +2543,28 @@
               </select>
               <div class="field-error" data-error-for="heating"></div>
             </div>
+            <div class="field">
+              <label for="callback-date">Preferred callback date</label>
+              <input type="date" id="callback-date" name="callback-date">
+            </div>
+            <div class="field">
+              <label for="callback-time">Preferred time</label>
+              <select id="callback-time" name="callback-time">
+                <option value="" disabled selected>Select a time</option>
+                <option>9:00am</option><option>9:30am</option>
+                <option>10:00am</option><option>10:30am</option>
+                <option>11:00am</option><option>11:30am</option>
+                <option>12:00pm</option><option>12:30pm</option>
+                <option>1:00pm</option><option>1:30pm</option>
+                <option>2:00pm</option><option>2:30pm</option>
+                <option>3:00pm</option><option>3:30pm</option>
+                <option>4:00pm</option><option>4:30pm</option>
+                <option>5:00pm</option>
+              </select>
+            </div>
           </div>
           <div class="form-actions">
-            <button class="submit-btn" type="submit">Get my upgrade estimate</button>
+            <button class="submit-btn" type="submit">Request a callback</button>
             <div class="form-status" id="form-status" aria-live="polite"></div>
             <p class="form-small">For eligible properties in England and Wales. By submitting, you agree to us contacting you about your enquiry. We will not pass your details to third parties.</p>
           </div>
@@ -2678,9 +2697,17 @@
       interest: form.interest.value,
       heating: form.heating.value,
       sourcePage: "thermova-homepage",
-      submittedAt: new Date().toISOString()
+      submittedAt: new Date().toISOString(),
+      callbackDate: document.getElementById("callback-date").value || null,
+      callbackTime: document.getElementById("callback-time").value || null
     };
   }
+
+  (function setMinCallbackDate() {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    document.getElementById("callback-date").setAttribute("min", d.toISOString().split("T")[0]);
+  }());
 
   function validatePayload(payload) {
     const errors = {};
@@ -2798,7 +2825,7 @@
       void error;
     } finally {
       submitButton.disabled = false;
-      submitButton.textContent = "Get my upgrade estimate";
+      submitButton.textContent = "Request a callback";
     }
   });
 

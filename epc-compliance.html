@@ -597,6 +597,288 @@
             color: var(--amber);
         }
 
+        /* ───── PRICE CALLOUT ───── */
+        .price-callout {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--amber);
+            border-left: 3px solid var(--amber);
+            padding-left: 16px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        /* ───── GUARANTEE PRICE ───── */
+        .guarantee-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+
+        /* ───── SOCIAL PROOF ───── */
+        .social-proof {
+            background: var(--dark-soft);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 48px 32px;
+        }
+
+        .social-proof-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .social-proof-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        .agent-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        .agent-logo {
+            height: 44px;
+            max-width: 220px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
+        }
+
+        .agent-quote {
+            font-size: 1.1rem;
+            color: #B8C4D2;
+            font-style: italic;
+            line-height: 1.75;
+            text-align: center;
+        }
+
+        .agent-attribution {
+            font-size: 0.9rem;
+            color: var(--white);
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .agent-attribution span {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        /* ───── FAQ ───── */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        .faq-item {
+            background: var(--dark-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+
+        .faq-item[open] {
+            border-color: var(--amber-20);
+        }
+
+        .faq-item summary {
+            padding: 20px 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.97rem;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            line-height: 1.4;
+            transition: color 0.2s ease;
+        }
+
+        .faq-item summary::-webkit-details-marker { display: none; }
+
+        .faq-item summary::after {
+            content: '+';
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--amber);
+            flex-shrink: 0;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .faq-item[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-item summary:hover {
+            color: var(--amber);
+        }
+
+        .faq-body {
+            padding: 0 24px 20px;
+            color: #B8C4D2;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ───── CONTACT FORM ───── */
+        .contact {
+            text-align: left;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-left h2 {
+            font-family: "Sora", system-ui, sans-serif;
+            font-size: clamp(1.9rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            margin-bottom: 16px;
+        }
+
+        .contact-left p {
+            font-size: 1.05rem;
+            color: #B8C4D2;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .contact-left .section-heading {
+            margin-bottom: 16px;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .epc-form {
+            background: var(--dark-soft);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .epc-form-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--white);
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .form-row label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #B8C4D2;
+        }
+
+        .form-row input,
+        .form-row select {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 11px 14px;
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-row select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A8A99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .form-row input:focus,
+        .form-row select:focus {
+            outline: none;
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px var(--amber-10);
+        }
+
+        .form-row input::placeholder { color: var(--muted); }
+
+        .form-row .field-error {
+            font-size: 0.8rem;
+            color: #FF6B6B;
+            min-height: 14px;
+        }
+
+        .epc-form .btn {
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .form-submit-promise {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .epc-form-status {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .epc-form-status.success {
+            display: block;
+            background: var(--amber-10);
+            border: 1px solid var(--amber-20);
+            color: var(--amber);
+        }
+
+        .epc-form-status.error {
+            display: block;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            color: #FF6B6B;
+        }
+
         /* ───── FOOTER ───── */
         footer {
             padding: 32px;
@@ -604,6 +886,7 @@
             text-align: center;
             color: var(--muted);
             font-size: 13px;
+            line-height: 1.8;
         }
 
         /* ───── ANIMATIONS ───── */
@@ -614,10 +897,11 @@
             @keyframes spinSlow { to { transform: rotate(360deg); } }
 
             /* Hero page-load stagger */
-            .eyebrow  { animation: fadeUp 0.55s ease-out 0ms   both; }
-            .hero h1  { animation: fadeUp 0.55s ease-out 130ms both; }
-            .hero-sub { animation: fadeUp 0.55s ease-out 260ms both; }
-            .cta-row  { animation: fadeUp 0.55s ease-out 400ms both; }
+            .eyebrow       { animation: fadeUp 0.55s ease-out 0ms   both; }
+            .hero h1       { animation: fadeUp 0.55s ease-out 130ms both; }
+            .hero-sub      { animation: fadeUp 0.55s ease-out 260ms both; }
+            .price-callout { animation: fadeUp 0.55s ease-out 340ms both; }
+            .cta-row       { animation: fadeUp 0.55s ease-out 460ms both; }
 
             /* Always-on */
             .logo-icon   { animation: spinSlow 60s linear infinite; }
@@ -659,9 +943,19 @@
             .problem-grid,
             .why-content,
             .quals-grid,
-            .steps-grid {
+            .steps-grid,
+            .faq-grid,
+            .contact-grid {
                 grid-template-columns: 1fr;
                 gap: 32px;
+            }
+
+            .social-proof {
+                padding: 40px 20px;
+            }
+
+            .contact {
+                text-align: left;
             }
 
             .header-inner {
@@ -736,6 +1030,7 @@
             </a>
             <nav class="header-nav" aria-label="Page navigation">
                 <a href="#how">How it works</a>
+                <a href="#faq">FAQ</a>
                 <a href="#contact">Get in touch</a>
                 <a href="/" class="nav-cta">Back to Thermova</a>
             </nav>
@@ -757,12 +1052,27 @@
             <p class="hero-sub">
                 A technical route to 2030 compliance for D-band rental properties. No expensive retrofits. No tenant disruption. If we do not achieve a C rating, there is no charge.
             </p>
+            <div class="price-callout">
+                £500 per property &middot; No VAT &middot; No charge if we don't achieve a C
+            </div>
             <div class="cta-row">
                 <a href="#contact" class="btn btn-primary">
                     Book a portfolio review
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                 </a>
                 <a href="#how" class="btn btn-ghost">How it works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SOCIAL PROOF ═══════════════ -->
+    <section class="social-proof">
+        <div class="social-proof-inner">
+            <p class="social-proof-label">Trusted by estate agents across the Fylde Coast</p>
+            <div class="agent-card">
+                <img class="agent-logo" src="https://harrisandcoestates.co.uk/wp-content/uploads/2025/05/Primary-Logo-Transparent-1.png" alt="Harris &amp; Co Estates">
+                <p class="agent-quote">&ldquo;Thermova&rsquo;s EPC C compliance service has been a practical solution for a number of our landlord clients. The process is straightforward, the no-result-no-charge model is an easy conversation to have with portfolio owners, and the results speak for themselves.&rdquo;</p>
+                <p class="agent-attribution">Harris &amp; Co Estates <span>&middot; Fleetwood&rsquo;s award-winning estate agent since 1995</span></p>
             </div>
         </div>
     </section>
@@ -904,38 +1214,211 @@
             <p>
                 If we do not achieve a C band EPC rating on any given property, there is no charge whatsoever. Not a reduced charge. No charge at all. The risk sits entirely with us.
             </p>
+            <div class="guarantee-price">£500 per property &middot; No VAT.</div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FAQ ═══════════════ -->
+    <section id="faq">
+        <div class="section-inner">
+            <div class="section-heading">Frequently Asked Questions</div>
+            <h2 class="section-title">Everything you need to know before you call.</h2>
+            <div class="faq-grid">
+                <details class="faq-item">
+                    <summary>How much does it cost?</summary>
+                    <div class="faq-body">£500 per property. Payable only if we achieve a C band rating. If the test does not lift the property into C, there is no charge.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>What happens if you don't achieve a C?</summary>
+                    <div class="faq-body">You pay nothing. No call-out fee, no reduced charge, nothing. The commercial risk sits entirely with us, which is why we screen properties before attending to make sure they are strong candidates.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>How do I know if my property qualifies?</summary>
+                    <div class="faq-body">The strongest candidates currently sit between D63 and D68 on their existing EPC. Send us a list of addresses and we will check the register, identify the properties where a verified air test is most likely to deliver a C, and only quote on those.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>How long does the test take?</summary>
+                    <div class="faq-body">Around two to three hours on site. The property can be occupied throughout and the tenant does not need to leave.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Will the tenant be disturbed?</summary>
+                    <div class="faq-body">No. The Pulse test is low pressure and non-invasive. There is no drilling, no residue, and no change to the fabric of the property.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>How long until the new EPC is issued?</summary>
+                    <div class="faq-body">Usually within five to ten working days of the test. The verified air permeability result is passed to a qualified Domestic Energy Assessor who carries out a fresh RdSAP 10 assessment and lodges it on the national register.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Is the new EPC legally valid?</summary>
+                    <div class="faq-body">Yes. RdSAP 10 became the mandatory methodology for existing dwelling assessments on 15 June 2025 and specifically permits a verified air permeability test result to replace the default assumed figure. The new EPC is lodged on the national register in exactly the same way as any other.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>How is this different from just commissioning a new EPC?</summary>
+                    <div class="faq-body">A standard EPC uses the worst-case assumed air permeability for the age of the property. We replace that assumption with a measured figure. Where the building is tighter than the default — which it usually is on well-maintained older properties — the SAP score increases and the rating improves.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Why not just wait for HEM?</summary>
+                    <div class="faq-body">HEM replaces RdSAP for existing homes in the second half of 2027. Under HEM, assumed values are no longer permitted and every element must be physically evidenced to a higher standard. A C rating achieved now under RdSAP 10 remains valid for its full ten-year term, locking compliance in under the easier methodology.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Does it work on flats?</summary>
+                    <div class="faq-body">In most cases, yes. The test is carried out on a single flat as a standalone dwelling and the same principle applies: replacing the assumed figure with a measured one.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>What if the property has no current EPC?</summary>
+                    <div class="faq-body">Not a problem. We carry out the air permeability test and arrange for a fresh RdSAP 10 EPC to be issued from scratch with the verified result built in.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Do you work with social housing providers?</summary>
+                    <div class="faq-body">Yes. The same RdSAP 10 methodology applies to social housing stock and the 2030 minimum EPC C standard is expected to apply to both tenures. We work through any portfolio, private or social, on the same terms.</div>
+                </details>
+            </div>
         </div>
     </section>
 
     <!-- ═══════════════ CONTACT ═══════════════ -->
     <section class="contact" id="contact">
-        <div class="contact-inner">
-            <div class="section-heading">Get in Touch</div>
-            <h2>Let's review your portfolio.</h2>
-            <p>A ten minute conversation is usually enough to identify which properties in a portfolio are strong candidates. No cost, no obligation.</p>
-
-            <div class="contact-methods">
-                <a href="tel:07976015890" class="contact-method">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                    07976 015890
-                </a>
-                <a href="mailto:info@thermova.uk" class="contact-method">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    info@thermova.uk
-                </a>
+        <div class="contact-grid">
+            <div class="contact-left">
+                <div class="section-heading">Get in Touch</div>
+                <h2>Let's review your portfolio.</h2>
+                <p>A ten minute conversation is usually enough to identify which properties are strong candidates. No cost, no obligation.</p>
+                <div class="contact-methods">
+                    <a href="tel:07976015890" class="contact-method">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        07976 015890
+                    </a>
+                    <a href="mailto:info@thermova.uk" class="contact-method">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        info@thermova.uk
+                    </a>
+                </div>
             </div>
-
-            <a href="mailto:info@thermova.uk?subject=EPC%20C%20Compliance%20Enquiry" class="btn btn-primary">
-                Request a portfolio review
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </a>
+            <div class="epc-form">
+                <p class="epc-form-title">Request a callback</p>
+                <form id="epc-enquiry-form" novalidate>
+                    <div class="form-row">
+                        <label for="epc-name">Your name</label>
+                        <input type="text" id="epc-name" name="name" placeholder="e.g. John Smith" autocomplete="name">
+                        <span class="field-error" data-error-for="name"></span>
+                    </div>
+                    <div class="form-row">
+                        <label for="epc-phone">Phone number</label>
+                        <input type="tel" id="epc-phone" name="phone" placeholder="e.g. 07700 900123" autocomplete="tel">
+                        <span class="field-error" data-error-for="phone"></span>
+                    </div>
+                    <div class="form-row">
+                        <label for="epc-portfolio">Number of D-band properties</label>
+                        <select id="epc-portfolio" name="portfolio">
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="1–5 properties">1 to 5 properties</option>
+                            <option value="6–10 properties">6 to 10 properties</option>
+                            <option value="11–20 properties">11 to 20 properties</option>
+                            <option value="More than 20 properties">More than 20 properties</option>
+                            <option value="Social housing stock">I manage social housing stock</option>
+                        </select>
+                        <span class="field-error" data-error-for="portfolio"></span>
+                    </div>
+                    <div class="form-row">
+                        <label for="epc-postcode">Postcode (of portfolio area)</label>
+                        <input type="text" id="epc-postcode" name="postcode" placeholder="e.g. FY6 7AF" autocomplete="postal-code">
+                        <span class="field-error" data-error-for="postcode"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Request a callback
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </button>
+                    <p class="form-submit-promise">We&rsquo;ll call within 24 hours. No obligation.</p>
+                    <div class="epc-form-status" id="epc-form-status"></div>
+                </form>
+            </div>
         </div>
     </section>
 
     <!-- ═══════════════ FOOTER ═══════════════ -->
     <footer>
-        Thermova &middot; Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF &middot; <a href="https://www.thermova.co.uk">www.thermova.co.uk</a>
+        Thermova &middot; Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF &middot; <a href="https://www.thermova.uk">www.thermova.uk</a><br>
+        Estate agents &mdash; <a href="mailto:info@thermova.uk?subject=Referral%20Programme">referral programme available</a>
     </footer>
+
+    <script>
+    /* ── EPC enquiry form ─────────────────────────────────────── */
+    (function () {
+        var form = document.getElementById('epc-enquiry-form');
+        var statusEl = document.getElementById('epc-form-status');
+        if (!form) return;
+
+        function setError(name, msg) {
+            var node = form.querySelector('[data-error-for="' + name + '"]');
+            if (node) node.textContent = msg;
+        }
+
+        function clearErrors() {
+            form.querySelectorAll('.field-error').forEach(function (n) { n.textContent = ''; });
+            statusEl.className = 'epc-form-status';
+            statusEl.textContent = '';
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearErrors();
+
+            var name     = form.name.value.trim();
+            var phone    = form.phone.value.trim();
+            var portfolio = form.portfolio.value;
+            var postcode = form.postcode.value.trim();
+            var valid = true;
+
+            if (!name)     { setError('name', 'Your name is required.'); valid = false; }
+            if (!phone)    { setError('phone', 'Phone number is required.'); valid = false; }
+            else if (phone.replace(/[^0-9+]/g, '').length < 10) { setError('phone', 'Enter a valid phone number.'); valid = false; }
+            if (!portfolio) { setError('portfolio', 'Please select an option.'); valid = false; }
+            if (!postcode) { setError('postcode', 'Postcode is required.'); valid = false; }
+            if (!valid) return;
+
+            var submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending…';
+
+            var payload = {
+                firstName:    name,
+                lastName:     'EPC Enquiry',
+                phone:        phone,
+                postcode:     postcode.toUpperCase(),
+                propertyType: portfolio,
+                interest:     'EPC C Compliance',
+                heating:      'other',
+                sourcePage:   'epc-compliance',
+                submittedAt:  new Date().toISOString()
+            };
+
+            try {
+                var res = await fetch('https://cyjbzemzjmfjsloogixw.supabase.co/functions/v1/lead-enquiry', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                var result = await res.json().catch(function () { return { ok: false, error: 'Unexpected error.' }; });
+
+                if (result.ok) {
+                    statusEl.className = 'epc-form-status success';
+                    statusEl.textContent = 'Thanks — we\'ll call you within 24 hours. No obligation.';
+                    form.reset();
+                } else {
+                    statusEl.className = 'epc-form-status error';
+                    statusEl.textContent = result.error || 'Something went wrong. Please try again or call us directly.';
+                }
+            } catch (err) {
+                statusEl.className = 'epc-form-status error';
+                statusEl.textContent = 'Could not send your request. Please call 07976 015890 directly.';
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Request a callback <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+        });
+    }());
+    /* ── End EPC enquiry form ─────────────────────────────────── */
+    </script>
 
     <script>
     (function () {
@@ -993,11 +1476,20 @@
         reg(document.querySelector('.guarantee h2'), 'will-animate', 100);
         reg(document.querySelector('.guarantee p'), 'will-animate', 200);
 
+        // Social proof
+        reg(document.querySelector('.agent-card'), 'will-animate');
+
+        // FAQ
+        reg(document.querySelector('#faq .section-heading'), 'will-animate');
+        reg(document.querySelector('#faq .section-title'), 'will-animate', 80);
+        regAll('.faq-item', 'will-animate', 60);
+
         // Contact
         reg(document.querySelector('#contact .section-heading'), 'will-animate');
         reg(document.querySelector('#contact h2'), 'will-animate', 80);
-        reg(document.querySelector('#contact .contact-inner > p'), 'will-animate', 160);
+        reg(document.querySelector('.contact-left > p'), 'will-animate', 160);
         regAll('.contact-method', 'will-animate', 120);
+        reg(document.querySelector('.epc-form'), 'will-animate', 80);
 
         // Callout colour ignition (colour only — no opacity class)
         reg(document.querySelector('.callout'), null, 0);

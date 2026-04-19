@@ -606,6 +606,54 @@
             font-size: 13px;
         }
 
+        /* ───── ANIMATIONS ───── */
+        @media (prefers-reduced-motion: no-preference) {
+            @keyframes fadeUp   { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+            @keyframes scaleIn  { from { opacity: 0; transform: scale(0.75); } to { opacity: 1; transform: scale(1); } }
+            @keyframes pulseDot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.6); opacity: 0.5; } }
+            @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+            /* Hero page-load stagger */
+            .eyebrow  { animation: fadeUp 0.55s ease-out 0ms   both; }
+            .hero h1  { animation: fadeUp 0.55s ease-out 130ms both; }
+            .hero-sub { animation: fadeUp 0.55s ease-out 260ms both; }
+            .cta-row  { animation: fadeUp 0.55s ease-out 400ms both; }
+
+            /* Always-on */
+            .logo-icon   { animation: spinSlow 60s linear infinite; }
+            .eyebrow-dot { animation: pulseDot 2.4s ease-in-out infinite; }
+
+            /* Scroll-reveal — hidden until JS activates (graceful: no JS = always visible) */
+            body.js-loaded .will-animate {
+                opacity: 0;
+                transform: translateY(22px);
+                transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+                transition-delay: var(--anim-delay, 0ms);
+            }
+            body.js-loaded .will-animate.is-visible {
+                opacity: 1;
+                transform: none;
+            }
+            body.js-loaded .will-animate-scale {
+                opacity: 0;
+                transform: scale(0.75);
+                transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+                transition-delay: var(--anim-delay, 0ms);
+            }
+            body.js-loaded .will-animate-scale.is-visible {
+                opacity: 1;
+                transform: scale(1);
+            }
+            /* Callout colour ignition — only colour transitions, parent controls visibility */
+            body.js-loaded .callout {
+                color: var(--muted);
+                transition: color 0.7s ease-out;
+            }
+            body.js-loaded .callout.is-visible {
+                color: var(--amber);
+            }
+        }
+
         /* ───── RESPONSIVE ───── */
         @media (max-width: 860px) {
             .problem-grid,
@@ -807,7 +855,7 @@
     </section>
 
     <!-- ═══════════════ QUALIFICATIONS ═══════════════ -->
-    <section>
+    <section id="why-thermova">
         <div class="section-inner">
             <div class="section-heading">Why Thermova</div>
             <h2 class="section-title">Combined technical expertise under one roof.</h2>
@@ -888,6 +936,73 @@
     <footer>
         Thermova &middot; Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF &middot; <a href="https://www.thermova.co.uk">www.thermova.co.uk</a>
     </footer>
+
+    <script>
+    (function () {
+        if (!('IntersectionObserver' in window)) return;
+        document.body.classList.add('js-loaded');
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('is-visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        function reg(el, cls, delay) {
+            if (!el) return;
+            if (cls) el.classList.add(cls);
+            if (delay) el.style.setProperty('--anim-delay', delay + 'ms');
+            observer.observe(el);
+        }
+
+        function regAll(selector, cls, step) {
+            document.querySelectorAll(selector).forEach(function (el, i) {
+                reg(el, cls, i * (step || 0));
+            });
+        }
+
+        // Problem section
+        reg(document.querySelector('.problem-copy'), 'will-animate');
+        regAll('.stat-card', 'will-animate', 120);
+
+        // How It Works
+        reg(document.querySelector('#how .section-heading'), 'will-animate');
+        reg(document.querySelector('#how .section-title'), 'will-animate', 80);
+        reg(document.querySelector('#how .section-lead'), 'will-animate', 160);
+        regAll('.step', 'will-animate', 150);
+
+        // Why the Window Matters
+        reg(document.querySelector('.why .section-heading'), 'will-animate');
+        reg(document.querySelector('.why .section-title'), 'will-animate', 80);
+        document.querySelectorAll('.why-copy p').forEach(function (el, i) {
+            reg(el, 'will-animate', 140 + i * 100);
+        });
+        regAll('.timeline-item', 'will-animate', 140);
+
+        // Why Thermova
+        reg(document.querySelector('#why-thermova .section-heading'), 'will-animate');
+        reg(document.querySelector('#why-thermova .section-title'), 'will-animate', 80);
+        reg(document.querySelector('#why-thermova .section-lead'), 'will-animate', 160);
+        regAll('.qual', 'will-animate', 100);
+
+        // Guarantee
+        reg(document.querySelector('.guarantee-icon'), 'will-animate-scale');
+        reg(document.querySelector('.guarantee h2'), 'will-animate', 100);
+        reg(document.querySelector('.guarantee p'), 'will-animate', 200);
+
+        // Contact
+        reg(document.querySelector('#contact .section-heading'), 'will-animate');
+        reg(document.querySelector('#contact h2'), 'will-animate', 80);
+        reg(document.querySelector('#contact .contact-inner > p'), 'will-animate', 160);
+        regAll('.contact-method', 'will-animate', 120);
+
+        // Callout colour ignition (colour only — no opacity class)
+        reg(document.querySelector('.callout'), null, 0);
+    }());
+    </script>
 
 </body>
 </html>

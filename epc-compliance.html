@@ -620,53 +620,62 @@
         /* ───── SOCIAL PROOF ───── */
         .social-proof {
             background: var(--dark-soft);
-            border-top: 1px solid var(--border);
+            border-top: 2px solid var(--amber);
             border-bottom: 1px solid var(--border);
-            padding: 48px 32px;
+            padding: 24px 32px;
         }
 
         .social-proof-inner {
             max-width: 1200px;
             margin: 0 auto;
-            text-align: center;
         }
 
-        .social-proof-label {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 32px;
-        }
-
-        .agent-card {
+        .testimonial-banner {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 20px;
-            max-width: 740px;
-            margin: 0 auto;
+            gap: 32px;
+            background: var(--dark);
+            border: 1px solid var(--amber-20);
+            border-radius: 12px;
+            padding: 20px 28px;
+        }
+
+        .testimonial-banner-logo {
+            flex-shrink: 0;
+            width: 140px;
+            display: flex;
+            align-items: center;
         }
 
         .agent-logo {
-            height: 44px;
-            max-width: 220px;
+            height: 36px;
+            max-width: 140px;
             object-fit: contain;
             filter: brightness(0) invert(1);
             opacity: 0.9;
         }
 
+        .testimonial-banner-divider {
+            width: 1px;
+            align-self: stretch;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        .testimonial-banner-body {
+            flex: 1;
+        }
+
         .agent-quote {
-            font-size: 1.1rem;
+            font-size: 0.97rem;
             color: #B8C4D2;
             font-style: italic;
-            line-height: 1.75;
-            text-align: center;
+            line-height: 1.65;
+            margin-bottom: 8px;
         }
 
         .agent-attribution {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--white);
             font-weight: 700;
             font-style: normal;
@@ -891,10 +900,14 @@
 
         /* ───── ANIMATIONS ───── */
         @media (prefers-reduced-motion: no-preference) {
-            @keyframes fadeUp   { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
-            @keyframes scaleIn  { from { opacity: 0; transform: scale(0.75); } to { opacity: 1; transform: scale(1); } }
-            @keyframes pulseDot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.6); opacity: 0.5; } }
-            @keyframes spinSlow { to { transform: rotate(360deg); } }
+            @keyframes fadeUp    { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+            @keyframes scaleIn   { from { opacity: 0; transform: scale(0.75); } to { opacity: 1; transform: scale(1); } }
+            @keyframes pulseDot  { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.6); opacity: 0.5; } }
+            @keyframes spinSlow  { to { transform: rotate(360deg); } }
+            @keyframes slideDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: none; } }
+            @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,106,26,0); } 50% { box-shadow: 0 0 28px 6px rgba(255,106,26,0.2); } }
+
+            .testimonial-banner { animation: slideDown 0.6s ease-out 180ms both, glowPulse 1.2s ease-in-out 900ms 2; }
 
             /* Hero page-load stagger */
             .eyebrow       { animation: fadeUp 0.55s ease-out 0ms   both; }
@@ -951,7 +964,23 @@
             }
 
             .social-proof {
-                padding: 40px 20px;
+                padding: 16px 16px;
+            }
+
+            .testimonial-banner {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px 20px;
+            }
+
+            .testimonial-banner-logo {
+                width: auto;
+            }
+
+            .testimonial-banner-divider {
+                width: 100%;
+                height: 1px;
+                align-self: auto;
             }
 
             .contact {
@@ -1041,6 +1070,22 @@
         </div>
     </header>
 
+    <!-- ═══════════════ SOCIAL PROOF ═══════════════ -->
+    <section class="social-proof">
+        <div class="social-proof-inner">
+            <div class="testimonial-banner">
+                <div class="testimonial-banner-logo">
+                    <img class="agent-logo" src="https://harrisandcoestates.co.uk/wp-content/uploads/2025/05/Primary-Logo-Transparent-1.png" alt="Harris &amp; Co Estates">
+                </div>
+                <div class="testimonial-banner-divider"></div>
+                <div class="testimonial-banner-body">
+                    <p class="agent-quote">&ldquo;Thermova&rsquo;s EPC C compliance service has been a practical solution for a number of our landlord clients. The process is straightforward, the no-result-no-charge model is an easy conversation to have with portfolio owners, and the results speak for themselves.&rdquo;</p>
+                    <p class="agent-attribution">Harris &amp; Co Estates <span>&middot; Fleetwood&rsquo;s award-winning estate agent since 1995</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ═══════════════ HERO ═══════════════ -->
     <section class="hero">
         <div class="hero-inner">
@@ -1061,18 +1106,6 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                 </a>
                 <a href="#how" class="btn btn-ghost">How it works</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════════ SOCIAL PROOF ═══════════════ -->
-    <section class="social-proof">
-        <div class="social-proof-inner">
-            <p class="social-proof-label">Trusted by estate agents across the Fylde Coast</p>
-            <div class="agent-card">
-                <img class="agent-logo" src="https://harrisandcoestates.co.uk/wp-content/uploads/2025/05/Primary-Logo-Transparent-1.png" alt="Harris &amp; Co Estates">
-                <p class="agent-quote">&ldquo;Thermova&rsquo;s EPC C compliance service has been a practical solution for a number of our landlord clients. The process is straightforward, the no-result-no-charge model is an easy conversation to have with portfolio owners, and the results speak for themselves.&rdquo;</p>
-                <p class="agent-attribution">Harris &amp; Co Estates <span>&middot; Fleetwood&rsquo;s award-winning estate agent since 1995</span></p>
             </div>
         </div>
     </section>
@@ -1475,9 +1508,6 @@
         reg(document.querySelector('.guarantee-icon'), 'will-animate-scale');
         reg(document.querySelector('.guarantee h2'), 'will-animate', 100);
         reg(document.querySelector('.guarantee p'), 'will-animate', 200);
-
-        // Social proof
-        reg(document.querySelector('.agent-card'), 'will-animate');
 
         // FAQ
         reg(document.querySelector('#faq .section-heading'), 'will-animate');

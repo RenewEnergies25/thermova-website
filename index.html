@@ -1382,9 +1382,8 @@
   }
 
   .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 28px;
+    display: flex;
+    justify-content: center;
   }
 
   .testimonial {
@@ -1392,6 +1391,22 @@
     border-radius: var(--radius-md);
     background: rgba(10, 20, 32, 0.74);
     box-shadow: 0 0 40px var(--color-glow-soft);
+  }
+
+  .testimonial-feature {
+    max-width: 720px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .testimonial-logo {
+    display: block;
+    height: 36px;
+    max-width: 160px;
+    object-fit: contain;
+    margin: 0 auto 20px;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
   }
 
   .testimonial-context {
@@ -2319,35 +2334,17 @@
   <section class="section section-dark" id="testimonials" aria-labelledby="testimonials-h">
     <div class="shell">
       <div class="section-head center">
-        <p class="section-label">Proof and trust</p>
-        <h2 id="testimonials-h">Real decisions from real property owners.</h2>
+        <p class="section-label">Trusted by estate agents</p>
+        <h2 id="testimonials-h">Recommended by estate agents on the Fylde Coast.</h2>
       </div>
       <div class="testimonials-grid">
-        <article class="testimonial">
-          <span class="testimonial-context">Boiler replacement route</span>
-          <p class="testimonial-quote">"We were replacing our old combi boiler and were not sure whether to go like-for-like or try a heat pump. Thermova walked us through the comparison properly with no pressure. We took the heat pump with the grant in place and could not be happier."</p>
+        <article class="testimonial testimonial-feature">
+          <img class="testimonial-logo" src="https://harrisandcoestates.co.uk/wp-content/uploads/2025/05/Primary-Logo-Transparent-1.png" alt="Harris &amp; Co Estates">
+          <span class="testimonial-context">Estate Agent Partnership</span>
+          <p class="testimonial-quote">&ldquo;Thermova&rsquo;s EPC C compliance service has been a practical solution for a number of our landlord clients. The process is straightforward, the no-result-no-charge model is an easy conversation to have with portfolio owners, and the results speak for themselves.&rdquo;</p>
           <div class="testimonial-meta">
-            <strong>Sarah R.</strong>
-            <span class="testimonial-meta-line">Worcestershire</span>
-            <span class="testimonial-meta-line">Homeowner</span>
-          </div>
-        </article>
-        <article class="testimonial">
-          <span class="testimonial-context">Landlord upgrade planning</span>
-          <p class="testimonial-quote">"As a landlord with four properties, the 2030 compliance question was weighing on me. Thermova audited all four, told me which to prioritise, and gave me a clear plan. That was the professional advice I needed, not a sales pitch."</p>
-          <div class="testimonial-meta">
-            <strong>Mark K.</strong>
-            <span class="testimonial-meta-line">Herefordshire</span>
-            <span class="testimonial-meta-line">Landlord</span>
-          </div>
-        </article>
-        <article class="testimonial">
-          <span class="testimonial-context">Solar + battery install</span>
-          <p class="testimonial-quote">"We are off the gas grid and had been on oil for years. Thermova were the first to actually understand the situation and design something that made sense. The heat pump transformed the house and the battery gives us confidence even on overcast days."</p>
-          <div class="testimonial-meta">
-            <strong>J. L.</strong>
-            <span class="testimonial-meta-line">Shropshire</span>
-            <span class="testimonial-meta-line">Homeowner</span>
+            <strong>Harris &amp; Co Estates</strong>
+            <span class="testimonial-meta-line">Fleetwood&rsquo;s award-winning estate agent since 1995</span>
           </div>
         </article>
       </div>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Thermova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #050B14;
+      --surface: #0A1420;
+      --surface-2: #0F1C2A;
+      --brand: #FF6A1A;
+      --brand-hover: #FF7F3A;
+      --text: #FFFFFF;
+      --text-sec: #B8C4D2;
+      --text-muted: #7A8A99;
+      --border: rgba(184,196,210,0.14);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --font-display: "Sora", system-ui, sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: var(--bg-primary);
+      background-image: radial-gradient(ellipse 800px 600px at 50% 0%, rgba(255,106,26,0.07) 0%, transparent 70%);
+      font: 400 15px/1.6 var(--font-body);
+      color: var(--text-sec);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .login-wrap { width: 100%; max-width: 400px; }
+    .login-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .login-logo { height: 36px; width: auto; }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 40px;
+    }
+    .login-title {
+      font: 600 1.375rem var(--font-display);
+      color: var(--text);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .login-sub {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font: 600 0.8125rem var(--font-body);
+      color: var(--text-sec);
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font: 400 0.9375rem var(--font-body);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus { border-color: var(--brand); }
+    .field input::placeholder { color: var(--text-muted); }
+    .form-error {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.875rem;
+      color: #f87171;
+      margin-bottom: 20px;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font: 600 0.9375rem var(--font-body);
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--brand-hover); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-logo-wrap">
+      <img src="/assets/thermova-logo.svg" class="login-logo" alt="Thermova" onerror="this.style.display='none'">
+    </div>
+    <div class="login-card">
+      <h1 class="login-title">Admin Login</h1>
+      <p class="login-sub">EPC Enrichment Dashboard</p>
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" autocomplete="username" required placeholder="you@thermova.uk">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" required placeholder="••••••••">
+        </div>
+        <p id="login-error" class="form-error" hidden></p>
+        <button type="submit" class="btn-primary" id="submit-btn">Sign in</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL  = "https://cyjbzemzjmfjsloogixw.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5amJ6ZW16am1manNsb29naXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDg4MDEsImV4cCI6MjA5MDk4NDgwMX0.mWjRiXc1wI4qj0hs0RAglVyMDtvV2emHtXjBvBYxRDA";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    // Skip login if already authenticated
+    sb.auth.getSession().then(({ data }) => {
+      if (data.session) window.location.replace("dashboard.html");
+    });
+
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn    = document.getElementById("submit-btn");
+      const errEl  = document.getElementById("login-error");
+      const email  = document.getElementById("email").value.trim();
+      const pass   = document.getElementById("password").value;
+
+      btn.disabled    = true;
+      btn.textContent = "Signing in…";
+      errEl.hidden    = true;
+
+      const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+      if (error) {
+        errEl.textContent = error.message;
+        errEl.hidden      = false;
+        btn.disabled      = false;
+        btn.textContent   = "Sign in";
+      } else {
+        window.location.replace("dashboard.html");
+      }
+    });
+  </script>
+</body>
+</html>

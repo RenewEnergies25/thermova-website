@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPC Dashboard | Thermova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #050B14;
+      --surface: #0A1420;
+      --surface-2: #0F1C2A;
+      --surface-3: #121F2E;
+      --brand: #FF6A1A;
+      --brand-hover: #FF7F3A;
+      --text: #FFFFFF;
+      --text-sec: #B8C4D2;
+      --text-muted: #7A8A99;
+      --border: rgba(184,196,210,0.14);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --font-display: "Sora", system-ui, sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: var(--bg-primary);
+      font: 400 15px/1.6 var(--font-body);
+      color: var(--text-sec);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    .dash-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 32px;
+      height: 60px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .dash-logo { height: 28px; width: auto; flex-shrink: 0; }
+    .dash-logo-text {
+      font: 700 1.1rem var(--font-display);
+      color: var(--text);
+      letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+    .tab-nav { display: flex; gap: 4px; flex: 1; }
+    .tab {
+      padding: 7px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font: 600 0.875rem var(--font-body);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab:hover { color: var(--text-sec); }
+    .tab.active {
+      background: var(--surface-2);
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-ghost {
+      padding: 7px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font: 500 0.875rem var(--font-body);
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-ghost:hover { color: var(--text-sec); border-color: rgba(184,196,210,0.3); }
+
+    /* ── Main layout ── */
+    .dash-main { max-width: 1100px; margin: 0 auto; padding: 40px 32px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Typography ── */
+    h1 { font: 600 1.5rem var(--font-display); color: var(--text); margin-bottom: 6px; }
+    .panel-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      padding: 11px 24px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font: 600 0.9375rem var(--font-body);
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--brand-hover); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-secondary {
+      padding: 9px 20px;
+      background: transparent;
+      color: var(--brand);
+      border: 1px solid var(--brand);
+      border-radius: var(--radius-sm);
+      font: 600 0.875rem var(--font-body);
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-secondary:hover:not(:disabled) { background: rgba(255,106,26,0.08); }
+    .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-sm { padding: 6px 14px; font-size: 0.8125rem; }
+
+    /* ── Dropzone ── */
+    .dropzone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 56px 32px;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: var(--brand);
+      background: rgba(255,106,26,0.04);
+    }
+    .dropzone-icon { font-size: 2rem; line-height: 1; }
+    .dropzone-label { font: 600 0.9375rem var(--font-body); color: var(--text-sec); }
+    .dropzone-hint { font-size: 0.8125rem; color: var(--text-muted); }
+    .dropzone-file { font: 600 0.9rem var(--font-body); color: var(--brand); }
+
+    /* ── Alerts ── */
+    .alert-error {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      color: #f87171;
+      margin-bottom: 20px;
+    }
+
+    /* ── Progress card ── */
+    .progress-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      margin-top: 28px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 16px;
+    }
+    .progress-filename { font: 600 0.9rem var(--font-body); color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .progress-status { font-size: 0.8125rem; color: var(--text-muted); flex-shrink: 0; }
+    .progress-bar-wrap { background: var(--surface-2); border-radius: 999px; height: 6px; overflow: hidden; margin-bottom: 10px; }
+    .progress-bar { height: 100%; background: var(--brand); border-radius: 999px; transition: width 0.4s ease; width: 0%; }
+    .progress-count { font-size: 0.8125rem; color: var(--text-muted); }
+
+    /* ── Results header ── */
+    .results-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; }
+    .results-label { font: 400 1rem var(--font-body); color: var(--text-muted); }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .data-table th {
+      text-align: left;
+      padding: 11px 14px;
+      color: var(--text-muted);
+      font: 600 0.8125rem var(--font-body);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      background: var(--surface);
+    }
+    .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text-sec); vertical-align: top; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .empty-row td { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
+
+    /* ── Badges ── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font: 700 0.75rem var(--font-body); white-space: nowrap; }
+    .badge-matched        { background: rgba(34,197,94,0.12);  color: #4ade80; }
+    .badge-low_confidence { background: rgba(234,179,8,0.12);  color: #facc15; }
+    .badge-not_found      { background: rgba(239,68,68,0.12);  color: #f87171; }
+    .badge-complete       { background: rgba(34,197,94,0.12);  color: #4ade80; }
+    .badge-processing     { background: rgba(234,179,8,0.12);  color: #facc15; }
+    .badge-error          { background: rgba(239,68,68,0.12);  color: #f87171; }
+    .badge-pending        { background: rgba(184,196,210,0.1); color: var(--text-muted); }
+
+    /* ── EPC rating chips ── */
+    .epc-chip { display: inline-block; width: 30px; text-align: center; border-radius: 5px; font: 700 0.8125rem var(--font-body); padding: 2px 4px; }
+    .epc-A { background: #00b050; color: #fff; }
+    .epc-B { background: #92d050; color: #000; }
+    .epc-C { background: #ffff00; color: #000; }
+    .epc-D { background: #ffbf00; color: #000; }
+    .epc-E { background: #ff8000; color: #fff; }
+    .epc-F { background: #ff4000; color: #fff; }
+    .epc-G { background: #c00000; color: #fff; }
+
+    /* ── Misc ── */
+    .addr-cell { max-width: 240px; word-break: break-word; }
+    .heat-cell { max-width: 200px; word-break: break-word; font-size: 0.8125rem; }
+    .matched-cell { max-width: 240px; word-break: break-word; font-size: 0.8125rem; }
+  </style>
+</head>
+<body style="visibility:hidden">
+
+  <header class="dash-header">
+    <img src="/assets/thermova-logo.svg" class="dash-logo" alt="Thermova" onerror="this.style.display='none';document.querySelector('.dash-logo-text').style.display='block'">
+    <span class="dash-logo-text" style="display:none">Thermova</span>
+    <nav class="tab-nav" role="tablist">
+      <button role="tab" class="tab active" data-tab="upload">Upload</button>
+      <button role="tab" class="tab" data-tab="results">Results</button>
+      <button role="tab" class="tab" data-tab="history">History</button>
+    </nav>
+    <button id="signout-btn" class="btn-ghost">Sign out</button>
+  </header>
+
+  <main class="dash-main">
+
+    <!-- ── UPLOAD TAB ── -->
+    <section id="panel-upload" class="tab-panel active">
+      <h1>Upload CSV</h1>
+      <p class="panel-sub">CSV must contain an <strong>address</strong> column header. Maximum 2,000 rows.</p>
+
+      <label class="dropzone" id="dropzone" for="csv-input">
+        <input type="file" id="csv-input" accept=".csv" hidden>
+        <span class="dropzone-icon">📂</span>
+        <span class="dropzone-label">Drop CSV here or click to browse</span>
+        <span class="dropzone-hint" id="file-hint">Accepts .csv files only</span>
+      </label>
+
+      <div id="upload-error" class="alert-error" hidden></div>
+      <button class="btn-primary" id="upload-btn" disabled>Enrich Addresses</button>
+
+      <div id="progress-card" class="progress-card" hidden>
+        <div class="progress-header">
+          <span class="progress-filename" id="progress-filename"></span>
+          <span class="progress-status" id="progress-status">Processing…</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <p class="progress-count" id="progress-count"></p>
+      </div>
+    </section>
+
+    <!-- ── RESULTS TAB ── -->
+    <section id="panel-results" class="tab-panel">
+      <div class="results-header">
+        <div>
+          <h1>Results <span id="results-upload-label" class="results-label"></span></h1>
+          <p class="panel-sub" style="margin-bottom:0">Colour-coded by match confidence. Green ≥ 0.5 Jaccard, amber 0.3–0.5, red &lt; 0.3.</p>
+        </div>
+        <button class="btn-secondary" id="download-btn" disabled>⬇ Download CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="results-table">
+          <thead>
+            <tr>
+              <th>Input Address</th>
+              <th>EPC</th>
+              <th>SAP</th>
+              <th>Heating Source</th>
+              <th>Inspection Date</th>
+              <th>Matched Address</th>
+              <th>Confidence</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody">
+            <tr class="empty-row"><td colspan="7">No results loaded yet. Upload a CSV to get started.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── HISTORY TAB ── -->
+    <section id="panel-history" class="tab-panel">
+      <h1>Upload History</h1>
+      <p class="panel-sub">Your last 50 uploads. Click "View" on a completed upload to re-download results.</p>
+      <div class="table-wrap">
+        <table class="data-table" id="history-table">
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>Date</th>
+              <th>Rows</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            <tr class="empty-row"><td colspan="5">No uploads yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL  = "https://cyjbzemzjmfjsloogixw.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5amJ6ZW16am1manNsb29naXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDg4MDEsImV4cCI6MjA5MDk4NDgwMX0.mWjRiXc1wI4qj0hs0RAglVyMDtvV2emHtXjBvBYxRDA";
+    const EPC_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/process-epc`;
+
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    let currentResults = [];
+    let currentUploadId = null;
+    let pollingTimer = null;
+
+    // ── Auth guard ──
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        window.location.replace("auth-login.html");
+        return;
+      }
+      document.body.style.visibility = "visible";
+      initDashboard();
+    });
+
+    function initDashboard() {
+      // Tab switching
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => switchTab(tab.dataset.tab));
+      });
+
+      // Sign out
+      document.getElementById("signout-btn").addEventListener("click", async () => {
+        await sb.auth.signOut();
+        window.location.replace("auth-login.html");
+      });
+
+      // Upload button
+      document.getElementById("upload-btn").addEventListener("click", handleUpload);
+
+      // Download button
+      document.getElementById("download-btn").addEventListener("click", downloadEnrichedCSV);
+
+      // Dropzone drag/drop
+      const dropzone  = document.getElementById("dropzone");
+      const fileInput = document.getElementById("csv-input");
+
+      dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("drag-over"); });
+      dropzone.addEventListener("dragleave", () => dropzone.classList.remove("drag-over"));
+      dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.classList.remove("drag-over");
+        const file = e.dataTransfer.files[0];
+        if (file) setFile(file);
+      });
+      fileInput.addEventListener("change", () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+    }
+
+    // ── Tab switching ──
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab").forEach((t) =>
+        t.classList.toggle("active", t.dataset.tab === tabName)
+      );
+      document.querySelectorAll(".tab-panel").forEach((p) =>
+        p.classList.toggle("active", p.id === `panel-${tabName}`)
+      );
+      if (tabName === "history") loadHistory();
+    }
+
+    // ── File selection ──
+    function setFile(file) {
+      if (!file.name.toLowerCase().endsWith(".csv")) {
+        showUploadError("File must be a .csv");
+        return;
+      }
+      const hint = document.getElementById("file-hint");
+      hint.innerHTML = `<span class="dropzone-file">${esc(file.name)}</span> &nbsp;·&nbsp; ${(file.size / 1024).toFixed(1)} KB`;
+      document.getElementById("upload-btn").disabled = false;
+      document.getElementById("upload-error").hidden = true;
+      // Store file back into input via DataTransfer
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById("csv-input").files = dt.files;
+    }
+
+    // ── CSV parsing ──
+    function parseCSV(text) {
+      const lines = text.split(/\r?\n/).filter((l) => l.trim());
+      if (lines.length < 2) throw new Error("CSV must have a header row and at least one data row");
+
+      const headers = splitCSVLine(lines[0]).map((h) => h.trim().replace(/^"|"$/g, "").toLowerCase());
+      const addrIdx = headers.findIndex((h) => h === "address");
+      if (addrIdx === -1) throw new Error('CSV must contain an "address" column header');
+
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = splitCSVLine(lines[i]).map((c) => c.trim().replace(/^"|"$/g, ""));
+        const addr = cols[addrIdx]?.trim();
+        if (addr) rows.push(addr);
+      }
+
+      if (rows.length === 0) throw new Error("No address rows found in CSV");
+      if (rows.length > 2000) throw new Error("Maximum 2,000 rows per upload");
+      return rows;
+    }
+
+    function splitCSVLine(line) {
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQuotes = !inQuotes; continue; }
+        if (ch === "," && !inQuotes) { result.push(current); current = ""; continue; }
+        current += ch;
+      }
+      result.push(current);
+      return result;
+    }
+
+    // ── Upload handler ──
+    async function handleUpload() {
+      const btn = document.getElementById("upload-btn");
+      btn.disabled    = true;
+      btn.textContent = "Uploading…";
+
+      try {
+        const fileInput = document.getElementById("csv-input");
+        const file = fileInput.files[0];
+        if (!file) throw new Error("No file selected");
+
+        const text = await file.text();
+        const rows = parseCSV(text);
+
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) { window.location.replace("auth-login.html"); return; }
+
+        const res = await fetch(EPC_FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ filename: file.name, rows }),
+        });
+
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Server error (${res.status})`);
+        }
+
+        const { upload_id } = await res.json();
+        currentUploadId = upload_id;
+
+        // Show progress
+        document.getElementById("progress-filename").textContent = file.name;
+        document.getElementById("progress-status").textContent  = "Processing…";
+        document.getElementById("progress-bar").style.width     = "0%";
+        document.getElementById("progress-count").textContent   = `0 / ${rows.length} rows`;
+        document.getElementById("progress-card").hidden         = false;
+        document.getElementById("upload-error").hidden          = true;
+
+        startProgressPolling(upload_id, rows.length, file.name);
+
+      } catch (err) {
+        showUploadError(err.message);
+        btn.disabled    = false;
+        btn.textContent = "Enrich Addresses";
+      }
+    }
+
+    // ── Progress polling ──
+    function startProgressPolling(uploadId, totalRows, filename) {
+      if (pollingTimer) clearInterval(pollingTimer);
+
+      pollingTimer = setInterval(async () => {
+        const { data, error } = await sb
+          .from("epc_uploads")
+          .select("processed_rows, status, total_rows")
+          .eq("id", uploadId)
+          .single();
+
+        if (error || !data) return;
+
+        const processed = data.processed_rows ?? 0;
+        const total     = data.total_rows ?? totalRows;
+        const pct       = total > 0 ? Math.round((processed / total) * 100) : 0;
+
+        document.getElementById("progress-bar").style.width   = `${pct}%`;
+        document.getElementById("progress-count").textContent = `${processed} / ${total} rows`;
+
+        if (data.status === "complete") {
+          document.getElementById("progress-status").textContent = "Complete ✓";
+          document.getElementById("progress-bar").style.width    = "100%";
+          clearInterval(pollingTimer);
+          pollingTimer = null;
+          document.getElementById("upload-btn").disabled    = false;
+          document.getElementById("upload-btn").textContent = "Enrich Addresses";
+          await loadResults(uploadId, filename || "");
+          switchTab("results");
+        } else if (data.status === "error") {
+          document.getElementById("progress-status").textContent = "Error";
+          clearInterval(pollingTimer);
+          pollingTimer = null;
+          document.getElementById("upload-btn").disabled    = false;
+          document.getElementById("upload-btn").textContent = "Enrich Addresses";
+        } else {
+          document.getElementById("progress-status").textContent = "Processing…";
+        }
+      }, 2000);
+    }
+
+    // ── Load results ──
+    async function loadResults(uploadId, filenameLabel) {
+      document.getElementById("results-upload-label").textContent =
+        filenameLabel ? `— ${filenameLabel}` : "";
+
+      const { data, error } = await sb
+        .from("epc_results")
+        .select("*")
+        .eq("upload_id", uploadId)
+        .order("row_index", { ascending: true });
+
+      if (error || !data) {
+        document.getElementById("results-tbody").innerHTML =
+          `<tr class="empty-row"><td colspan="7">Failed to load results.</td></tr>`;
+        return;
+      }
+
+      currentResults = data;
+      renderResultsTable(data);
+      document.getElementById("download-btn").disabled = false;
+    }
+
+    function renderResultsTable(data) {
+      const tbody = document.getElementById("results-tbody");
+      if (!data.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No results found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map((row) => `
+        <tr>
+          <td class="addr-cell">${esc(row.input_address)}</td>
+          <td>${epcChip(row.epc_rating)}</td>
+          <td>${row.sap_score ?? "—"}</td>
+          <td class="heat-cell">${esc(row.heating_source ?? "—")}</td>
+          <td>${row.inspection_date ?? "—"}</td>
+          <td class="matched-cell">${esc(row.matched_address ?? "—")}</td>
+          <td>${confidenceBadge(row.match_confidence)}</td>
+        </tr>
+      `).join("");
+    }
+
+    // ── CSV download ──
+    function downloadEnrichedCSV() {
+      if (!currentResults.length) return;
+
+      const headers = [
+        "input_address","epc_rating","sap_score","heating_source",
+        "inspection_date","matched_address","match_confidence","jaccard_score","status"
+      ];
+      const lines = [headers.join(",")];
+
+      for (const row of currentResults) {
+        lines.push([
+          csvQ(row.input_address),
+          csvQ(row.epc_rating ?? ""),
+          csvQ(row.sap_score ?? ""),
+          csvQ(row.heating_source ?? ""),
+          csvQ(row.inspection_date ?? ""),
+          csvQ(row.matched_address ?? ""),
+          csvQ(row.match_confidence),
+          csvQ(row.jaccard_score ?? ""),
+          csvQ(row.status),
+        ].join(","));
+      }
+
+      const blob = new Blob([lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = `epc-enriched-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function csvQ(val) {
+      const s = String(val ?? "");
+      return (s.includes(",") || s.includes('"') || s.includes("\n"))
+        ? `"${s.replace(/"/g, '""')}"` : s;
+    }
+
+    // ── History ──
+    async function loadHistory() {
+      const { data, error } = await sb
+        .from("epc_uploads")
+        .select("id, filename, created_at, total_rows, processed_rows, status")
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      const tbody = document.getElementById("history-tbody");
+
+      if (error || !data || !data.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No uploads yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map((upload) => {
+        const date = new Date(upload.created_at).toLocaleString("en-GB", {
+          day: "numeric", month: "short", year: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        });
+        const action = upload.status === "complete"
+          ? `<button class="btn-ghost btn-sm" onclick="historyLoad('${upload.id}','${esc(upload.filename).replace(/'/g,"\\'")}')">View / Download</button>`
+          : "—";
+        return `
+          <tr>
+            <td>${esc(upload.filename)}</td>
+            <td style="white-space:nowrap">${date}</td>
+            <td>${upload.total_rows}</td>
+            <td>${statusBadge(upload.status)}</td>
+            <td>${action}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function historyLoad(uploadId, filename) {
+      await loadResults(uploadId, filename);
+      switchTab("results");
+    }
+
+    // ── Helpers ──
+    function esc(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function epcChip(rating) {
+      if (!rating) return "—";
+      const r = String(rating).toUpperCase();
+      return `<span class="epc-chip epc-${r}">${r}</span>`;
+    }
+
+    function confidenceBadge(conf) {
+      const labels = { matched: "Matched", low_confidence: "Low", not_found: "Not Found" };
+      const label  = labels[conf] ?? conf ?? "—";
+      return `<span class="badge badge-${conf ?? "pending"}">${label}</span>`;
+    }
+
+    function statusBadge(status) {
+      const labels = { complete: "Complete", processing: "Processing", error: "Error", pending: "Pending" };
+      return `<span class="badge badge-${status ?? "pending"}">${labels[status] ?? status}</span>`;
+    }
+
+    function showUploadError(msg) {
+      const el = document.getElementById("upload-error");
+      el.textContent = msg;
+      el.hidden = false;
+    }
+  </script>
+</body>
+</html>

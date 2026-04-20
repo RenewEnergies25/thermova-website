@@ -611,7 +611,7 @@
           csvQ(row.epc_rating ?? ""),
           csvQ(row.sap_score ?? ""),
           csvQ(row.heating_source ?? ""),
-          csvQ(row.inspection_date ?? ""),
+          csvQ(fmtDate(row.inspection_date)),
           csvQ(row.matched_address ?? ""),
           csvQ(row.match_confidence),
         ];
@@ -634,6 +634,12 @@
       const s = String(val ?? "");
       return (s.includes(",") || s.includes('"') || s.includes("\n"))
         ? `"${s.replace(/"/g, '""')}"` : s;
+    }
+
+    function fmtDate(iso) {
+      if (!iso || String(iso).length !== 10) return iso ?? "";
+      const [y, m, d] = String(iso).split("-");
+      return `${d}/${m}/${y}`;
     }
 
     // ── History ──

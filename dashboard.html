@@ -328,6 +328,8 @@
     let currentResults = [];
     let currentUploadId = null;
     let pollingTimer = null;
+    let originalHeaders = [];
+    let originalFullRows = [];
 
     const EPC_ORDER = { A:1, B:2, C:3, D:4, E:5, F:6, G:7 };
     function sortByEpcRating(results) {
@@ -411,20 +413,21 @@
       const lines = text.split(/\r?\n/).filter((l) => l.trim());
       if (lines.length < 2) throw new Error("CSV must have a header row and at least one data row");
 
-      const headers = splitCSVLine(lines[0]).map((h) => h.trim().replace(/^"|"$/g, "").toLowerCase());
-      const addrIdx = headers.findIndex((h) => h === "address");
+      const headers = splitCSVLine(lines[0]).map((h) => h.trim().replace(/^"|"$/g, ""));
+      const addrIdx = headers.findIndex((h) => h.trim().toLowerCase() === "address");
       if (addrIdx === -1) throw new Error('CSV must contain an "address" column header');
 
-      const rows = [];
+      const addresses = [];
+      const fullRows  = [];
       for (let i = 1; i < lines.length; i++) {
         const cols = splitCSVLine(lines[i]).map((c) => c.trim().replace(/^"|"$/g, ""));
         const addr = cols[addrIdx]?.trim();
-        if (addr) rows.push(addr);
+        if (addr) { addresses.push(addr); fullRows.push(cols); }
       }
 
-      if (rows.length === 0) throw new Error("No address rows found in CSV");
-      if (rows.length > 2000) throw new Error("Maximum 2,000 rows per upload");
-      return rows;
+      if (addresses.length === 0) throw new Error("No address rows found in CSV");
+      if (addresses.length > 2000) throw new Error("Maximum 2,000 rows per upload");
+      return { headers, addresses, fullRows };
     }
 
     function splitCSVLine(line) {
@@ -453,7 +456,9 @@
         if (!file) throw new Error("No file selected");
 
         const text = await file.text();
-        const rows = parseCSV(text);
+        const { headers, addresses, fullRows } = parseCSV(text);
+        originalHeaders  = headers;
+        originalFullRows = fullRows;
 
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { window.location.replace("auth-login.html"); return; }
@@ -464,7 +469,7 @@
             "Authorization": `Bearer ${session.access_token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ filename: file.name, rows }),
+          body: JSON.stringify({ filename: file.name, rows: addresses }),
         });
 
         if (!res.ok) {
@@ -479,11 +484,11 @@
         document.getElementById("progress-filename").textContent = file.name;
         document.getElementById("progress-status").textContent  = "Processing…";
         document.getElementById("progress-bar").style.width     = "0%";
-        document.getElementById("progress-count").textContent   = `0 / ${rows.length} rows`;
+        document.getElementById("progress-count").textContent   = `0 / ${addresses.length} rows`;
         document.getElementById("progress-card").hidden         = false;
         document.getElementById("upload-error").hidden          = true;
 
-        startProgressPolling(upload_id, rows.length, file.name);
+        startProgressPolling(upload_id, addresses.length, file.name);
 
       } catch (err) {
         showUploadError(err.message);
@@ -578,24 +583,29 @@
     function downloadEnrichedCSV() {
       if (!currentResults.length) return;
 
-      const headers = [
-        "input_address","epc_rating","sap_score","heating_source",
-        "inspection_date","matched_address","match_confidence","jaccard_score","status"
-      ];
-      const lines = [headers.join(",")];
+      const epcCols = ["epc_rating","sap_score","heating_source","inspection_date","matched_address","match_confidence"];
+      const hasOriginal = originalFullRows.length > 0;
+      const hdrs = hasOriginal
+        ? [...originalHeaders, ...epcCols]
+        : ["input_address", ...epcCols, "jaccard_score", "status"];
+      const lines = [hdrs.map(csvQ).join(",")];
 
       for (const row of sortByEpcRating(currentResults)) {
-        lines.push([
-          csvQ(row.input_address),
+        const epcVals = [
           csvQ(row.epc_rating ?? ""),
           csvQ(row.sap_score ?? ""),
           csvQ(row.heating_source ?? ""),
           csvQ(row.inspection_date ?? ""),
           csvQ(row.matched_address ?? ""),
           csvQ(row.match_confidence),
-          csvQ(row.jaccard_score ?? ""),
-          csvQ(row.status),
-        ].join(","));
+        ];
+        let cols;
+        if (hasOriginal && originalFullRows[row.row_index]) {
+          cols = [...originalFullRows[row.row_index].map(csvQ), ...epcVals];
+        } else {
+          cols = [csvQ(row.input_address), ...epcVals, csvQ(row.jaccard_score ?? ""), csvQ(row.status)];
+        }
+        lines.push(cols.join(","));
       }
 
       const blob = new Blob([lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });

@@ -53,8 +53,8 @@ function stripPostcode(address: string, postcode: string): string {
 
 const FLAT_PREFIXES = new Set(["flat", "apartment", "apt", "unit", "room"]);
 
-function buildAddressHint(inputAddress: string, postcode: string): string {
-  const stripped = stripPostcode(inputAddress, postcode);
+function buildAddressHint(inputAddress: string, postcode: string | null): string {
+  const stripped = postcode ? stripPostcode(inputAddress, postcode) : inputAddress;
   const expanded = expandAbbreviations(stripped);
   const tokens = expanded.split(/\s+/).filter(Boolean);
 
@@ -146,13 +146,26 @@ async function promisePool<T>(
   return results;
 }
 
+function inferPostcodeFromSiblings(inputAddress: string, allRows: string[]): string | null {
+  const inputHint = buildAddressHint(inputAddress, null);
+  for (const row of allRows) {
+    if (row === inputAddress) continue;
+    const pc = extractPostcode(row);
+    if (!pc) continue;
+    if (buildAddressHint(row, pc) === inputHint) return pc;
+  }
+  return null;
+}
+
 async function callEpcApi(
-  postcode: string,
+  postcode: string | null,
   addressHint: string,
   epcApiKey: string
 ): Promise<EpcRow[]> {
-  const params = new URLSearchParams({ postcode, address: addressHint, size: "25" });
-  const url = `https://epc.opendatacommunities.org/api/v1/domestic/search?${params}`;
+  // Use size=100 for address-only searches (no postcode) — results span the whole country
+  const params: Record<string, string> = { address: addressHint, size: postcode ? "25" : "100" };
+  if (postcode) params.postcode = postcode;
+  const url = `https://epc.opendatacommunities.org/api/v1/domestic/search?${new URLSearchParams(params)}`;
   const res = await fetch(url, {
     headers: {
       Authorization: `Basic ${epcApiKey}`,
@@ -174,22 +187,18 @@ async function enrichRow(
   uploadId: string,
   rowIndex: number,
   inputAddress: string,
+  allRows: string[],
   epcApiKey: string
 ): Promise<void> {
   try {
-    const postcode = extractPostcode(inputAddress);
+    let postcode: string | null = extractPostcode(inputAddress);
 
     if (!postcode) {
-      await supabase
-        .from("epc_results")
-        .update({
-          status: "complete",
-          match_confidence: "not_found",
-          error_message: "No UK postcode found in address",
-        })
-        .eq("upload_id", uploadId)
-        .eq("row_index", rowIndex);
-    } else {
+      postcode = inferPostcodeFromSiblings(inputAddress, allRows);
+    }
+
+    // postcode may still be null — callEpcApi handles address-only search
+    {
       const addressHint = buildAddressHint(inputAddress, postcode);
       const rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
       const deduplicated = deduplicateByLatestInspectionDate(rawRows);
@@ -335,7 +344,7 @@ Deno.serve(async (request: Request) => {
   // Background processing
   const processingPromise = (async () => {
     const tasks = rows.map((addr, i) => () =>
-      enrichRow(supabase, uploadId, i, addr, epcApiKey)
+      enrichRow(supabase, uploadId, i, addr, rows, epcApiKey)
     );
     await promisePool(tasks, 5);
     await supabase

@@ -33,6 +33,7 @@ const UK_ABBREVS: Record<string, string> = {
   gro: "grove", pk: "park", ter: "terrace", wk: "walk",
   wy: "way", blvd: "boulevard", hse: "house", bldg: "building",
   mws: "mews", pde: "parade",
+  redbank: "red bank",
 };
 
 function expandAbbreviations(s: string): string {
@@ -44,7 +45,15 @@ function expandAbbreviations(s: string): string {
 }
 
 function normalise(s: string): Set<string> {
-  return new Set(expandAbbreviations(s).split(/\s+/).filter(Boolean));
+  const tokens = expandAbbreviations(s).split(/\s+/).filter(Boolean);
+  const result: string[] = [];
+  for (const t of tokens) {
+    result.push(t);
+    // Expand number ranges: "43-47" → also add "43" and "47"
+    const m = t.match(/^(\d+)-(\d+)$/);
+    if (m) { result.push(m[1], m[2]); }
+  }
+  return new Set(result);
 }
 
 function stripPostcode(address: string, postcode: string): string {
@@ -76,7 +85,9 @@ function buildAddressHint(inputAddress: string, postcode: string | null): string
   // Return house number + next 2 tokens (street name) — city/county are intentionally excluded
   // as the EPC API returns empty when town names are included
   if (houseIdx !== -1) {
-    return tokens.slice(houseIdx, houseIdx + 3).join(" ");
+    // For range numbers like "2-7", use only the first number as the API hint
+    const houseToken = tokens[houseIdx].replace(/^(\d+)-\d+$/, "$1");
+    return [houseToken, ...tokens.slice(houseIdx + 1, houseIdx + 3)].join(" ");
   }
   return tokens.slice(0, 3).join(" ");
 }
@@ -101,7 +112,8 @@ function extractFlatNumber(address: string): string | null {
 
 function selectBest(
   rows: EpcRow[],
-  inputAddress: string
+  inputAddress: string,
+  inputHouseToken?: string | null
 ): { row: EpcRow; score: number } | null {
   if (rows.length === 0) return null;
   const inputTokens = normalise(inputAddress);
@@ -109,11 +121,22 @@ function selectBest(
   let best: { row: EpcRow; score: number } | null = null;
   for (const row of rows) {
     let score = jaccard(inputTokens, normalise(row.address));
-    // Penalise heavily if both sides have an explicit flat number and they disagree
+    // Penalise if both sides have an explicit flat number, same naming scheme, and they disagree
     if (inputFlat !== null) {
       const rowFlat = extractFlatNumber(row.address);
       if (rowFlat !== null && rowFlat !== inputFlat) {
-        score *= 0.5;
+        const inputFlatIsNum = /^\d/.test(inputFlat);
+        const rowFlatIsNum   = /^\d/.test(rowFlat);
+        if (inputFlatIsNum === rowFlatIsNum) {
+          score *= 0.5;
+        }
+      }
+    }
+    // Penalise if extracted house numbers are both present and disagree
+    if (inputHouseToken) {
+      const rowHouse = extractHouseToken(row.address);
+      if (rowHouse && rowHouse !== inputHouseToken) {
+        score *= 0.7;
       }
     }
     if (
@@ -171,16 +194,23 @@ function inferPostcodeFromSiblings(inputAddress: string, allRows: string[]): str
   return null;
 }
 
-function buildHouseNumberHint(inputAddress: string, postcode: string): string | null {
-  const stripped = stripPostcode(inputAddress, postcode);
-  const expanded = expandAbbreviations(stripped);
+function extractHouseToken(address: string): string | null {
+  const expanded = expandAbbreviations(address);
   const tokens = expanded.split(/\s+/).filter(Boolean);
   let start = 0;
   if (tokens[0] && FLAT_PREFIXES.has(tokens[0])) start = 2;
   for (let i = start; i < tokens.length; i++) {
-    if (/^\d+[-]?\d*[a-z]?$/.test(tokens[i])) return tokens[i];
+    if (/^\d+[-]?\d*[a-z]?$/.test(tokens[i])) {
+      // For ranges, return first number only
+      return tokens[i].replace(/^(\d+)-\d+$/, "$1");
+    }
   }
   return null;
+}
+
+function buildHouseNumberHint(inputAddress: string, postcode: string): string | null {
+  const stripped = stripPostcode(inputAddress, postcode);
+  return extractHouseToken(stripped);
 }
 
 async function lookupPostcodeFromNominatim(address: string): Promise<string | null> {
@@ -241,6 +271,9 @@ async function enrichRow(
     // postcode may still be null — callEpcApi handles address-only search
     {
       const addressHint = buildAddressHint(inputAddress, postcode);
+      const inputHouseToken = extractHouseToken(
+        postcode ? stripPostcode(inputAddress, postcode) : inputAddress
+      );
       let rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
 
       // Street-name mismatch retry: full hint returned nothing but postcode known →
@@ -252,15 +285,23 @@ async function enrichRow(
         }
       }
 
-      // Last resort: if no results and no postcode, try Nominatim geocoding then retry EPC
-      if (rawRows.length === 0 && !postcode) {
+      // Final fallback: try Nominatim to resolve postcode — runs whether or not we have one.
+      // Catches wrong postcodes (e.g. transposed digits) and completely missing postcodes.
+      if (rawRows.length === 0) {
         const nominatimPostcode = await lookupPostcodeFromNominatim(inputAddress);
-        if (nominatimPostcode) {
+        if (nominatimPostcode && nominatimPostcode !== postcode) {
           rawRows = await callEpcApi(nominatimPostcode, addressHint, epcApiKey);
+          if (rawRows.length === 0) {
+            const houseHint = inputHouseToken;
+            if (houseHint) {
+              rawRows = await callEpcApi(nominatimPostcode, houseHint, epcApiKey);
+            }
+          }
         }
       }
+
       const deduplicated = deduplicateByLatestInspectionDate(rawRows);
-      const best = selectBest(deduplicated, inputAddress);
+      const best = selectBest(deduplicated, inputAddress, inputHouseToken);
 
       const confidence = (!best || best.score === 0) ? "not_found" : classify(best.score);
 

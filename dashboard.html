@@ -429,12 +429,19 @@
         const addr = cols[addrIdx]?.trim();
         if (!addr) continue;
 
-        // If postcode column present, address lacks a full postcode, and postcode col has one → append
+        // If postcode column present, address lacks a full postcode, and postcode col has one →
+        // replace trailing outward code (if present) with full postcode, else append
         let sendAddr = addr;
         if (pcIdx !== -1) {
           const pc = cols[pcIdx]?.trim() ?? "";
           if (pc && !fullPcRe.test(addr) && fullPcRe.test(pc)) {
-            sendAddr = `${addr} ${pc}`;
+            const outward = pc.split(/\s+/)[0];
+            const trailingOutwardRe = new RegExp(`\\b${outward}\\s*$`, "i");
+            if (trailingOutwardRe.test(addr)) {
+              sendAddr = addr.replace(trailingOutwardRe, pc).trim();
+            } else {
+              sendAddr = `${addr} ${pc}`;
+            }
           }
         }
 

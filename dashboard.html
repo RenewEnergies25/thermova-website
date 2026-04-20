@@ -334,7 +334,8 @@
     const EPC_ORDER = { A:1, B:2, C:3, D:4, E:5, F:6, G:7 };
     function sortByEpcRating(results) {
       return [...results].sort((a, b) =>
-        (EPC_ORDER[a.epc_rating] ?? 8) - (EPC_ORDER[b.epc_rating] ?? 8)
+        (EPC_ORDER[(a.epc_rating ?? "").toUpperCase()] ?? 8) -
+        (EPC_ORDER[(b.epc_rating ?? "").toUpperCase()] ?? 8)
       );
     }
 
@@ -479,6 +480,10 @@
 
         const { upload_id } = await res.json();
         currentUploadId = upload_id;
+        sessionStorage.setItem(
+          `epc_orig_${upload_id}`,
+          JSON.stringify({ headers: originalHeaders, fullRows: originalFullRows })
+        );
 
         // Show progress
         document.getElementById("progress-filename").textContent = file.name;
@@ -583,11 +588,22 @@
     function downloadEnrichedCSV() {
       if (!currentResults.length) return;
 
+      let origHeaders  = originalHeaders;
+      let origFullRows = originalFullRows;
+      if (origFullRows.length === 0 && currentUploadId) {
+        const stored = sessionStorage.getItem(`epc_orig_${currentUploadId}`);
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            origHeaders  = parsed.headers  ?? [];
+            origFullRows = parsed.fullRows ?? [];
+          } catch (_) { /* ignore corrupt entry */ }
+        }
+      }
+
       const epcCols = ["epc_rating","sap_score","heating_source","inspection_date","matched_address","match_confidence"];
-      const hasOriginal = originalFullRows.length > 0;
-      const hdrs = hasOriginal
-        ? [...originalHeaders, ...epcCols]
-        : ["input_address", ...epcCols];
+      const hasOriginal = origFullRows.length > 0;
+      const hdrs = hasOriginal ? [...origHeaders, ...epcCols] : ["input_address", ...epcCols];
       const lines = [hdrs.map(csvQ).join(",")];
 
       for (const row of sortByEpcRating(currentResults)) {
@@ -599,12 +615,9 @@
           csvQ(row.matched_address ?? ""),
           csvQ(row.match_confidence),
         ];
-        let cols;
-        if (hasOriginal && originalFullRows[row.row_index]) {
-          cols = [...originalFullRows[row.row_index].map(csvQ), ...epcVals];
-        } else {
-          cols = [csvQ(row.input_address), ...epcVals];
-        }
+        const cols = (hasOriginal && origFullRows[row.row_index])
+          ? [...origFullRows[row.row_index].map(csvQ), ...epcVals]
+          : [csvQ(row.input_address), ...epcVals];
         lines.push(cols.join(","));
       }
 
@@ -659,6 +672,9 @@
     }
 
     async function historyLoad(uploadId, filename) {
+      currentUploadId = uploadId;
+      originalFullRows = [];
+      originalHeaders  = [];
       await loadResults(uploadId, filename);
       switchTab("results");
     }

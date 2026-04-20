@@ -157,6 +157,18 @@ function inferPostcodeFromSiblings(inputAddress: string, allRows: string[]): str
   return null;
 }
 
+function buildHouseNumberHint(inputAddress: string, postcode: string): string | null {
+  const stripped = stripPostcode(inputAddress, postcode);
+  const expanded = expandAbbreviations(stripped);
+  const tokens = expanded.split(/\s+/).filter(Boolean);
+  let start = 0;
+  if (tokens[0] && FLAT_PREFIXES.has(tokens[0])) start = 2;
+  for (let i = start; i < tokens.length; i++) {
+    if (/^\d+[-]?\d*[a-z]?$/.test(tokens[i])) return tokens[i];
+  }
+  return null;
+}
+
 async function lookupPostcodeFromNominatim(address: string): Promise<string | null> {
   const q = encodeURIComponent(address + " UK");
   const url = `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1&countrycodes=gb&limit=3`;
@@ -216,6 +228,15 @@ async function enrichRow(
     {
       const addressHint = buildAddressHint(inputAddress, postcode);
       let rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
+
+      // Street-name mismatch retry: full hint returned nothing but postcode known →
+      // retry with bare house number so typos like "Princes" vs "Princess" don't matter
+      if (rawRows.length === 0 && postcode) {
+        const houseHint = buildHouseNumberHint(inputAddress, postcode);
+        if (houseHint) {
+          rawRows = await callEpcApi(postcode, houseHint, epcApiKey);
+        }
+      }
 
       // Last resort: if no results and no postcode, try Nominatim geocoding then retry EPC
       if (rawRows.length === 0 && !postcode) {

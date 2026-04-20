@@ -329,6 +329,13 @@
     let currentUploadId = null;
     let pollingTimer = null;
 
+    const EPC_ORDER = { A:1, B:2, C:3, D:4, E:5, F:6, G:7 };
+    function sortByEpcRating(results) {
+      return [...results].sort((a, b) =>
+        (EPC_ORDER[a.epc_rating] ?? 8) - (EPC_ORDER[b.epc_rating] ?? 8)
+      );
+    }
+
     // ── Auth guard ──
     sb.auth.getSession().then(({ data }) => {
       if (!data.session) {
@@ -543,8 +550,8 @@
         return;
       }
 
-      currentResults = data;
-      renderResultsTable(data);
+      currentResults = sortByEpcRating(data);
+      renderResultsTable(currentResults);
       document.getElementById("download-btn").disabled = false;
     }
 
@@ -577,7 +584,7 @@
       ];
       const lines = [headers.join(",")];
 
-      for (const row of currentResults) {
+      for (const row of sortByEpcRating(currentResults)) {
         lines.push([
           csvQ(row.input_address),
           csvQ(row.epc_rating ?? ""),

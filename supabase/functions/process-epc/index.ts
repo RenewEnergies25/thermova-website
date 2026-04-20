@@ -26,13 +26,59 @@ function extractPostcode(address: string): string | null {
   return m ? m[1].replace(/\s+/, " ").toUpperCase() : null;
 }
 
+const UK_ABBREVS: Record<string, string> = {
+  rd: "road", st: "street", ave: "avenue", ln: "lane",
+  dr: "drive", cl: "close", cres: "crescent", ct: "court",
+  pl: "place", sq: "square", gdns: "gardens", grn: "green",
+  gro: "grove", pk: "park", ter: "terrace", wk: "walk",
+  wy: "way", blvd: "boulevard", hse: "house", bldg: "building",
+  mws: "mews", pde: "parade",
+};
+
+function expandAbbreviations(s: string): string {
+  return s.toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(/\s+/)
+    .map((t) => UK_ABBREVS[t] ?? t)
+    .join(" ");
+}
+
 function normalise(s: string): Set<string> {
-  return new Set(
-    s.toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .split(/\s+/)
-      .filter(Boolean)
-  );
+  return new Set(expandAbbreviations(s).split(/\s+/).filter(Boolean));
+}
+
+function stripPostcode(address: string, postcode: string): string {
+  return address.replace(new RegExp(postcode.replace(/\s+/g, "\\s*"), "i"), "").trim();
+}
+
+const FLAT_PREFIXES = new Set(["flat", "apartment", "apt", "unit", "room"]);
+
+function buildAddressHint(inputAddress: string, postcode: string): string {
+  const stripped = stripPostcode(inputAddress, postcode);
+  const expanded = expandAbbreviations(stripped);
+  const tokens = expanded.split(/\s+/).filter(Boolean);
+
+  // Skip past a flat/apartment prefix ("flat 6", "unit 2") to reach the house number
+  let start = 0;
+  if (tokens[0] && FLAT_PREFIXES.has(tokens[0])) {
+    start = 2;
+  }
+
+  // Find the first house number (digits, optionally followed by one letter: 12, 12A)
+  let houseIdx = -1;
+  for (let i = start; i < tokens.length; i++) {
+    if (/^\d+[a-z]?$/.test(tokens[i])) {
+      houseIdx = i;
+      break;
+    }
+  }
+
+  // Return house number + next 2 tokens (street name) — city/county are intentionally excluded
+  // as the EPC API returns empty when town names are included
+  if (houseIdx !== -1) {
+    return tokens.slice(houseIdx, houseIdx + 3).join(" ");
+  }
+  return tokens.slice(0, 3).join(" ");
 }
 
 function jaccard(a: Set<string>, b: Set<string>): number {
@@ -102,12 +148,11 @@ async function promisePool<T>(
 
 async function callEpcApi(
   postcode: string,
+  addressHint: string,
   epcApiKey: string
 ): Promise<EpcRow[]> {
-  const url =
-    `https://epc.opendatacommunities.org/api/v1/domestic/search?postcode=${
-      encodeURIComponent(postcode)
-    }&size=25`;
+  const params = new URLSearchParams({ postcode, address: addressHint, size: "25" });
+  const url = `https://epc.opendatacommunities.org/api/v1/domestic/search?${params}`;
   const res = await fetch(url, {
     headers: {
       Authorization: `Basic ${epcApiKey}`,
@@ -145,7 +190,8 @@ async function enrichRow(
         .eq("upload_id", uploadId)
         .eq("row_index", rowIndex);
     } else {
-      const rawRows = await callEpcApi(postcode, epcApiKey);
+      const addressHint = buildAddressHint(inputAddress, postcode);
+      const rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
       const deduplicated = deduplicateByLatestInspectionDate(rawRows);
       const best = selectBest(deduplicated, inputAddress);
 

@@ -587,7 +587,7 @@
       const hasOriginal = originalFullRows.length > 0;
       const hdrs = hasOriginal
         ? [...originalHeaders, ...epcCols]
-        : ["input_address", ...epcCols, "jaccard_score", "status"];
+        : ["input_address", ...epcCols];
       const lines = [hdrs.map(csvQ).join(",")];
 
       for (const row of sortByEpcRating(currentResults)) {
@@ -603,7 +603,7 @@
         if (hasOriginal && originalFullRows[row.row_index]) {
           cols = [...originalFullRows[row.row_index].map(csvQ), ...epcVals];
         } else {
-          cols = [csvQ(row.input_address), ...epcVals, csvQ(row.jaccard_score ?? ""), csvQ(row.status)];
+          cols = [csvQ(row.input_address), ...epcVals];
         }
         lines.push(cols.join(","));
       }

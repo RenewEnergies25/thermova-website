@@ -37,7 +37,7 @@ const UK_ABBREVS: Record<string, string> = {
 
 function expandAbbreviations(s: string): string {
   return s.toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/[^a-z0-9\s\-]/g, "")
     .split(/\s+/)
     .map((t) => UK_ABBREVS[t] ?? t)
     .join(" ");
@@ -67,7 +67,7 @@ function buildAddressHint(inputAddress: string, postcode: string | null): string
   // Find the first house number (digits, optionally followed by one letter: 12, 12A)
   let houseIdx = -1;
   for (let i = start; i < tokens.length; i++) {
-    if (/^\d+[a-z]?$/.test(tokens[i])) {
+    if (/^\d+[-]?\d*[a-z]?$/.test(tokens[i])) {
       houseIdx = i;
       break;
     }
@@ -157,6 +157,21 @@ function inferPostcodeFromSiblings(inputAddress: string, allRows: string[]): str
   return null;
 }
 
+async function lookupPostcodeFromNominatim(address: string): Promise<string | null> {
+  const q = encodeURIComponent(address + " UK");
+  const url = `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1&countrycodes=gb&limit=3`;
+  const res = await fetch(url, {
+    headers: { "User-Agent": "thermova-epc-enrichment/1.0 (deangriff19@gmail.com)" },
+  }).catch(() => null);
+  if (!res || !res.ok) return null;
+  const items = await res.json().catch(() => []);
+  for (const item of items) {
+    const pc = (item as Record<string, Record<string, string>>).address?.postcode;
+    if (pc) return pc.replace(/\s+/, " ").toUpperCase();
+  }
+  return null;
+}
+
 async function callEpcApi(
   postcode: string | null,
   addressHint: string,
@@ -200,7 +215,15 @@ async function enrichRow(
     // postcode may still be null — callEpcApi handles address-only search
     {
       const addressHint = buildAddressHint(inputAddress, postcode);
-      const rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
+      let rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
+
+      // Last resort: if no results and no postcode, try Nominatim geocoding then retry EPC
+      if (rawRows.length === 0 && !postcode) {
+        const nominatimPostcode = await lookupPostcodeFromNominatim(inputAddress);
+        if (nominatimPostcode) {
+          rawRows = await callEpcApi(nominatimPostcode, addressHint, epcApiKey);
+        }
+      }
       const deduplicated = deduplicateByLatestInspectionDate(rawRows);
       const best = selectBest(deduplicated, inputAddress);
 

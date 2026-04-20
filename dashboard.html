@@ -415,15 +415,31 @@
       if (lines.length < 2) throw new Error("CSV must have a header row and at least one data row");
 
       const headers = splitCSVLine(lines[0]).map((h) => h.trim().replace(/^"|"$/g, ""));
-      const addrIdx = headers.findIndex((h) => h.trim().toLowerCase() === "address");
+      const normH   = headers.map((h) => h.trim().toLowerCase());
+      const addrIdx = normH.findIndex((h) => h === "address");
       if (addrIdx === -1) throw new Error('CSV must contain an "address" column header');
 
-      const addresses = [];
-      const fullRows  = [];
+      // Detect postcode column ("postcode", "post code", "post_code" — case-insensitive)
+      const pcIdx    = normH.findIndex((h) => /^post[\s_]?code$/.test(h));
+      const fullPcRe = /\b[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}\b/i;
+
+      const addresses = [], fullRows = [];
       for (let i = 1; i < lines.length; i++) {
         const cols = splitCSVLine(lines[i]).map((c) => c.trim().replace(/^"|"$/g, ""));
         const addr = cols[addrIdx]?.trim();
-        if (addr) { addresses.push(addr); fullRows.push(cols); }
+        if (!addr) continue;
+
+        // If postcode column present, address lacks a full postcode, and postcode col has one → append
+        let sendAddr = addr;
+        if (pcIdx !== -1) {
+          const pc = cols[pcIdx]?.trim() ?? "";
+          if (pc && !fullPcRe.test(addr) && fullPcRe.test(pc)) {
+            sendAddr = `${addr} ${pc}`;
+          }
+        }
+
+        addresses.push(sendAddr);
+        fullRows.push(cols);
       }
 
       if (addresses.length === 0) throw new Error("No address rows found in CSV");

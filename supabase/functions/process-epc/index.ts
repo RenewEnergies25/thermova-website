@@ -93,15 +93,29 @@ function classify(score: number): "matched" | "low_confidence" | "not_found" {
   return "not_found";
 }
 
+function extractFlatNumber(address: string): string | null {
+  // Returns the flat identifier ("2", "2a", "c") or null for non-numeric flat labels
+  const m = address.match(/\bflat\s+([a-z\d]+)/i);
+  return m ? m[1].toLowerCase() : null;
+}
+
 function selectBest(
   rows: EpcRow[],
   inputAddress: string
 ): { row: EpcRow; score: number } | null {
   if (rows.length === 0) return null;
   const inputTokens = normalise(inputAddress);
+  const inputFlat   = extractFlatNumber(inputAddress);
   let best: { row: EpcRow; score: number } | null = null;
   for (const row of rows) {
-    const score = jaccard(inputTokens, normalise(row.address));
+    let score = jaccard(inputTokens, normalise(row.address));
+    // Penalise heavily if both sides have an explicit flat number and they disagree
+    if (inputFlat !== null) {
+      const rowFlat = extractFlatNumber(row.address);
+      if (rowFlat !== null && rowFlat !== inputFlat) {
+        score *= 0.5;
+      }
+    }
     if (
       !best ||
       score > best.score ||
@@ -248,32 +262,31 @@ async function enrichRow(
       const deduplicated = deduplicateByLatestInspectionDate(rawRows);
       const best = selectBest(deduplicated, inputAddress);
 
-      if (!best || best.score === 0) {
+      const confidence = (!best || best.score === 0) ? "not_found" : classify(best.score);
+
+      if (confidence === "not_found") {
         await supabase
           .from("epc_results")
           .update({ status: "complete", match_confidence: "not_found" })
           .eq("upload_id", uploadId)
           .eq("row_index", rowIndex);
       } else {
-        const confidence = classify(best.score);
-        const sapRaw = best.row["current-energy-efficiency"];
+        const sapRaw = best!.row["current-energy-efficiency"];
         const sapScore = sapRaw ? parseInt(sapRaw) || null : null;
-        const inspDateRaw = best.row["inspection-date"];
-        const inspDate = inspDateRaw && inspDateRaw.length === 10
-          ? inspDateRaw
-          : null;
+        const inspDateRaw = best!.row["inspection-date"];
+        const inspDate = inspDateRaw && inspDateRaw.length === 10 ? inspDateRaw : null;
 
         await supabase
           .from("epc_results")
           .update({
             status: "complete",
-            matched_address: best.row["address"] ?? null,
-            epc_rating: best.row["current-energy-rating"] ?? null,
+            matched_address: best!.row["address"] ?? null,
+            epc_rating: best!.row["current-energy-rating"] ?? null,
             sap_score: sapScore,
-            heating_source: best.row["mainheat-description"] ?? null,
+            heating_source: best!.row["mainheat-description"] ?? null,
             inspection_date: inspDate,
             match_confidence: confidence,
-            jaccard_score: Math.round(best.score * 1000) / 1000,
+            jaccard_score: Math.round(best!.score * 1000) / 1000,
           })
           .eq("upload_id", uploadId)
           .eq("row_index", rowIndex);

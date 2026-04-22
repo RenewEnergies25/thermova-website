@@ -13,4 +13,19 @@
     <lastmod>2026-04-21T06:55:29+00:00</lastmod>
     <priority>0.80</priority>
   </url>
+  <url>
+    <loc>https://thermova.uk/privacy</loc>
+    <lastmod>2026-04-22</lastmod>
+    <priority>0.30</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/terms</loc>
+    <lastmod>2026-04-22</lastmod>
+    <priority>0.30</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/cookies</loc>
+    <lastmod>2026-04-22</lastmod>
+    <priority>0.30</priority>
+  </url>
 </urlset>

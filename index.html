@@ -1429,6 +1429,10 @@
     justify-content: center;
   }
 
+  .reviews-widget-container {
+    min-height: 280px;
+  }
+
   .testimonial {
     padding: 24px;
     border-radius: var(--radius-md);
@@ -2364,11 +2368,11 @@
     </div>
   </section>
 
-  <section class="section section-dark" id="testimonials" aria-labelledby="testimonials-h">
+  <section class="section section-dark" id="partners" aria-labelledby="partners-h">
     <div class="shell">
       <div class="section-head center">
         <p class="section-label">Trusted by estate agents</p>
-        <h2 id="testimonials-h">Recommended by estate agents on the Fylde Coast.</h2>
+        <h2 id="partners-h">Recommended by estate agents on the Fylde Coast.</h2>
       </div>
       <div class="testimonials-grid">
         <article class="testimonial testimonial-feature">
@@ -2380,6 +2384,24 @@
             <span class="testimonial-meta-line">Fleetwood&rsquo;s award-winning estate agent since 1995</span>
           </div>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-mid" id="reviews" aria-labelledby="reviews-h">
+    <div class="shell">
+      <div class="section-head center">
+        <p class="section-label">What our customers say</p>
+        <h2 id="reviews-h">Real reviews from real customers.</h2>
+        <p class="section-intro">Fresh from our <a href="https://share.google/pyciTlsxkmu5hdCYT" target="_blank" rel="noopener noreferrer">Google Business Profile</a>, updated automatically.</p>
+      </div>
+
+      <!-- Google Reviews widget. Sign in at elfsight.com, create a Google Reviews widget,
+           connect the Thermova Ltd profile, and replace the placeholder div below with
+           the widget div (e.g. <div class="elfsight-app-1a2b3c4d-..."></div>).
+           The widget <script> tag goes near the bottom of this file next to the other vendor scripts. -->
+      <div class="reviews-widget-container">
+        <!-- GOOGLE_REVIEWS_WIDGET_PLACEHOLDER -->
       </div>
     </div>
   </section>
@@ -3135,5 +3157,10 @@
   }());
   // ── End scroll-reveal animations ─────────────────────────────────────
 </script>
+
+<!-- Google Reviews widget script for the #reviews section.
+     After setting up the Elfsight (or chosen widget vendor) Google Reviews app,
+     paste the vendor's <script> tag here. Example (Elfsight):
+     <script src="https://static.elfsight.com/platform/platform.js" async></script> -->
 </body>
 </html>

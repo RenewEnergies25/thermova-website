@@ -112,6 +112,43 @@ function extractFlatNumber(address: string): string | null {
   return m ? m[1].toLowerCase() : null;
 }
 
+// Returns a normalised floor-position token (ground / first / second / third / fourth /
+// middle / mezzanine / top / basement / lower_ground) or null. Distinct from extractFlatNumber:
+// "Top Floor Flat" and "Ground Floor Flat" describe vertical position, not unit identity.
+function extractFloorQualifier(address: string): string | null {
+  const norm = " " + address.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ") + " ";
+  // Order: specific ordinals first so "second floor" doesn't get caught by a looser "top floor" match.
+  if (/\bbasement\s+(?:floor\s+)?(?:flat|apartment|apt|unit)\b/.test(norm)) return "basement";
+  if (/\b(?:flat|apartment|apt|unit)\s+basement\b/.test(norm)) return "basement";
+  if (/\blower\s+ground\b/.test(norm)) return "lower_ground";
+  if (/\bground\s+(?:floor\s+)?(?:flat|apartment|apt|unit)\b/.test(norm)) return "ground";
+  if (/\b(?:flat|apartment|apt|unit)\s+ground(?:\s+floor)?\b/.test(norm)) return "ground";
+  if (/\bground\s+floor\b/.test(norm)) return "ground";
+  if (/\b(?:first|1st)\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+(?:first|1st)(?:\s+floor)?\b/.test(norm)) return "first";
+  if (/\b(?:second|2nd)\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+(?:second|2nd)(?:\s+floor)?\b/.test(norm)) return "second";
+  if (/\b(?:third|3rd)\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+(?:third|3rd)(?:\s+floor)?\b/.test(norm)) return "third";
+  if (/\b(?:fourth|4th)\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+(?:fourth|4th)(?:\s+floor)?\b/.test(norm)) return "fourth";
+  if (/\bmiddle\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+middle(?:\s+floor)?\b/.test(norm)) return "middle";
+  if (/\bmezzanine\b/.test(norm)) return "mezzanine";
+  if (/\b(?:top|upper)\s+(?:floor\s+)?(?:flat|apartment|apt|unit)\b/.test(norm)) return "top";
+  if (/\b(?:flat|apartment|apt|unit)\s+(?:top|upper)(?:\s+floor)?\b/.test(norm)) return "top";
+  if (/\b(?:top|upper)\s+floor\b/.test(norm)) return "top";
+  return null;
+}
+
+// Two floor qualifiers conflict if they reference different vertical positions.
+// "top" pairs harmlessly with any specific upper floor (first/second/etc.) — the user may not
+// know the exact storey — but it does conflict with ground-level qualifiers (ground/basement).
+function floorQualifiersConflict(a: string, b: string): boolean {
+  if (a === b) return false;
+  const groundLevel = new Set(["basement", "lower_ground", "ground"]);
+  if (a === "top" || b === "top") {
+    const other = a === "top" ? b : a;
+    return groundLevel.has(other);
+  }
+  return true;
+}
+
 function selectBest(
   rows: EpcRow[],
   inputAddress: string,
@@ -120,6 +157,7 @@ function selectBest(
   if (rows.length === 0) return null;
   const inputTokens   = normalise(inputAddress);
   const inputFlat     = extractFlatNumber(inputAddress);
+  const inputFloor    = extractFloorQualifier(inputAddress);
   const inputPostcode = extractPostcode(inputAddress);
   let best: { row: EpcRow; score: number } | null = null;
   for (const row of rows) {
@@ -145,6 +183,15 @@ function selectBest(
         if (inputFlatIsNum === rowFlatIsNum) {
           score *= 0.5;
         }
+      }
+    }
+    // Floor-qualifier penalty: "Top Floor Flat" vs "Ground Floor Flat" at the same address are
+    // different properties. A 0.3× multiplier demotes same-postcode+same-house pairs with
+    // conflicting floor labels below the 0.3 not_found threshold even after the short-circuit boost.
+    if (inputFloor !== null) {
+      const rowFloor = extractFloorQualifier(row.address);
+      if (rowFloor !== null && floorQualifiersConflict(inputFloor, rowFloor)) {
+        score *= 0.3;
       }
     }
     // Penalise if extracted house numbers are both present and disagree

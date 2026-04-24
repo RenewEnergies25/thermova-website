@@ -33,6 +33,8 @@ const UK_ABBREVS: Record<string, string> = {
   gro: "grove", pk: "park", ter: "terrace", wk: "walk",
   wy: "way", blvd: "boulevard", hse: "house", bldg: "building",
   mws: "mews", pde: "parade",
+  n: "north", s: "south", e: "east", w: "west",
+  gt: "great", lt: "little", mt: "mount", hts: "heights",
   redbank: "red bank",
 };
 
@@ -116,11 +118,24 @@ function selectBest(
   inputHouseToken?: string | null
 ): { row: EpcRow; score: number } | null {
   if (rows.length === 0) return null;
-  const inputTokens = normalise(inputAddress);
-  const inputFlat   = extractFlatNumber(inputAddress);
+  const inputTokens   = normalise(inputAddress);
+  const inputFlat     = extractFlatNumber(inputAddress);
+  const inputPostcode = extractPostcode(inputAddress);
   let best: { row: EpcRow; score: number } | null = null;
   for (const row of rows) {
     let score = jaccard(inputTokens, normalise(row.address));
+    // Exact-anchor short-circuit: same postcode AND same house token → promote above the matched threshold
+    // so formatting-only differences in the street name (e.g. "Rd" vs "Lane") can't demote the match.
+    // Flat/house penalties below still apply, so mismatched flats at the same address demote back.
+    if (inputPostcode && inputHouseToken) {
+      const rowPostcode = extractPostcode(row.address);
+      if (rowPostcode && rowPostcode === inputPostcode) {
+        const rowHouse = extractHouseToken(row.address);
+        if (rowHouse && rowHouse === inputHouseToken) {
+          score = Math.max(score, 0.55);
+        }
+      }
+    }
     // Penalise if both sides have an explicit flat number, same naming scheme, and they disagree
     if (inputFlat !== null) {
       const rowFlat = extractFlatNumber(row.address);

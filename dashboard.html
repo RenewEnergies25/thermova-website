@@ -153,6 +153,17 @@
       color: #f87171;
       margin-bottom: 20px;
     }
+    .detection-summary {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .detection-summary strong { color: var(--text); font-weight: 600; }
 
     /* ── Progress card ── */
     .progress-card {
@@ -240,16 +251,17 @@
     <!-- ── UPLOAD TAB ── -->
     <section id="panel-upload" class="tab-panel active">
       <h1>Upload CSV</h1>
-      <p class="panel-sub">CSV must contain an <strong>address</strong> column header. Maximum 2,000 rows.</p>
+      <p class="panel-sub">Headers optional — if absent we auto-detect address and postcode columns. Comma- or tab-separated. Maximum 2,000 rows.</p>
 
       <label class="dropzone" id="dropzone" for="csv-input">
-        <input type="file" id="csv-input" accept=".csv" hidden>
+        <input type="file" id="csv-input" accept=".csv,.tsv,.txt" hidden>
         <span class="dropzone-icon">📂</span>
         <span class="dropzone-label">Drop CSV here or click to browse</span>
-        <span class="dropzone-hint" id="file-hint">Accepts .csv files only</span>
+        <span class="dropzone-hint" id="file-hint">Accepts .csv, .tsv, or .txt</span>
       </label>
 
       <div id="upload-error" class="alert-error" hidden></div>
+      <div id="detection-summary" class="detection-summary" hidden></div>
       <button class="btn-primary" id="upload-btn" disabled>Enrich Addresses</button>
 
       <div id="progress-card" class="progress-card" hidden>
@@ -395,14 +407,15 @@
 
     // ── File selection ──
     function setFile(file) {
-      if (!file.name.toLowerCase().endsWith(".csv")) {
-        showUploadError("File must be a .csv");
+      if (!/\.(csv|tsv|txt)$/i.test(file.name)) {
+        showUploadError("File must be .csv, .tsv, or .txt");
         return;
       }
       const hint = document.getElementById("file-hint");
       hint.innerHTML = `<span class="dropzone-file">${esc(file.name)}</span> &nbsp;·&nbsp; ${(file.size / 1024).toFixed(1)} KB`;
       document.getElementById("upload-btn").disabled = false;
       document.getElementById("upload-error").hidden = true;
+      renderDetectionSummary(null);
       // Store file back into input via DataTransfer
       const dt = new DataTransfer();
       dt.items.add(file);
@@ -468,6 +481,219 @@
       return result;
     }
 
+    // ── Auto-detecting fallback parser (kicks in when parseCSV rejects the file) ──
+    const KNOWN_HEADER_ROLES = (() => {
+      const pc  = ["postcode","postalcode","zip","zipcode","pcode","postcd"];
+      const adr = ["address","addr","addressline1","addressline2","addressline3",
+                   "line1","line2","line3","street","streetaddress","streetname",
+                   "town","city","locality","county","region","building",
+                   "houseno","housenumber","housename","premises","thoroughfare"];
+      const ign = ["name","firstname","lastname","fullname","owner","ownername",
+                   "email","emailaddress","phone","tel","telephone","mobile",
+                   "id","customerid","ref","reference","notes","comments",
+                   "date","createdat","updatedat","status","price","amount","value"];
+      const m = {};
+      pc.forEach((k) => (m[k] = "postcode"));
+      adr.forEach((k) => (m[k] = "address"));
+      ign.forEach((k) => (m[k] = "ignore"));
+      return m;
+    })();
+
+    const AUTO_PC_RE       = /\b[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}\b/i;
+    const AUTO_PC_FULL_RE  = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}$/i;
+    const AUTO_HOUSENUM_RE = /^\d+[a-z]?\s+\S/i;
+
+    function autoNormHeader(s) { return (s || "").toLowerCase().replace(/[^a-z0-9]/g, ""); }
+    function autoTrimCell(c)   { return (c ?? "").trim().replace(/^"|"$/g, ""); }
+    function autoDetectDelim(firstLine) {
+      const tabs   = (firstLine.match(/\t/g) || []).length;
+      const commas = (firstLine.match(/,/g)  || []).length;
+      return tabs > commas ? "\t" : ",";
+    }
+    function autoSplitLine(line, delim) {
+      return delim === "\t" ? line.split("\t") : splitCSVLine(line);
+    }
+
+    function autoColumnSignals(values) {
+      const nonEmpty = values.filter((v) => v && v.length);
+      const n = nonEmpty.length || 1;
+      let pcEmb = 0, pcPure = 0, email = 0, phone = 0, date = 0, bool = 0, pInt = 0, addy = 0;
+      for (const v of nonEmpty) {
+        const t = v.trim();
+        if (AUTO_PC_RE.test(t))                                                         pcEmb++;
+        if (AUTO_PC_FULL_RE.test(t))                                                    pcPure++;
+        if (/@/.test(t) && /\./.test(t))                                                email++;
+        if (/^[+\d][\d\s\-().]{6,}$/.test(t) && !/[a-z]/i.test(t))                      phone++;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(t) || /^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/.test(t)) date++;
+        if (/^(y|n|yes|no|true|false|0|1)$/i.test(t))                                   bool++;
+        if (/^\d+$/.test(t))                                                            pInt++;
+        if (/[a-z]{2,}/i.test(t))                                                       addy++;
+      }
+      return {
+        n,
+        pcEmbRate:    pcEmb / n,
+        pcPureRate:   pcPure / n,
+        looksEmail:   email / n >= 0.5,
+        looksPhone:   phone / n >= 0.5,
+        looksDate:    date / n >= 0.5,
+        looksBoolean: bool / n >= 0.7,
+        looksPureInt: pInt / n >= 0.7 && pcEmb === 0,
+        addressRate:  addy / n,
+      };
+    }
+
+    function parseCSVAuto(text) {
+      const raw = text.split(/\r?\n/).filter((l) => l.length && l.trim().length);
+      if (raw.length === 0) throw new Error("File is empty");
+
+      const delim = autoDetectDelim(raw[0]);
+      const grid  = raw.map((l) => autoSplitLine(l, delim).map(autoTrimCell));
+
+      // Trim trailing empties: find max index with a non-empty cell across rows
+      let maxCols = 0;
+      for (const r of grid) {
+        let last = -1;
+        for (let i = 0; i < r.length; i++) if (r[i] && r[i].length) last = i;
+        if (last + 1 > maxCols) maxCols = last + 1;
+      }
+      if (maxCols === 0) throw new Error("No data rows found in file");
+      const rows = grid.map((r) => {
+        const out = r.slice(0, maxCols);
+        while (out.length < maxCols) out.push("");
+        return out;
+      });
+
+      // ── Step 1: header detection ──
+      const row0            = rows[0];
+      const normRow0        = row0.map(autoNormHeader);
+      const anyKnownHeader  = normRow0.some((h) => h && KNOWN_HEADER_ROLES[h]);
+      const row1LooksData   = row0.some((c) => AUTO_PC_RE.test(c) || AUTO_HOUSENUM_RE.test(c));
+
+      let hasHeader;
+      if (anyKnownHeader && !row1LooksData)      hasHeader = true;
+      else if (!anyKnownHeader && row1LooksData) hasHeader = false;
+      else if (anyKnownHeader && row1LooksData)  hasHeader = true;
+      else {
+        // Neither signal — if data rows contain postcodes but row 1 doesn't, row 1 is a header
+        const later = rows.slice(1);
+        let laterHasPc = false;
+        for (let ci = 0; ci < maxCols && !laterHasPc; ci++) {
+          const s = autoColumnSignals(later.slice(0, 10).map((r) => r[ci]));
+          if (s.pcEmbRate >= 0.3) laterHasPc = true;
+        }
+        hasHeader = laterHasPc;
+      }
+
+      const dataStart = hasHeader ? 1 : 0;
+      const dataRows  = rows.slice(dataStart);
+      if (dataRows.length === 0)       throw new Error("No data rows found in file");
+      if (dataRows.length > 2000)      throw new Error("Maximum 2,000 rows per upload");
+
+      // ── Step 2: column role assignment ──
+      const perCol = [];
+      for (let ci = 0; ci < maxCols; ci++) {
+        const sample = dataRows.slice(0, 10).map((r) => r[ci]);
+        perCol.push(autoColumnSignals(sample));
+      }
+      const headerRole = (ci) => {
+        if (!hasHeader) return null;
+        const k = autoNormHeader(row0[ci]);
+        return k ? (KNOWN_HEADER_ROLES[k] ?? null) : null;
+      };
+
+      // Postcode column: explicit header wins, else highest pcPureRate > 0.5 (leftmost on tie)
+      let postcodeCol = -1;
+      for (let ci = 0; ci < maxCols; ci++) {
+        if (headerRole(ci) === "postcode") { postcodeCol = ci; break; }
+      }
+      if (postcodeCol === -1) {
+        let bestRate = 0.5;  // strict >
+        for (let ci = 0; ci < maxCols; ci++) {
+          if (perCol[ci].pcPureRate > bestRate) { postcodeCol = ci; bestRate = perCol[ci].pcPureRate; }
+        }
+      }
+
+      // Address columns
+      const addressCols = [];
+      for (let ci = 0; ci < maxCols; ci++) {
+        if (ci === postcodeCol) continue;
+        const role = headerRole(ci);
+        if (role === "ignore")   continue;
+        if (role === "postcode") continue;
+        if (role === "address")  { addressCols.push(ci); continue; }
+        const s = perCol[ci];
+        if (s.looksEmail || s.looksPhone || s.looksDate || s.looksBoolean || s.looksPureInt) continue;
+        if (s.addressRate >= 0.5) addressCols.push(ci);
+      }
+
+      // Fallback: nothing looked like an address column → use everything that isn't clearly rejectable
+      let usedFallback = false;
+      if (addressCols.length === 0) {
+        usedFallback = true;
+        for (let ci = 0; ci < maxCols; ci++) {
+          if (ci === postcodeCol) continue;
+          if (headerRole(ci) === "ignore") continue;
+          const s = perCol[ci];
+          if (s.looksEmail || s.looksPhone || s.looksDate || s.looksBoolean) continue;
+          addressCols.push(ci);
+        }
+      }
+
+      // ── Build output ──
+      const addresses = [];
+      const fullRows  = [];
+      for (const r of dataRows) {
+        const parts = addressCols.map((ci) => r[ci]).filter((v) => v && v.length);
+        let addr = parts.join(", ").trim();
+        if (!addr) continue;
+
+        // Postcode merge (same semantics as parseCSV: swap trailing outward or append)
+        if (postcodeCol !== -1) {
+          const pc = (r[postcodeCol] || "").trim();
+          if (pc && !AUTO_PC_RE.test(addr) && AUTO_PC_RE.test(pc)) {
+            const outward = pc.split(/\s+/)[0];
+            const trail   = new RegExp(`\\b${outward}\\s*$`, "i");
+            addr = trail.test(addr) ? addr.replace(trail, pc).trim() : `${addr} ${pc}`;
+          }
+        }
+
+        addresses.push(addr);
+        fullRows.push(r);
+      }
+
+      if (addresses.length === 0)  throw new Error("No address rows found in file");
+      if (addresses.length > 2000) throw new Error("Maximum 2,000 rows per upload");
+
+      const headers = hasHeader
+        ? row0.slice()
+        : Array.from({ length: maxCols }, (_, i) => `col_${i + 1}`);
+
+      const result = { headers, addresses, fullRows };
+      Object.defineProperty(result, "_detection", {
+        value: { delim, hasHeader, postcodeCol, addressCols, rowCount: addresses.length, usedFallback, headerLabels: headers },
+        enumerable: false,
+      });
+      return result;
+    }
+
+    function renderDetectionSummary(detection) {
+      const el = document.getElementById("detection-summary");
+      if (!el) return;
+      if (!detection) { el.hidden = true; el.innerHTML = ""; return; }
+      const { delim, hasHeader, postcodeCol, addressCols, rowCount, usedFallback, headerLabels } = detection;
+      const delimLabel = delim === "\t" ? "tab-separated" : "comma-separated";
+      const hdrLabel   = hasHeader ? "with header row" : "no header row";
+      const colLabel   = (ci) => hasHeader && headerLabels[ci] ? `${ci + 1} (${headerLabels[ci]})` : `${ci + 1}`;
+      const pcStr      = postcodeCol === -1 ? "none (embedded or missing)" : colLabel(postcodeCol);
+      const addrStr    = addressCols.length === 0 ? "none" : addressCols.map(colLabel).join(" + ");
+      const fallback   = usedFallback ? " &nbsp;·&nbsp; <em>fallback (no obvious address column)</em>" : "";
+      el.innerHTML = `<strong>Auto-detected</strong> (${delimLabel}, ${hdrLabel}) &nbsp;·&nbsp; `
+                   + `postcode column: ${esc(pcStr)} &nbsp;·&nbsp; `
+                   + `address columns: ${esc(addrStr)} &nbsp;·&nbsp; `
+                   + `${rowCount} data row${rowCount === 1 ? "" : "s"}${fallback}`;
+      el.hidden = false;
+    }
+
     // ── Upload handler ──
     async function handleUpload() {
       const btn = document.getElementById("upload-btn");
@@ -480,7 +706,19 @@
         if (!file) throw new Error("No file selected");
 
         const text = await file.text();
-        const { headers, addresses, fullRows } = parseCSV(text);
+        let parsed;
+        try {
+          parsed = parseCSV(text);
+          renderDetectionSummary(null);
+        } catch (err) {
+          if (/must contain an "address"|header row/i.test(err.message)) {
+            parsed = parseCSVAuto(text);
+            renderDetectionSummary(parsed._detection);
+          } else {
+            throw err;
+          }
+        }
+        const { headers, addresses, fullRows } = parsed;
         originalHeaders  = headers;
         originalFullRows = fullRows;
 

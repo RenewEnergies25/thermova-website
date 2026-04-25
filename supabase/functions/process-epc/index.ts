@@ -35,7 +35,7 @@ const UK_ABBREVS: Record<string, string> = {
   mws: "mews", pde: "parade",
   n: "north", s: "south", e: "east", w: "west",
   gt: "great", lt: "little", mt: "mount", hts: "heights",
-  redbank: "red bank",
+  redbank: "red bank", snowhill: "snow hill",
 };
 
 function expandAbbreviations(s: string): string {
@@ -106,10 +106,21 @@ function classify(score: number): "matched" | "low_confidence" | "not_found" {
   return "not_found";
 }
 
+// Words that look like a flat label after "flat" but actually describe a vertical position
+// (e.g. "flat top", "flat GF", "flat ground"). These are handled by extractFloorQualifier
+// so we filter them out here to keep the two extractors mutually exclusive.
+const FLOOR_WORDS = new Set([
+  "top", "ground", "basement", "first", "second", "third", "fourth", "fifth",
+  "upper", "lower", "mid", "middle", "mezzanine", "rear", "front",
+  "gf", "tf", "lg",
+]);
+
 function extractFlatNumber(address: string): string | null {
   // Returns the flat identifier ("2", "2a", "c") or null for non-numeric flat labels
   const m = address.match(/\bflat\s+([a-z\d]+)/i);
-  return m ? m[1].toLowerCase() : null;
+  if (!m) return null;
+  const val = m[1].toLowerCase();
+  return FLOOR_WORDS.has(val) ? null : val;
 }
 
 // Returns a normalised floor-position token (ground / first / second / third / fourth /
@@ -121,8 +132,12 @@ function extractFloorQualifier(address: string): string | null {
   if (/\bbasement\s+(?:floor\s+)?(?:flat|apartment|apt|unit)\b/.test(norm)) return "basement";
   if (/\b(?:flat|apartment|apt|unit)\s+basement\b/.test(norm)) return "basement";
   if (/\blower\s+ground\b/.test(norm)) return "lower_ground";
+  if (/\b(?:flat|apartment|apt|unit)\s+lg\b/.test(norm)) return "lower_ground";
   if (/\bground\s+(?:floor\s+)?(?:flat|apartment|apt|unit)\b/.test(norm)) return "ground";
   if (/\b(?:flat|apartment|apt|unit)\s+ground(?:\s+floor)?\b/.test(norm)) return "ground";
+  // "GF" / "G/F" abbreviations — common in user-supplied data ("flat GF", "GF flat")
+  if (/\b(?:flat|apartment|apt|unit)\s+gf\b/.test(norm)) return "ground";
+  if (/\bgf\s+(?:flat|apartment|apt|unit)\b/.test(norm)) return "ground";
   if (/\bground\s+floor\b/.test(norm)) return "ground";
   if (/\b(?:first|1st)\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+(?:first|1st)(?:\s+floor)?\b/.test(norm)) return "first";
   if (/\b(?:second|2nd)\s+floor\b/.test(norm) || /\b(?:flat|apartment|apt|unit)\s+(?:second|2nd)(?:\s+floor)?\b/.test(norm)) return "second";
@@ -132,6 +147,9 @@ function extractFloorQualifier(address: string): string | null {
   if (/\bmezzanine\b/.test(norm)) return "mezzanine";
   if (/\b(?:top|upper)\s+(?:floor\s+)?(?:flat|apartment|apt|unit)\b/.test(norm)) return "top";
   if (/\b(?:flat|apartment|apt|unit)\s+(?:top|upper)(?:\s+floor)?\b/.test(norm)) return "top";
+  // "TF" abbreviation for top-floor flat
+  if (/\b(?:flat|apartment|apt|unit)\s+tf\b/.test(norm)) return "top";
+  if (/\btf\s+(?:flat|apartment|apt|unit)\b/.test(norm)) return "top";
   if (/\b(?:top|upper)\s+floor\b/.test(norm)) return "top";
   return null;
 }
@@ -152,55 +170,55 @@ function floorQualifiersConflict(a: string, b: string): boolean {
 function selectBest(
   rows: EpcRow[],
   inputAddress: string,
-  inputHouseToken?: string | null
+  inputHouseToken: string | null,
+  effectivePostcode: string | null
 ): { row: EpcRow; score: number } | null {
   if (rows.length === 0) return null;
-  const inputTokens   = normalise(inputAddress);
-  const inputFlat     = extractFlatNumber(inputAddress);
-  const inputFloor    = extractFloorQualifier(inputAddress);
-  const inputPostcode = extractPostcode(inputAddress);
+  const inputTokens = normalise(inputAddress);
+  const inputFlat   = extractFlatNumber(inputAddress);
+  const inputFloor  = extractFloorQualifier(inputAddress);
+  const inputHasUnit = inputFlat !== null || inputFloor !== null;
   let best: { row: EpcRow; score: number } | null = null;
   for (const row of rows) {
     let score = jaccard(inputTokens, normalise(row.address));
-    // Exact-anchor short-circuit: same postcode AND same house token → promote above the matched threshold
-    // so formatting-only differences in the street name (e.g. "Rd" vs "Lane") can't demote the match.
-    // Flat/house penalties below still apply, so mismatched flats at the same address demote back.
-    if (inputPostcode && inputHouseToken) {
-      const rowPostcode = extractPostcode(row.address);
-      if (rowPostcode && rowPostcode === inputPostcode) {
-        const rowHouse = extractHouseToken(row.address);
-        if (rowHouse && rowHouse === inputHouseToken) {
-          score = Math.max(score, 0.55);
-        }
-      }
+    const rowHouse = extractHouseToken(row.address);
+    const rowFlat  = extractFlatNumber(row.address);
+    const rowFloor = extractFloorQualifier(row.address);
+    const rowHasUnit = rowFlat !== null || rowFloor !== null;
+    // Exact-anchor short-circuit: rows came from a postcode-restricted query, so a matching house
+    // token plus that effective postcode is enough to promote the score above the matched
+    // threshold. Don't inspect the row's address for a postcode — EPC rows rarely include one.
+    if (effectivePostcode && inputHouseToken && rowHouse && rowHouse === inputHouseToken) {
+      score = Math.max(score, 0.55);
     }
-    // Penalise if both sides have an explicit flat number, same naming scheme, and they disagree
-    if (inputFlat !== null) {
-      const rowFlat = extractFlatNumber(row.address);
-      if (rowFlat !== null && rowFlat !== inputFlat) {
-        const inputFlatIsNum = /^\d/.test(inputFlat);
-        const rowFlatIsNum   = /^\d/.test(rowFlat);
-        if (inputFlatIsNum === rowFlatIsNum) {
-          score *= 0.5;
-        }
-      }
+    // Same-type unit mismatch: both have flat numbers and they disagree. Flat 1 vs Flat 2 are
+    // different properties at the same address.
+    if (inputFlat !== null && rowFlat !== null && rowFlat !== inputFlat) {
+      const inputIsNum = /^\d/.test(inputFlat);
+      const rowIsNum   = /^\d/.test(rowFlat);
+      if (inputIsNum === rowIsNum) score *= 0.5;
     }
-    // Floor-qualifier penalty: "Top Floor Flat" vs "Ground Floor Flat" at the same address are
-    // different properties. A 0.3× multiplier demotes same-postcode+same-house pairs with
-    // conflicting floor labels below the 0.3 not_found threshold even after the short-circuit boost.
-    if (inputFloor !== null) {
-      const rowFloor = extractFloorQualifier(row.address);
-      if (rowFloor !== null && floorQualifiersConflict(inputFloor, rowFloor)) {
-        score *= 0.3;
-      }
+    // Same-type floor mismatch: "Top Floor Flat" vs "Ground Floor Flat" — different units.
+    if (inputFloor !== null && rowFloor !== null && floorQualifiersConflict(inputFloor, rowFloor)) {
+      score *= 0.3;
     }
-    // Penalise if extracted house numbers are both present and disagree
-    if (inputHouseToken) {
-      const rowHouse = extractHouseToken(row.address);
-      if (rowHouse && rowHouse !== inputHouseToken) {
-        score *= 0.7;
-      }
-    }
+    // Cross-type unit mismatch: input names a flat number ("flat 6") but the row uses a floor
+    // position ("Basement Flat"), or vice versa. They describe different units at the same
+    // address. 0.3× pushes the score under the not_found threshold (post short-circuit) so we
+    // don't return the wrong sibling unit just because nothing better was found.
+    if (inputFlat !== null && rowFlat === null && rowFloor !== null) score *= 0.3;
+    if (inputFloor !== null && rowFloor === null && rowFlat !== null) score *= 0.3;
+    // Whole-house EPC vs flat input: user asked for a specific unit, EPC is for the building
+    // before/instead of being split into flats. Treat as different property.
+    if (inputHasUnit && !rowHasUnit) score *= 0.3;
+    // Inverse: input has no unit qualifier but row is flat-specific. Could be the user just
+    // didn't specify, or the building has only flat-level EPCs. Mild penalty so an exact whole-
+    // house match elsewhere still wins, but a flat-only result still surfaces as low_confidence.
+    if (!inputHasUnit && rowHasUnit) score *= 0.6;
+    // House-number mismatch within the same postcode (e.g., "Flat 2 at #4" vs row "Flat 2 at #18"
+    // sharing postcode FY1 6EF). 0.5× pushes a same-flat-number false-positive below 0.3 even when
+    // jaccard alone is high due to shared "flat 2" + "blackpool" tokens.
+    if (inputHouseToken && rowHouse && rowHouse !== inputHouseToken) score *= 0.5;
     if (
       !best ||
       score > best.score ||
@@ -216,9 +234,11 @@ function selectBest(
 function deduplicateByLatestInspectionDate(rows: EpcRow[]): EpcRow[] {
   const map = new Map<string, EpcRow>();
   for (const row of rows) {
-    const key = normalise(row.address).size > 0
-      ? [...normalise(row.address)].sort().join(" ")
-      : row.address.toLowerCase();
+    // Order-preserving key: lowercased + abbreviation-expanded + punctuation-stripped tokens.
+    // Set-based keys collide: "Flat 6, 2 Lonsdale Road" and "Flat 2, 6 Lonsdale Road" share
+    // the same token set but are different properties.
+    const key = expandAbbreviations(row.address).split(/\s+/).filter(Boolean).join(" ")
+                || row.address.toLowerCase();
     const existing = map.get(key);
     if (!existing || row["inspection-date"] > existing["inspection-date"]) {
       map.set(key, row);
@@ -270,13 +290,34 @@ function extractHouseToken(address: string): string | null {
   return null;
 }
 
-function buildHouseNumberHint(inputAddress: string, postcode: string): string | null {
-  const stripped = stripPostcode(inputAddress, postcode);
-  return extractHouseToken(stripped);
+// Build a Nominatim-friendly query: drop the (possibly-wrong) postcode, remove
+// "United Kingdom" trailers, and dedup repeated comma-separated parts. Inputs like
+// "13 Threlfall Road, 13 Threlfall Road FY1 6DF Blackpool United Kingdom" otherwise
+// confuse the geocoder and return zero results.
+function buildNominatimQuery(address: string): string {
+  let s = address;
+  const pc = extractPostcode(s);
+  if (pc) s = s.replace(new RegExp(pc.replace(/\s+/g, "\\s*"), "i"), " ");
+  s = s.replace(/\b(?:united\s+kingdom|uk|england|scotland|wales)\b/gi, " ");
+  // Dedup comma-separated parts: drop any part that is a prefix of another part.
+  // Inputs like "13 Threlfall Road, 13 Threlfall Road Blackpool" otherwise keep both
+  // (the first is a prefix of the second) and Nominatim returns no results.
+  const parts = s.split(",").map((p) => p.trim().replace(/\s+/g, " ")).filter(Boolean);
+  const kept: string[] = [];
+  for (const p of parts) {
+    const lower = p.toLowerCase();
+    const subsumed = parts.some((other) => other !== p &&
+      other.toLowerCase().startsWith(lower) && other.length > p.length);
+    if (subsumed) continue;
+    if (!kept.some((k) => k.toLowerCase() === lower)) kept.push(p);
+  }
+  return kept.join(", ").trim();
 }
 
 async function lookupPostcodeFromNominatim(address: string): Promise<string | null> {
-  const q = encodeURIComponent(address + " UK");
+  const cleaned = buildNominatimQuery(address);
+  if (!cleaned) return null;
+  const q = encodeURIComponent(cleaned);
   const url = `https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1&countrycodes=gb&limit=3`;
   const res = await fetch(url, {
     headers: { "User-Agent": "thermova-epc-enrichment/1.0 (deangriff19@gmail.com)" },
@@ -292,12 +333,17 @@ async function lookupPostcodeFromNominatim(address: string): Promise<string | nu
 
 async function callEpcApi(
   postcode: string | null,
-  addressHint: string,
+  addressHint: string | null,
   epcApiKey: string
 ): Promise<EpcRow[]> {
-  // Use size=100 for address-only searches (no postcode) — results span the whole country
-  const params: Record<string, string> = { address: addressHint, size: postcode ? "25" : "100" };
+  // Postcode-restricted: fetch all properties at the postcode (size=100) without an address
+  // filter, so misspelled street names ("Hemmingway" vs "Hemingway", "Snowhill" vs "Snow Hill")
+  // don't make us miss the right row. The matcher selects the best candidate.
+  // Address-only fallback (no postcode): need an address hint and a wider net.
+  const params: Record<string, string> = { size: "100" };
   if (postcode) params.postcode = postcode;
+  else if (addressHint) params.address = addressHint;
+  else return [];
   const url = `https://epc.opendatacommunities.org/api/v1/domestic/search?${new URLSearchParams(params)}`;
   const res = await fetch(url, {
     headers: {
@@ -336,34 +382,40 @@ async function enrichRow(
       const inputHouseToken = extractHouseToken(
         postcode ? stripPostcode(inputAddress, postcode) : inputAddress
       );
+
+      // Primary fetch: postcode-restricted (size=100), no address filter. Catches
+      // street-name typos and compound-word mismatches in one shot.
       let rawRows = await callEpcApi(postcode, addressHint, epcApiKey);
+      let effectivePostcode = postcode;
 
-      // Street-name mismatch retry: full hint returned nothing but postcode known →
-      // retry with bare house number so typos like "Princes" vs "Princess" don't matter
-      if (rawRows.length === 0 && postcode) {
-        const houseHint = buildHouseNumberHint(inputAddress, postcode);
-        if (houseHint) {
-          rawRows = await callEpcApi(postcode, houseHint, epcApiKey);
-        }
-      }
-
-      // Final fallback: try Nominatim to resolve postcode — runs whether or not we have one.
-      // Catches wrong postcodes (e.g. transposed digits) and completely missing postcodes.
-      if (rawRows.length === 0) {
+      // Nominatim fallback: trigger when the supplied postcode either returned no rows or
+      // returned rows that don't include our house number. The latter catches wrong-postcode
+      // cases like "13 Threlfall Road FY1 6DF" where FY1 6DF returns Threlfall Mews entries
+      // but the actual #13 lives in FY1 6NW.
+      const houseFoundInRows = inputHouseToken !== null &&
+        rawRows.some((r) => extractHouseToken(r.address) === inputHouseToken);
+      if (!houseFoundInRows) {
         const nominatimPostcode = await lookupPostcodeFromNominatim(inputAddress);
         if (nominatimPostcode && nominatimPostcode !== postcode) {
-          rawRows = await callEpcApi(nominatimPostcode, addressHint, epcApiKey);
-          if (rawRows.length === 0) {
-            const houseHint = inputHouseToken;
-            if (houseHint) {
-              rawRows = await callEpcApi(nominatimPostcode, houseHint, epcApiKey);
-            }
+          const altRows = await callEpcApi(nominatimPostcode, addressHint, epcApiKey);
+          // Only swap in if the alt postcode contains our house number (so we don't replace
+          // a useful nearby-postcode row set with an unrelated one)
+          const altHasHouse = inputHouseToken !== null &&
+            altRows.some((r) => extractHouseToken(r.address) === inputHouseToken);
+          if (altHasHouse || (rawRows.length === 0 && altRows.length > 0)) {
+            rawRows = altRows;
+            effectivePostcode = nominatimPostcode;
           }
         }
       }
 
+      // Last-resort: address-only search if we still have nothing
+      if (rawRows.length === 0 && !postcode && addressHint) {
+        rawRows = await callEpcApi(null, addressHint, epcApiKey);
+      }
+
       const deduplicated = deduplicateByLatestInspectionDate(rawRows);
-      const best = selectBest(deduplicated, inputAddress, inputHouseToken);
+      const best = selectBest(deduplicated, inputAddress, inputHouseToken, effectivePostcode);
 
       const confidence = (!best || best.score === 0) ? "not_found" : classify(best.score);
 

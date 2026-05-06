@@ -401,6 +401,51 @@ fbq('track', 'PageView');
     font-size: 1.25rem;
   }
 
+  .social-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-divider);
+    text-decoration: none;
+    transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .social-icons a:hover {
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+    transform: translateY(-1px);
+  }
+
+  .social-icons svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .social-icons.in-footer {
+    margin-top: 18px;
+  }
+
+  .social-icons.in-mobile-nav {
+    margin-top: 16px;
+    justify-content: flex-start;
+  }
+
+  @media (max-width: 960px) {
+    .social-icons.in-header {
+      display: none;
+    }
+  }
+
   .mobile-nav {
     position: fixed;
     inset: 0;
@@ -1983,6 +2028,22 @@ fbq('track', 'PageView');
       <path d="M12 6.5C14.5 6.5 16 8.5 16 10.5C16 13 13.5 14.5 12 14.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M12 17.5C9.5 17.5 8 15.5 8 13.5C8 11 10.5 9.5 12 9.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="12" cy="12" r="3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="17" cy="7" r="0.9" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M8 10.5V16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="8" cy="7.8" r="0.9" fill="currentColor"/>
+      <path d="M12 16.5V10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 13C12 11.6 13 10.5 14.5 10.5C16 10.5 16.5 11.6 16.5 13V16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </symbol>
+    <symbol id="icon-facebook" viewBox="0 0 24 24">
+      <path d="M19.5 4.5H15.5C13.567 4.5 12 6.067 12 8V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M9 11.5H15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
   </defs>
 </svg>
 <nav class="site-nav" aria-label="Primary">
@@ -1999,6 +2060,11 @@ fbq('track', 'PageView');
       <li><a href="#faq">FAQ</a></li>
       <li><a class="nav-cta" href="#assessment">Book assessment</a></li>
     </ul>
+    <div class="social-icons in-header">
+      <a href="https://www.instagram.com/thermovauk/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Instagram"><svg aria-hidden="true" focusable="false"><use href="#icon-instagram"/></svg></a>
+      <a href="https://www.linkedin.com/company/113232935" target="_blank" rel="noopener noreferrer" aria-label="Thermova on LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#icon-linkedin"/></svg></a>
+      <a href="https://www.facebook.com/share/17UE6euCC2/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Facebook"><svg aria-hidden="true" focusable="false"><use href="#icon-facebook"/></svg></a>
+    </div>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav-panel" aria-label="Open menu">☰</button>
   </div>
 </nav>
@@ -2021,6 +2087,11 @@ fbq('track', 'PageView');
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <a class="button mobile-nav-cta" href="#assessment">Book assessment</a>
+    <div class="social-icons in-mobile-nav">
+      <a href="https://www.instagram.com/thermovauk/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Instagram"><svg aria-hidden="true" focusable="false"><use href="#icon-instagram"/></svg></a>
+      <a href="https://www.linkedin.com/company/113232935" target="_blank" rel="noopener noreferrer" aria-label="Thermova on LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#icon-linkedin"/></svg></a>
+      <a href="https://www.facebook.com/share/17UE6euCC2/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Facebook"><svg aria-hidden="true" focusable="false"><use href="#icon-facebook"/></svg></a>
+    </div>
   </aside>
 </div>
 
@@ -2679,6 +2750,11 @@ fbq('track', 'PageView');
           <img class="brand-logo footer" src="assets/thermova-logo.svg" alt="Thermova">
         </a>
         <p style="margin-top: 18px; max-width: 30ch;">Heat pumps, solar and battery systems for homeowners and landlords who are ready to move on from gas.</p>
+        <div class="social-icons in-footer">
+          <a href="https://www.instagram.com/thermovauk/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Instagram"><svg aria-hidden="true" focusable="false"><use href="#icon-instagram"/></svg></a>
+          <a href="https://www.linkedin.com/company/113232935" target="_blank" rel="noopener noreferrer" aria-label="Thermova on LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#icon-linkedin"/></svg></a>
+          <a href="https://www.facebook.com/share/17UE6euCC2/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Facebook"><svg aria-hidden="true" focusable="false"><use href="#icon-facebook"/></svg></a>
+        </div>
       </div>
       <div>
         <h4>Services</h4>

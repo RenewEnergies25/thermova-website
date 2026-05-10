@@ -293,13 +293,15 @@
               <th>EPC</th>
               <th>SAP</th>
               <th>Heating Source</th>
+              <th>Floor Area (m²)</th>
+              <th>Property Type</th>
               <th>Inspection Date</th>
               <th>Matched Address</th>
               <th>Confidence</th>
             </tr>
           </thead>
           <tbody id="results-tbody">
-            <tr class="empty-row"><td colspan="7">No results loaded yet. Upload a CSV to get started.</td></tr>
+            <tr class="empty-row"><td colspan="9">No results loaded yet. Upload a CSV to get started.</td></tr>
           </tbody>
         </table>
       </div>
@@ -817,7 +819,7 @@
 
       if (error || !data) {
         document.getElementById("results-tbody").innerHTML =
-          `<tr class="empty-row"><td colspan="7">Failed to load results.</td></tr>`;
+          `<tr class="empty-row"><td colspan="9">Failed to load results.</td></tr>`;
         return;
       }
 
@@ -826,10 +828,15 @@
       document.getElementById("download-btn").disabled = false;
     }
 
+    function formatPropertyType(builtForm, propertyType) {
+      const parts = [builtForm, propertyType].filter(Boolean);
+      return parts.length ? esc(parts.join(" ")) : "—";
+    }
+
     function renderResultsTable(data) {
       const tbody = document.getElementById("results-tbody");
       if (!data.length) {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No results found.</td></tr>`;
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="9">No results found.</td></tr>`;
         return;
       }
       tbody.innerHTML = data.map((row) => `
@@ -838,6 +845,8 @@
           <td>${epcChip(row.epc_rating)}</td>
           <td>${row.sap_score ?? "—"}</td>
           <td class="heat-cell">${esc(row.heating_source ?? "—")}</td>
+          <td>${row.total_floor_area ?? "—"}</td>
+          <td>${formatPropertyType(row.built_form, row.property_type)}</td>
           <td>${row.inspection_date ?? "—"}</td>
           <td class="matched-cell">${esc(row.matched_address ?? "—")}</td>
           <td>${confidenceBadge(row.match_confidence)}</td>
@@ -862,7 +871,7 @@
         }
       }
 
-      const epcCols = ["epc_rating","sap_score","heating_source","inspection_date","matched_address","match_confidence"];
+      const epcCols = ["epc_rating","sap_score","heating_source","total_floor_area","property_type","inspection_date","matched_address","match_confidence"];
       const hasOriginal = origFullRows.length > 0;
       const hdrs = hasOriginal ? [...origHeaders, ...epcCols] : ["input_address", ...epcCols];
       const lines = [hdrs.map(csvQ).join(",")];
@@ -872,6 +881,8 @@
           csvQ(row.epc_rating ?? ""),
           csvQ(row.sap_score ?? ""),
           csvQ(row.heating_source ?? ""),
+          csvQ(row.total_floor_area ?? ""),
+          csvQ([row.built_form, row.property_type].filter(Boolean).join(" ")),
           csvQ(fmtDate(row.inspection_date)),
           csvQ(row.matched_address ?? ""),
           csvQ(row.match_confidence),

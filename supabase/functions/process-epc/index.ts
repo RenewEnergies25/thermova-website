@@ -12,6 +12,9 @@ interface EpcRow {
   "current-energy-efficiency": string;
   "mainheat-description": string;
   "inspection-date": string;
+  "total-floor-area"?: string;
+  "property-type"?: string;
+  "built-form"?: string;
 }
 
 function json(body: Record<string, unknown>, status = 200) {
@@ -430,6 +433,8 @@ async function enrichRow(
         const sapScore = sapRaw ? parseInt(sapRaw) || null : null;
         const inspDateRaw = best!.row["inspection-date"];
         const inspDate = inspDateRaw && inspDateRaw.length === 10 ? inspDateRaw : null;
+        const tfaRaw = best!.row["total-floor-area"];
+        const totalFloorArea = tfaRaw ? (parseFloat(tfaRaw) || null) : null;
 
         await supabase
           .from("epc_results")
@@ -440,6 +445,9 @@ async function enrichRow(
             sap_score: sapScore,
             heating_source: best!.row["mainheat-description"] ?? null,
             inspection_date: inspDate,
+            total_floor_area: totalFloorArea,
+            property_type: best!.row["property-type"] ?? null,
+            built_form: best!.row["built-form"] ?? null,
             match_confidence: confidence,
             jaccard_score: Math.round(best!.score * 1000) / 1000,
           })

@@ -38,25 +38,44 @@ fbq('track', 'PageView');
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Graham Barr",
-  "jobTitle": "Founder",
-  "worksFor": {
-    "@type": "LocalBusiness",
-    "name": "Thermova",
-    "url": "https://thermova.uk",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Harbury, Derby Road",
-      "addressLocality": "Poulton-le-Fylde",
-      "postalCode": "FY6 7AF",
-      "addressCountry": "GB"
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://thermova.uk/"
     },
-    "telephone": "+447976015890"
-  },
-  "url": "https://thermova.uk/about",
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About",
+      "item": "https://thermova.uk/about"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://thermova.uk/about#graham",
+  "name": "Graham Barr",
+  "givenName": "Graham",
+  "familyName": "Barr",
+  "jobTitle": "Founder & Director",
+  "description": "Graham Barr is the founder of Thermova, a Blackpool-based renewable energy company installing air source heat pumps, solar PV and battery storage. He is a qualified Domestic Energy Assessor, Retrofit Assessor and Retrofit Coordinator with over a decade in renewables and nearly thirty years in construction.",
   "image": "https://thermova.uk/assets/graham.jfif",
-  "description": "Graham Barr is the founder of Thermova, a Blackpool-based renewable energy company installing air source heat pumps, solar PV and battery storage. He is a qualified Domestic Energy Assessor, Retrofit Assessor and Retrofit Coordinator with over a decade in renewables and nearly thirty years in construction."
+  "url": "https://thermova.uk/about",
+  "worksFor": { "@id": "https://thermova.uk/#business" },
+  "nationality": { "@type": "Country", "name": "United Kingdom" },
+  "knowsAbout": [
+    "Air source heat pumps",
+    "Solar PV",
+    "Battery storage",
+    "Boiler Upgrade Scheme",
+    "EPC compliance"
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -734,7 +753,7 @@ fbq('track', 'PageView');
     <!-- COMPANY HISTORY -->
     <section class="about-section">
       <h2>About Thermova</h2>
-      <p>Thermova Ltd is registered in England &amp; Wales (company number 17135215) and operates from Harbury, Derby Road, Poulton-le-Fylde, FY6 7AF. <span class="todo">TODO: founding date / short history</span>.</p>
+      <p>Thermova Ltd is registered in England &amp; Wales (company number 17135215) and operates from Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF. <span class="todo">TODO: founding date / short history</span>.</p>
       <p>We install air source heat pumps, solar panels and battery storage — and we handle the paperwork for the Boiler Upgrade Scheme as part of the job, so customers don't have to chase the grant themselves.</p>
     </section>
 
@@ -784,7 +803,7 @@ fbq('track', 'PageView');
           <li><a href="/#assessment">Book an assessment</a></li>
           <li><a href="tel:+447976015890">07976 015890</a></li>
           <li><a href="mailto:info@thermova.uk">info@thermova.uk</a></li>
-          <li>Harbury, Derby Road, Poulton-le-Fylde, FY6 7AF</li>
+          <li>Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF</li>
         </ul>
       </div>
     </div>

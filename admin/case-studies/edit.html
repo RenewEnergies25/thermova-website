@@ -117,7 +117,7 @@
         <legend>Meta</legend>
         <div class="field-row">
           <div class="field">
-            <label>Slug <span class="hint">(URL — lowercase letters, numbers, hyphens only)</span></label>
+            <label>Slug <span class="hint">(auto-derived from title — edit to override)</span></label>
             <input type="text" name="slug" required pattern="[a-z0-9-]+">
           </div>
           <div class="field">
@@ -389,6 +389,14 @@
 
       document.getElementById("add-faq").addEventListener("click", () => { faqItems.push({q:"",a:""}); renderFaqList(); });
 
+      // Auto-slug: title → slug, until user manually edits the slug field
+      const titleEl = document.querySelector('[name="title"]');
+      const slugEl  = document.querySelector('[name="slug"]');
+      titleEl.addEventListener("input", () => {
+        if (!slugEl.dataset.touched) slugEl.value = slugify(titleEl.value);
+      });
+      slugEl.addEventListener("input", () => { slugEl.dataset.touched = "1"; });
+
       const id = new URLSearchParams(location.search).get("id");
       if (id && id !== "new") await loadRow(id);
       else {
@@ -430,6 +438,8 @@
       ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","read_time_minutes","hero_image_url","hero_image_alt","hero_image_caption","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_days","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
         if (form.elements[k] !== undefined && data[k] != null) form.elements[k].value = data[k];
       });
+      // Editing an existing row → user has previously committed to this slug; lock auto-sync
+      document.querySelector('[name="slug"]').dataset.touched = "1";
       form.elements.keywords_csv.value = (data.keywords || []).join(", ");
       form.elements.about_topics_csv.value = (data.about_topics || []).join(", ");
       jsonToGrid("property-grid", data.property_spec);
@@ -550,6 +560,19 @@
 
     function currentSlug() {
       return (document.querySelector('[name="slug"]').value || "").trim();
+    }
+
+    function slugify(s) {
+      return (s || "")
+        .toLowerCase()
+        .normalize("NFKD")               // strip diacritics
+        .replace(/[̀-ͯ]/g, "")  // …
+        .replace(/&/g, " and ")
+        .replace(/['"’]/g, "")             // drop apostrophes outright
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .replace(/-{2,}/g, "-")
+        .slice(0, 80);
     }
 
     function collectFormData() {

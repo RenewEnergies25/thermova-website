@@ -609,39 +609,58 @@
     }
 
     function parseCaseStudy(text) {
-      const lines = text.replace(/\r\n/g, "\n").split("\n");
+      text = text.replace(/\r\n/g, "\n");
 
-      // 1. Extract top-of-file meta header (Title tag:, Meta description:, URL slug:, Focus/Secondary keywords:, Schema:)
+      // 1. Extract metadata headers. Handles both:
+      //    - newline-separated:  "Title tag: X\nMeta description: Y\n..."
+      //    - concatenated single line: "Title tag: X Meta description: Y URL slug: Z ..."
+      // by scanning the first ~1500 chars for each known label and grabbing
+      // everything up to the next known label (or end of segment).
       const meta = {};
-      let i = 0;
-      const headerKeys = {
-        "title tag":            "title",
-        "meta description":     "meta_description",
-        "url slug":             "slug",
-        "focus keyword":        "focus_keyword",
-        "secondary keywords":   "secondary_keywords",
-        "schema":               "schema_hint",
-      };
-      while (i < lines.length) {
-        const m = lines[i].match(/^([A-Za-z][A-Za-z ]+?):\s*(.+)$/);
-        if (m) {
-          const key = m[1].trim().toLowerCase();
-          if (headerKeys[key]) {
-            meta[headerKeys[key]] = m[2].trim();
-            i++;
-            continue;
-          }
-        }
-        if (lines[i].trim() === "") { i++; continue; }
-        break;
+      const labelMap = [
+        ["title",              /Title tag\s*:/i],
+        ["meta_description",   /Meta description\s*:/i],
+        ["slug",               /URL slug\s*:/i],
+        ["focus_keyword",      /Focus keyword\s*:/i],
+        ["secondary_keywords", /Secondary keywords?\s*:/i],
+        ["schema_hint",        /Schema\s*:/i],
+      ];
+
+      // Find each label's position in the original text
+      const hits = [];
+      for (const [key, rx] of labelMap) {
+        const m = rx.exec(text);
+        if (m) hits.push({ key, start: m.index, valueStart: m.index + m[0].length });
+      }
+      // Sort by position
+      hits.sort((a, b) => a.start - b.start);
+      // Extract value between each hit and the next
+      for (let k = 0; k < hits.length; k++) {
+        const next = hits[k + 1];
+        const end = next ? next.start : Math.min(text.length, hits[k].valueStart + 2000);
+        meta[hits[k].key] = text.slice(hits[k].valueStart, end).replace(/\s+/g, " ").trim();
       }
 
-      // 2. Body starts at first non-blank line after header. Detect first H1 (the article title).
+      // 2. Strip the entire header block from text so it doesn't appear in body
+      let bodyText = text;
+      if (hits.length) {
+        // Find end of last header value (= start of next non-header content)
+        const lastEnd = hits[hits.length - 1].valueStart + meta[hits[hits.length - 1].key].length;
+        // Skip to next newline after the headers
+        let cutFrom = lastEnd;
+        const nl = text.indexOf("\n", lastEnd);
+        if (nl !== -1) cutFrom = nl + 1;
+        bodyText = text.slice(cutFrom);
+      }
+
+      const lines = bodyText.split("\n");
+      let i = 0;
+
+      // 3. Skip leading blanks; first non-blank line is H1
       while (i < lines.length && !lines[i].trim()) i++;
       let h1Title = "";
       if (i < lines.length) {
         h1Title = lines[i].trim();
-        // If meta.title wasn't set, use the H1
         if (!meta.title) meta.title = h1Title;
         i++;
       }
@@ -675,8 +694,53 @@
       const faqs = faqStart !== -1 ? extractFaqs(bodyLines.slice(faqStart + 1, faqEnd)) : [];
 
       // Main body = everything before FAQ heading (or whole thing if no FAQ found)
-      const mainBodyLines = faqStart !== -1 ? bodyLines.slice(0, faqStart) : bodyLines.slice(0, ctaStart === -1 ? bodyLines.length : ctaStart);
+      const mainBodyEnd = faqStart !== -1 ? faqStart : (ctaStart === -1 ? bodyLines.length : ctaStart);
+      const mainBodyLines = bodyLines.slice(0, mainBodyEnd);
+
+      // Detect a final methodology footnote inside the main body:
+      // a trailing paragraph that often starts with "Generation and consumption data"
+      // or similar disclosure phrasing — used to populate methodology_footnote.
+      let methodologyFootnote = "";
+      const footnoteRx = /^(Generation and consumption data|Performance and consumption|Year-one performance figures|Methodology and disclosures)/i;
+      for (let j = mainBodyLines.length - 1; j >= Math.max(0, mainBodyLines.length - 10); j--) {
+        const t = mainBodyLines[j].trim();
+        if (footnoteRx.test(t)) {
+          methodologyFootnote = mainBodyLines.slice(j).map(s => s.trim()).filter(Boolean).join(" ");
+          mainBodyLines.length = j; // drop these from the body
+          break;
+        }
+      }
+
       const bodyHtml = linesToHtml(mainBodyLines);
+
+      // CTA extraction: lines from ctaStart up to end of bodyLines
+      let ctaHeading = "";
+      let ctaBody = "";
+      if (ctaStart !== -1) {
+        const ctaLines = bodyLines.slice(ctaStart);
+        // Pull off the methodology footnote at the end of CTA section if present
+        let ctaEnd = ctaLines.length;
+        for (let j = ctaLines.length - 1; j >= Math.max(0, ctaLines.length - 6); j--) {
+          if (footnoteRx.test(ctaLines[j].trim())) {
+            if (!methodologyFootnote) {
+              methodologyFootnote = ctaLines.slice(j).map(s => s.trim()).filter(Boolean).join(" ");
+            }
+            ctaEnd = j;
+            break;
+          }
+        }
+        const ctaContent = ctaLines.slice(0, ctaEnd);
+        // First non-blank line = heading
+        let k = 0;
+        while (k < ctaContent.length && !ctaContent[k].trim()) k++;
+        if (k < ctaContent.length) {
+          ctaHeading = ctaContent[k].trim();
+          k++;
+        }
+        // Remaining = body (as HTML)
+        const ctaBodyLines = ctaContent.slice(k);
+        ctaBody = linesToHtml(ctaBodyLines);
+      }
 
       // Extract keywords
       const keywords = [];
@@ -692,7 +756,10 @@
         keywords,
         body_html:        bodyHtml,
         faqs,
-        summary: `${meta.title ? "title ✓ " : ""}${meta.meta_description ? "desc ✓ " : ""}${meta.slug ? "slug ✓ " : ""}${faqs.length ? `${faqs.length} FAQs ✓` : ""}`,
+        cta_heading:      ctaHeading,
+        cta_body:         ctaBody,
+        methodology_footnote: methodologyFootnote,
+        summary: `${meta.title ? "title ✓ " : ""}${meta.meta_description ? "desc ✓ " : ""}${meta.slug ? "slug ✓ " : ""}${keywords.length ? `${keywords.length} keywords ✓ ` : ""}${faqs.length ? `${faqs.length} FAQs ✓ ` : ""}${ctaHeading ? "CTA ✓" : ""}`,
       };
     }
 
@@ -850,9 +917,12 @@
         document.querySelector('[name="slug"]').value = p.slug;
         document.querySelector('[name="slug"]').dataset.touched = "1";
       }
-      if (p.meta_description) document.querySelector('[name="meta_description"]').value = p.meta_description;
-      if (p.body_html)        document.querySelector('[name="body_html"]').value = p.body_html;
-      if (p.keywords?.length) document.querySelector('[name="keywords_csv"]').value = p.keywords.join(", ");
+      if (p.meta_description)     document.querySelector('[name="meta_description"]').value = p.meta_description;
+      if (p.body_html)            document.querySelector('[name="body_html"]').value = p.body_html;
+      if (p.keywords?.length)     document.querySelector('[name="keywords_csv"]').value = p.keywords.join(", ");
+      if (p.cta_heading)          document.querySelector('[name="cta_heading"]').value = p.cta_heading;
+      if (p.cta_body)             document.querySelector('[name="cta_body"]').value = p.cta_body;
+      if (p.methodology_footnote) document.querySelector('[name="methodology_footnote"]').value = p.methodology_footnote;
       if (p.faqs?.length) {
         faqItems = p.faqs;
         renderFaqList();

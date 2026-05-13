@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Case Studies — Admin | Thermova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #050B14;
+      --surface: #0A1420;
+      --surface-2: #0F1C2A;
+      --surface-3: #121F2E;
+      --brand: #FF6A1A;
+      --brand-hover: #FF7F3A;
+      --text: #FFFFFF;
+      --text-sec: #B8C4D2;
+      --text-muted: #7A8A99;
+      --border: rgba(184,196,210,0.14);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --font-display: "Sora", system-ui, sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    body { min-height: 100vh; background: var(--bg-primary); font: 400 15px/1.6 var(--font-body); color: var(--text-sec); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+
+    .dash-header { display: flex; align-items: center; gap: 24px; padding: 0 32px; height: 60px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10; }
+    .dash-logo { height: 28px; width: auto; flex-shrink: 0; }
+    .dash-logo-text { font: 700 1.1rem var(--font-display); color: var(--text); letter-spacing: -0.01em; flex-shrink: 0; }
+    .dash-title { font: 600 1rem var(--font-display); color: var(--text); margin-left: 8px; }
+    .dash-spacer { flex: 1; }
+    .btn-ghost { padding: 7px 16px; background: transparent; border: 1px solid var(--border); border-radius: 999px; color: var(--text-muted); font: 500 0.875rem var(--font-body); cursor: pointer; transition: all 0.15s; flex-shrink: 0; text-decoration: none; }
+    .btn-ghost:hover { color: var(--text-sec); border-color: rgba(184,196,210,0.3); }
+
+    .dash-main { max-width: 1200px; margin: 0 auto; padding: 40px 32px; }
+
+    h1 { font: 600 1.5rem var(--font-display); color: var(--text); margin-bottom: 6px; }
+    .panel-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
+
+    .page-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .btn-primary { padding: 11px 24px; background: var(--brand); color: #fff; border: none; border-radius: 999px; font: 600 0.875rem var(--font-body); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: var(--brand-hover); }
+
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .data-table th { color: var(--text-muted); font-weight: 600; background: var(--surface-2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .data-table td { color: var(--text-sec); }
+    .data-table td.cell-title { color: var(--text); font-weight: 600; max-width: 360px; }
+    .data-table td.cell-slug { color: var(--text-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .badge.published { background: rgba(34, 197, 94, 0.16); color: #4ADE80; }
+    .badge.draft { background: rgba(234, 179, 8, 0.16); color: #FACC15; }
+    .badge.archived { background: rgba(148, 163, 184, 0.16); color: #94A3B8; }
+
+    .row-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn-row { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-sec); font: 500 0.78rem var(--font-body); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+    .btn-row:hover { color: var(--text); border-color: rgba(184,196,210,0.3); }
+    .btn-row.danger:hover { color: #F87171; border-color: rgba(248,113,113,0.45); }
+
+    .empty-row td { padding: 32px 16px; text-align: center; color: var(--text-muted); }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; min-width: 280px; padding: 14px 18px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font-size: 0.88rem; box-shadow: 0 18px 40px rgba(0,0,0,.4); display: none; }
+    .toast.show { display: block; }
+    .toast.error { border-color: rgba(248,113,113,0.45); }
+    .toast.success { border-color: rgba(74, 222, 128, 0.45); }
+  </style>
+</head>
+<body style="visibility:hidden">
+
+  <header class="dash-header">
+    <img src="/assets/thermova-logo.svg" class="dash-logo" alt="Thermova" onerror="this.style.display='none';document.querySelector('.dash-logo-text').style.display='block'">
+    <span class="dash-logo-text" style="display:none">Thermova</span>
+    <span class="dash-title">Case studies</span>
+    <div class="dash-spacer"></div>
+    <a class="btn-ghost" href="/dashboard.html">← Back to dashboard</a>
+    <button id="signout-btn" class="btn-ghost">Sign out</button>
+  </header>
+
+  <main class="dash-main">
+    <h1>Case studies</h1>
+    <p class="panel-sub">Add, edit, publish or remove case studies. Publishing commits HTML to GitHub; Netlify auto-deploys in ~1–2 min.</p>
+
+    <div class="page-toolbar">
+      <div></div>
+      <a class="btn-primary" href="/admin/case-studies/edit.html?id=new">+ New case study</a>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Slug</th>
+            <th>Status</th>
+            <th>Published</th>
+            <th>Last updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL  = "https://cyjbzemzjmfjsloogixw.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5amJ6ZW16am1manNsb29naXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDg4MDEsImV4cCI6MjA5MDk4NDgwMX0.mWjRiXc1wI4qj0hs0RAglVyMDtvV2emHtXjBvBYxRDA";
+    const PUBLISH_FN = `${SUPABASE_URL}/functions/v1/publish-case-study`;
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    // Auth gate
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) { window.location.replace("/auth-login.html"); return; }
+      document.body.style.visibility = "visible";
+      init();
+    });
+
+    function init() {
+      document.getElementById("signout-btn").addEventListener("click", async () => {
+        await sb.auth.signOut();
+        window.location.replace("/auth-login.html");
+      });
+      loadCaseStudies();
+    }
+
+    function fmtDate(d) {
+      if (!d) return "—";
+      return new Date(d).toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function esc(s) { const e = document.createElement("div"); e.innerText = s ?? ""; return e.innerHTML; }
+
+    async function loadCaseStudies() {
+      const tbody = document.getElementById("rows");
+      const { data, error } = await sb
+        .from("case_studies")
+        .select("id, slug, title, status, published_date, last_published_at, updated_at")
+        .order("updated_at", { ascending: false });
+      if (error) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Error loading case studies: ${esc(error.message)}</td></tr>`;
+        return;
+      }
+      if (!data || !data.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No case studies yet. Click "+ New case study" to add one.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(r => `
+        <tr data-id="${esc(r.id)}" data-status="${esc(r.status)}">
+          <td class="cell-title">${esc(r.title)}</td>
+          <td class="cell-slug">/blog/${esc(r.slug)}</td>
+          <td><span class="badge ${esc(r.status)}">${esc(r.status)}</span></td>
+          <td>${esc(r.published_date)}</td>
+          <td>${fmtDate(r.last_published_at || r.updated_at)}</td>
+          <td>
+            <div class="row-actions">
+              <a class="btn-row" href="/admin/case-studies/edit.html?id=${esc(r.id)}">Edit</a>
+              ${r.status === "published"
+                ? `<button class="btn-row" data-action="unpublish" data-id="${esc(r.id)}">Unpublish</button>`
+                : `<button class="btn-row" data-action="publish" data-id="${esc(r.id)}">Publish</button>`}
+              <button class="btn-row danger" data-action="delete" data-id="${esc(r.id)}">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+      tbody.querySelectorAll("button[data-action]").forEach(btn => {
+        btn.addEventListener("click", () => handleAction(btn.dataset.action, btn.dataset.id, btn));
+      });
+    }
+
+    async function handleAction(action, id, btn) {
+      if (action === "delete" && !confirm("Permanently delete this case study? The static HTML file and database row will be removed.")) return;
+      if (action === "unpublish" && !confirm("Unpublish? The live URL will return 404 within ~2 minutes after Netlify redeploys.")) return;
+      if (action === "publish" && !confirm("Publish to the live site? The HTML will be committed to GitHub and Netlify will deploy it within ~2 minutes.")) return;
+
+      const original = btn.textContent;
+      btn.textContent = action === "delete" ? "Deleting…" : action === "publish" ? "Publishing…" : "Unpublishing…";
+      btn.disabled = true;
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) throw new Error("No session");
+        const res = await fetch(PUBLISH_FN, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ case_study_id: id, action }),
+        });
+        const body = await res.json();
+        if (!res.ok || !body.ok) throw new Error(body.error || `${res.status}`);
+        showToast(`${action} OK — commit ${body.commit_sha?.slice(0,7) ?? ""}`, "success");
+        await loadCaseStudies();
+      } catch (e) {
+        showToast(`${action} failed: ${e.message}`, "error");
+        btn.textContent = original;
+        btn.disabled = false;
+      }
+    }
+
+    function showToast(msg, type = "") {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.className = `toast show ${type}`;
+      setTimeout(() => { t.className = "toast"; }, 6000);
+    }
+  </script>
+</body>
+</html>

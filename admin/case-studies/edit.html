@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Edit case study — Admin | Thermova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #050B14; --surface: #0A1420; --surface-2: #0F1C2A; --surface-3: #121F2E;
+      --brand: #FF6A1A; --brand-hover: #FF7F3A;
+      --text: #FFFFFF; --text-sec: #B8C4D2; --text-muted: #7A8A99;
+      --border: rgba(184,196,210,0.14);
+      --radius-sm: 12px; --radius-md: 20px;
+      --font-display: "Sora", system-ui, sans-serif; --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    body { min-height: 100vh; background: var(--bg-primary); font: 400 15px/1.6 var(--font-body); color: var(--text-sec); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+
+    .dash-header { display: flex; align-items: center; gap: 24px; padding: 0 32px; height: 60px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10; }
+    .dash-logo { height: 28px; width: auto; flex-shrink: 0; }
+    .dash-title { font: 600 1rem var(--font-display); color: var(--text); margin-left: 8px; }
+    .dash-spacer { flex: 1; }
+    .btn-ghost { padding: 7px 16px; background: transparent; border: 1px solid var(--border); border-radius: 999px; color: var(--text-muted); font: 500 0.875rem var(--font-body); cursor: pointer; text-decoration: none; }
+    .btn-ghost:hover { color: var(--text-sec); border-color: rgba(184,196,210,0.3); }
+
+    .dash-main { max-width: 960px; margin: 0 auto; padding: 32px; }
+    h1 { font: 600 1.5rem var(--font-display); color: var(--text); margin-bottom: 6px; }
+    .panel-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+
+    .actions-bar { position: sticky; top: 60px; z-index: 9; display: flex; gap: 12px; justify-content: flex-end; align-items: center; padding: 14px 0; background: var(--bg-primary); border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .btn-primary { padding: 10px 22px; background: var(--brand); color: #fff; border: none; border-radius: 999px; font: 600 0.875rem var(--font-body); cursor: pointer; }
+    .btn-primary:hover { background: var(--brand-hover); }
+    .btn-primary:disabled, .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { padding: 10px 22px; background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 999px; font: 600 0.875rem var(--font-body); cursor: pointer; }
+    .btn-secondary:hover { border-color: rgba(184,196,210,0.3); }
+    .status-msg { color: var(--text-muted); font-size: 0.86rem; margin-right: auto; }
+    .status-msg.error { color: #F87171; }
+    .status-msg.success { color: #4ADE80; }
+
+    fieldset.section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px 28px; margin-bottom: 20px; }
+    legend { color: var(--text); font: 600 0.9rem var(--font-display); padding: 0 8px; letter-spacing: 0.02em; }
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .field-row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.82rem; color: var(--text-sec); margin-bottom: 6px; font-weight: 500; }
+    label .hint { color: var(--text-muted); font-weight: 400; }
+    input[type="text"], input[type="number"], input[type="date"], textarea, select {
+      width: 100%; padding: 10px 14px;
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font: 400 0.92rem var(--font-body); line-height: 1.5;
+    }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--brand); }
+    textarea { min-height: 96px; resize: vertical; font-family: var(--font-body); }
+    textarea.prose { min-height: 160px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86rem; }
+
+    .pill-input { padding: 6px 12px !important; min-width: 0; }
+
+    /* Image upload + gallery */
+    .dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 24px; border: 2px dashed var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text-muted); cursor: pointer; transition: border-color 0.15s; }
+    .dropzone:hover, .dropzone.drag-over { border-color: var(--brand); color: var(--text-sec); }
+    .dropzone-icon { font-size: 1.6rem; }
+    .dropzone-hint { font-size: 0.78rem; }
+
+    .hero-preview img, .gallery-item img { max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border); display: block; }
+    .hero-preview { margin-top: 12px; max-width: 280px; }
+
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; }
+    .gallery-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .gallery-item img { aspect-ratio: 16/10; object-fit: cover; }
+    .gallery-item input { width: 100%; padding: 6px 10px; background: var(--surface-3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-size: 0.82rem; }
+    .gallery-item .actions { display: flex; justify-content: space-between; gap: 6px; }
+    .gallery-item button { padding: 5px 10px; background: transparent; border: 1px solid var(--border); border-radius: 999px; color: var(--text-sec); font-size: 0.78rem; cursor: pointer; }
+    .gallery-item button.danger:hover { color: #F87171; border-color: rgba(248,113,113,0.45); }
+
+    /* FAQ editor */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+    .faq-row { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; }
+    .faq-row textarea { background: var(--surface-3); }
+    .faq-row .faq-row-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .btn-small { padding: 4px 10px; background: transparent; border: 1px solid var(--border); border-radius: 999px; color: var(--text-sec); font-size: 0.78rem; cursor: pointer; }
+    .btn-small:hover { color: var(--text); }
+    .btn-small.danger:hover { color: #F87171; border-color: rgba(248,113,113,0.45); }
+
+    .live-url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; color: var(--text-muted); }
+  </style>
+</head>
+<body style="visibility:hidden">
+
+  <header class="dash-header">
+    <img src="/assets/thermova-logo.svg" class="dash-logo" alt="Thermova" onerror="this.style.display='none'">
+    <span class="dash-title">Case study editor</span>
+    <div class="dash-spacer"></div>
+    <a class="btn-ghost" href="/admin/case-studies/">← All case studies</a>
+    <button id="signout-btn" class="btn-ghost">Sign out</button>
+  </header>
+
+  <main class="dash-main">
+    <h1 id="page-title">New case study</h1>
+    <p class="panel-sub">Save draft writes to the database without touching the live site. Publish commits HTML to GitHub and Netlify deploys it within ~2 minutes.</p>
+
+    <div class="actions-bar">
+      <span class="status-msg" id="status-msg"></span>
+      <button class="btn-secondary" id="save-draft-btn">Save draft</button>
+      <button class="btn-primary" id="publish-btn">Publish</button>
+    </div>
+
+    <form id="cs-form" autocomplete="off">
+
+      <fieldset class="section">
+        <legend>Meta</legend>
+        <div class="field-row">
+          <div class="field">
+            <label>Slug <span class="hint">(URL — lowercase letters, numbers, hyphens only)</span></label>
+            <input type="text" name="slug" required pattern="[a-z0-9-]+">
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select name="status">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Title <span class="hint">(used in H1, page title, OG)</span></label>
+          <input type="text" name="title" required>
+        </div>
+        <div class="field">
+          <label>Meta description <span class="hint">(150–160 chars — shown in Google SERP)</span></label>
+          <textarea name="meta_description" maxlength="200" required></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Breadcrumb label</label>
+            <input type="text" name="breadcrumb_label" required>
+          </div>
+          <div class="field">
+            <label>Location <span class="hint">(shown in byline)</span></label>
+            <input type="text" name="location" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Author</label>
+            <input type="text" name="author_name" value="Graham Barr">
+          </div>
+          <div class="field">
+            <label>Published date</label>
+            <input type="date" name="published_date" required>
+          </div>
+          <div class="field">
+            <label>Read time (min)</label>
+            <input type="number" name="read_time_minutes" min="1" max="60" value="6">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Images</legend>
+        <div class="field">
+          <label>Hero image <span class="hint">(jpg/png/webp, ≤5MB — uploads to Supabase Storage)</span></label>
+          <label class="dropzone" for="hero-file">
+            <span class="dropzone-icon">📷</span>
+            <span>Drop image here or click to browse</span>
+            <span class="dropzone-hint">Uploads to <code>case-studies/&lt;slug&gt;/hero-&lt;ts&gt;.&lt;ext&gt;</code></span>
+            <input type="file" id="hero-file" accept="image/jpeg,image/png,image/webp" hidden>
+          </label>
+          <div class="hero-preview" id="hero-preview" hidden></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Hero image URL</label>
+            <input type="text" name="hero_image_url" id="hero-url">
+          </div>
+          <div class="field">
+            <label>Hero image alt</label>
+            <input type="text" name="hero_image_alt">
+          </div>
+        </div>
+        <div class="field">
+          <label>Hero image caption</label>
+          <input type="text" name="hero_image_caption">
+        </div>
+
+        <div class="field" style="margin-top: 20px;">
+          <label>Gallery <span class="hint">(additional images for inline use in prose; click "Copy URL" on each thumbnail and paste as &lt;img&gt; in body fields)</span></label>
+          <label class="dropzone" for="gallery-files">
+            <span class="dropzone-icon">🖼️</span>
+            <span>Drop one or more images or click to browse</span>
+            <input type="file" id="gallery-files" accept="image/jpeg,image/png,image/webp" multiple hidden>
+          </label>
+          <div class="gallery" id="gallery"></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Opening</legend>
+        <div class="field">
+          <label>Opening paragraph 1 <span class="hint">(HTML allowed)</span></label>
+          <textarea class="prose" name="opening_paragraph_1" required></textarea>
+        </div>
+        <div class="field">
+          <label>Opening paragraph 2</label>
+          <textarea class="prose" name="opening_paragraph_2"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Why this matters</legend>
+        <div class="field">
+          <label>Heading</label>
+          <input type="text" name="why_matters_heading">
+        </div>
+        <div class="field">
+          <label>Prose <span class="hint">(HTML allowed — &lt;p&gt;, &lt;ul&gt;, &lt;img&gt;)</span></label>
+          <textarea class="prose" name="why_matters_prose"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Property specification</legend>
+        <div class="field-row" id="property-grid"></div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Installation</legend>
+        <div class="field">
+          <label>What was installed <span class="hint">(HTML — typically a &lt;ul&gt; list)</span></label>
+          <textarea class="prose" name="equipment_list_html"></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Install duration (days)</label>
+            <input type="number" name="installation_days" min="1" max="30">
+          </div>
+          <div></div>
+        </div>
+        <div class="field">
+          <label>Installation timeline prose</label>
+          <textarea class="prose" name="installation_timeline_prose"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Year-one performance data</legend>
+        <div class="field-row" id="performance-grid"></div>
+        <div class="field">
+          <label>Methodology prose <span class="hint">(HTML — bullets explaining the numbers)</span></label>
+          <textarea class="prose" name="methodology_prose"></textarea>
+        </div>
+        <div class="field">
+          <label>CO₂ equivalence prose</label>
+          <textarea class="prose" name="co2_equivalence_prose"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Cost</legend>
+        <div class="field-row" id="cost-grid"></div>
+        <div class="field">
+          <label>Cost narrative prose</label>
+          <textarea class="prose" name="cost_narrative_prose"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Winter performance</legend>
+        <div class="field">
+          <label>Bullets / prose <span class="hint">(HTML)</span></label>
+          <textarea class="prose" name="winter_performance_html"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>FAQs</legend>
+        <div class="faq-list" id="faq-list"></div>
+        <div style="margin-top: 12px;">
+          <button type="button" class="btn-small" id="add-faq">+ Add FAQ</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>CTA</legend>
+        <div class="field">
+          <label>CTA heading</label>
+          <input type="text" name="cta_heading">
+        </div>
+        <div class="field">
+          <label>CTA body</label>
+          <textarea name="cta_body"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>SEO</legend>
+        <div class="field">
+          <label>Keywords <span class="hint">(comma-separated — used in Article JSON-LD)</span></label>
+          <input type="text" name="keywords_csv">
+        </div>
+        <div class="field">
+          <label>About topics <span class="hint">(comma-separated — used in Article JSON-LD)</span></label>
+          <input type="text" name="about_topics_csv">
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>Methodology footnote</legend>
+        <div class="field">
+          <textarea class="prose" name="methodology_footnote"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="section" id="audit-section" hidden>
+        <legend>Audit</legend>
+        <div class="field">
+          <label>Last published</label>
+          <p class="live-url" id="audit-last-published">—</p>
+        </div>
+        <div class="field">
+          <label>Last commit SHA</label>
+          <p class="live-url" id="audit-commit-sha">—</p>
+        </div>
+        <div class="field">
+          <label>Live URL</label>
+          <p class="live-url" id="audit-live-url">—</p>
+        </div>
+      </fieldset>
+    </form>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL  = "https://cyjbzemzjmfjsloogixw.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5amJ6ZW16am1manNsb29naXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDg4MDEsImV4cCI6MjA5MDk4NDgwMX0.mWjRiXc1wI4qj0hs0RAglVyMDtvV2emHtXjBvBYxRDA";
+    const STORAGE_PUBLIC = `${SUPABASE_URL}/storage/v1/object/public/Website`;
+    const PUBLISH_FN = `${SUPABASE_URL}/functions/v1/publish-case-study`;
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const PROPERTY_KEYS = ["property_type","year_built","floor_area","walls","loft_insulation","floors","glazing","previous_heating","epc_rating_before","occupants"];
+    const PROPERTY_LABELS = { property_type:"Property type", year_built:"Year built", floor_area:"Floor area", walls:"Walls", loft_insulation:"Loft insulation", floors:"Floors", glazing:"Glazing", previous_heating:"Previous heating", epc_rating_before:"EPC rating before", occupants:"Occupants" };
+    const PERFORMANCE_KEYS = ["heat_delivered_kwh","electricity_consumed_kwh","measured_scop","gas_usage_removed_kwh","co2_before","co2_after","co2_reduction"];
+    const PERFORMANCE_LABELS = { heat_delivered_kwh:"Heat delivered (kWh)", electricity_consumed_kwh:"Electricity consumed (kWh)", measured_scop:"Measured SCOP", gas_usage_removed_kwh:"Gas usage removed", co2_before:"CO₂ before", co2_after:"CO₂ after", co2_reduction:"CO₂ reduction" };
+    const COST_KEYS = ["system_cost","grant_amount","net_cost","caption"];
+    const COST_LABELS = { system_cost:"Full system cost", grant_amount:"Grant amount (BUS)", net_cost:"Net to homeowner", caption:"Cost table caption" };
+
+    // ── Auth gate
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) { window.location.replace("/auth-login.html"); return; }
+      document.body.style.visibility = "visible";
+      init();
+    });
+
+    let row = null; // current row (null = new)
+    let galleryImages = []; // {url, alt, caption, storage_path}
+    let faqItems = []; // {q, a}
+
+    async function init() {
+      document.getElementById("signout-btn").addEventListener("click", async () => {
+        await sb.auth.signOut(); window.location.replace("/auth-login.html");
+      });
+      buildKeyValueGrid("property-grid", PROPERTY_KEYS, PROPERTY_LABELS, "property_spec");
+      buildKeyValueGrid("performance-grid", PERFORMANCE_KEYS, PERFORMANCE_LABELS, "performance_data");
+      buildKeyValueGrid("cost-grid", COST_KEYS, COST_LABELS, "cost_data");
+
+      document.getElementById("save-draft-btn").addEventListener("click", () => save("draft"));
+      document.getElementById("publish-btn").addEventListener("click", () => save("publish"));
+
+      document.getElementById("hero-file").addEventListener("change", e => handleHeroUpload(e.target.files[0]));
+      document.getElementById("gallery-files").addEventListener("change", e => handleGalleryUpload(e.target.files));
+      ["hero-file", "gallery-files"].forEach(id => {
+        const label = document.querySelector(`label[for="${id}"]`);
+        label.addEventListener("dragover", e => { e.preventDefault(); label.classList.add("drag-over"); });
+        label.addEventListener("dragleave", () => label.classList.remove("drag-over"));
+        label.addEventListener("drop", e => {
+          e.preventDefault(); label.classList.remove("drag-over");
+          const files = Array.from(e.dataTransfer.files);
+          if (id === "hero-file" && files[0]) handleHeroUpload(files[0]);
+          if (id === "gallery-files") handleGalleryUpload(files);
+        });
+      });
+
+      document.getElementById("add-faq").addEventListener("click", () => { faqItems.push({q:"",a:""}); renderFaqList(); });
+
+      const id = new URLSearchParams(location.search).get("id");
+      if (id && id !== "new") await loadRow(id);
+      else {
+        document.querySelector('[name="published_date"]').value = new Date().toISOString().slice(0,10);
+        renderFaqList();
+        renderGallery();
+      }
+    }
+
+    function buildKeyValueGrid(containerId, keys, labels, _jsonField) {
+      const c = document.getElementById(containerId);
+      c.innerHTML = keys.map(k => `
+        <div class="field">
+          <label>${labels[k]}</label>
+          <input type="text" data-kv-grid="${containerId}" data-kv-key="${k}">
+        </div>
+      `).join("");
+    }
+    function gridToJson(containerId) {
+      const obj = {};
+      document.querySelectorAll(`[data-kv-grid="${containerId}"]`).forEach(inp => {
+        if (inp.value !== "") obj[inp.dataset.kvKey] = inp.value;
+      });
+      return obj;
+    }
+    function jsonToGrid(containerId, obj) {
+      document.querySelectorAll(`[data-kv-grid="${containerId}"]`).forEach(inp => {
+        inp.value = (obj && obj[inp.dataset.kvKey]) || "";
+      });
+    }
+
+    async function loadRow(id) {
+      const { data, error } = await sb.from("case_studies").select("*").eq("id", id).single();
+      if (error || !data) { setStatus(`Failed to load: ${error?.message}`, "error"); return; }
+      row = data;
+      document.getElementById("page-title").textContent = `Edit: ${data.title}`;
+      // populate top-level scalar fields
+      const form = document.getElementById("cs-form");
+      ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","read_time_minutes","hero_image_url","hero_image_alt","hero_image_caption","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_days","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
+        if (form.elements[k] !== undefined && data[k] != null) form.elements[k].value = data[k];
+      });
+      form.elements.keywords_csv.value = (data.keywords || []).join(", ");
+      form.elements.about_topics_csv.value = (data.about_topics || []).join(", ");
+      jsonToGrid("property-grid", data.property_spec);
+      jsonToGrid("performance-grid", data.performance_data);
+      jsonToGrid("cost-grid", data.cost_data);
+      faqItems = data.faq_items || [];
+      galleryImages = data.gallery_images || [];
+      if (data.hero_image_url) showHeroPreview(data.hero_image_url);
+      renderFaqList();
+      renderGallery();
+      const audit = document.getElementById("audit-section");
+      audit.hidden = false;
+      document.getElementById("audit-last-published").textContent = data.last_published_at || "—";
+      document.getElementById("audit-commit-sha").textContent = data.last_published_commit_sha || "—";
+      document.getElementById("audit-live-url").innerHTML = data.status === "published"
+        ? `<a href="https://thermova.uk/blog/${data.slug}" target="_blank">https://thermova.uk/blog/${data.slug}</a>`
+        : "(not currently published)";
+    }
+
+    function renderFaqList() {
+      const list = document.getElementById("faq-list");
+      if (!faqItems.length) { list.innerHTML = `<p style="color:var(--text-muted);font-size:0.86rem;">No FAQs yet. Click + Add FAQ.</p>`; return; }
+      list.innerHTML = faqItems.map((f,i) => `
+        <div class="faq-row" data-faq="${i}">
+          <textarea data-faq-field="q" placeholder="Question (one line)">${escVal(f.q)}</textarea>
+          <textarea data-faq-field="a" placeholder="Answer">${escVal(f.a)}</textarea>
+          <div class="faq-row-actions">
+            <button type="button" class="btn-small danger" data-faq-del="${i}">Remove</button>
+          </div>
+        </div>
+      `).join("");
+      list.querySelectorAll("[data-faq]").forEach(div => {
+        const idx = +div.dataset.faq;
+        div.querySelector('[data-faq-field="q"]').addEventListener("input", e => faqItems[idx].q = e.target.value);
+        div.querySelector('[data-faq-field="a"]').addEventListener("input", e => faqItems[idx].a = e.target.value);
+        div.querySelector("[data-faq-del]").addEventListener("click", () => { faqItems.splice(idx, 1); renderFaqList(); });
+      });
+    }
+
+    function renderGallery() {
+      const g = document.getElementById("gallery");
+      g.innerHTML = galleryImages.map((img, i) => `
+        <div class="gallery-item" data-gi="${i}">
+          <img src="${escVal(img.url)}" alt="${escVal(img.alt || '')}">
+          <input type="text" data-gi-field="alt" placeholder="Alt text" value="${escVal(img.alt || '')}">
+          <input type="text" data-gi-field="caption" placeholder="Caption (optional)" value="${escVal(img.caption || '')}">
+          <div class="actions">
+            <button type="button" data-gi-copy="${i}">Copy URL</button>
+            <button type="button" class="danger" data-gi-del="${i}">Remove</button>
+          </div>
+        </div>
+      `).join("");
+      g.querySelectorAll("[data-gi]").forEach(div => {
+        const idx = +div.dataset.gi;
+        div.querySelector('[data-gi-field="alt"]').addEventListener("input", e => galleryImages[idx].alt = e.target.value);
+        div.querySelector('[data-gi-field="caption"]').addEventListener("input", e => galleryImages[idx].caption = e.target.value);
+        div.querySelector("[data-gi-copy]").addEventListener("click", () => copyToClipboard(galleryImages[idx].url));
+        div.querySelector("[data-gi-del]").addEventListener("click", () => removeGalleryImage(idx));
+      });
+    }
+
+    async function copyToClipboard(text) {
+      try { await navigator.clipboard.writeText(text); setStatus("URL copied to clipboard", "success"); }
+      catch { setStatus("Couldn't copy — select manually", "error"); }
+    }
+
+    async function removeGalleryImage(idx) {
+      const img = galleryImages[idx];
+      if (!confirm("Remove this image? It will be deleted from Supabase Storage.")) return;
+      if (img.storage_path) {
+        const { error } = await sb.storage.from("Website").remove([img.storage_path]);
+        if (error) { setStatus(`Storage delete failed: ${error.message}`, "error"); return; }
+      }
+      galleryImages.splice(idx, 1); renderGallery();
+    }
+
+    async function handleHeroUpload(file) {
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { setStatus("Hero image too large (≤5MB)", "error"); return; }
+      const slug = currentSlug();
+      if (!slug) { setStatus("Set slug first — image upload paths use the slug", "error"); return; }
+      setStatus("Uploading hero image…");
+      const ts = Date.now();
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `case-studies/${slug}/hero-${ts}.${ext}`;
+      const { error } = await sb.storage.from("Website").upload(path, file, { cacheControl: "3600", upsert: false });
+      if (error) { setStatus(`Hero upload failed: ${error.message}`, "error"); return; }
+      const url = `${STORAGE_PUBLIC}/${path}`;
+      document.getElementById("hero-url").value = url;
+      const altInput = document.querySelector('[name="hero_image_alt"]');
+      if (!altInput.value) altInput.value = `Thermova case study at ${(document.querySelector('[name="location"]').value) || ""}`.trim();
+      showHeroPreview(url);
+      setStatus(`Hero uploaded — ${path}`, "success");
+    }
+    function showHeroPreview(url) {
+      const p = document.getElementById("hero-preview");
+      p.innerHTML = `<img src="${escVal(url)}" alt="hero preview">`;
+      p.hidden = false;
+    }
+
+    async function handleGalleryUpload(files) {
+      const slug = currentSlug();
+      if (!slug) { setStatus("Set slug first — image upload paths use the slug", "error"); return; }
+      for (const file of files) {
+        if (file.size > 5 * 1024 * 1024) { setStatus(`Skipped ${file.name}: too large (≤5MB)`, "error"); continue; }
+        setStatus(`Uploading ${file.name}…`);
+        const ts = Date.now();
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const path = `case-studies/${slug}/gallery/${ts}-${safeName}`;
+        const { error } = await sb.storage.from("Website").upload(path, file, { cacheControl: "3600", upsert: false });
+        if (error) { setStatus(`Upload failed (${file.name}): ${error.message}`, "error"); continue; }
+        const url = `${STORAGE_PUBLIC}/${path}`;
+        galleryImages.push({ url, alt: "", caption: "", storage_path: path });
+      }
+      renderGallery();
+      setStatus(`Uploaded ${files.length} gallery image(s)`, "success");
+    }
+
+    function currentSlug() {
+      return (document.querySelector('[name="slug"]').value || "").trim();
+    }
+
+    function collectFormData() {
+      const f = document.getElementById("cs-form");
+      const payload = {};
+      ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","hero_image_url","hero_image_alt","hero_image_caption","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
+        const v = f.elements[k]?.value ?? "";
+        payload[k] = v === "" ? null : v;
+      });
+      payload.read_time_minutes = parseInt(f.elements.read_time_minutes.value || "6", 10);
+      const days = f.elements.installation_days.value;
+      payload.installation_days = days ? parseInt(days, 10) : null;
+      payload.keywords = (f.elements.keywords_csv.value || "").split(",").map(s => s.trim()).filter(Boolean);
+      payload.about_topics = (f.elements.about_topics_csv.value || "").split(",").map(s => s.trim()).filter(Boolean);
+      payload.property_spec = gridToJson("property-grid");
+      payload.performance_data = gridToJson("performance-grid");
+      payload.cost_data = gridToJson("cost-grid");
+      payload.gallery_images = galleryImages;
+      payload.faq_items = faqItems.filter(x => x.q && x.a);
+      return payload;
+    }
+
+    async function save(action) {
+      const draftBtn = document.getElementById("save-draft-btn");
+      const pubBtn = document.getElementById("publish-btn");
+      draftBtn.disabled = true; pubBtn.disabled = true;
+
+      try {
+        const payload = collectFormData();
+        if (!payload.slug || !payload.title || !payload.meta_description || !payload.published_date) {
+          throw new Error("Slug, title, meta description and published date are required");
+        }
+        setStatus(action === "publish" ? "Saving + publishing…" : "Saving draft…");
+
+        let saved;
+        if (!row) {
+          const { data, error } = await sb.from("case_studies").insert(payload).select().single();
+          if (error) throw error;
+          saved = data; row = saved;
+          history.replaceState({}, "", `?id=${saved.id}`);
+        } else {
+          const { data, error } = await sb.from("case_studies").update(payload).eq("id", row.id).select().single();
+          if (error) throw error;
+          saved = data; row = saved;
+        }
+
+        if (action === "publish") {
+          setStatus("Saved. Publishing via edge function (HTML → GitHub → Netlify)…");
+          const { data: { session } } = await sb.auth.getSession();
+          const res = await fetch(PUBLISH_FN, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ case_study_id: saved.id, action: "publish" }),
+          });
+          const body = await res.json();
+          if (!res.ok || !body.ok) throw new Error(body.error || `${res.status}`);
+          setStatus(`Published — commit ${body.commit_sha.slice(0,7)}. Netlify deploys in ~1–2 min.`, "success");
+          if (body.blog_url) document.getElementById("audit-live-url").innerHTML = `<a href="${body.blog_url}" target="_blank">${body.blog_url}</a>`;
+          document.getElementById("audit-commit-sha").textContent = body.commit_sha;
+          document.getElementById("audit-section").hidden = false;
+        } else {
+          setStatus("Draft saved", "success");
+        }
+      } catch (e) {
+        setStatus(`${action === "publish" ? "Publish" : "Save"} failed: ${e.message}`, "error");
+      } finally {
+        draftBtn.disabled = false; pubBtn.disabled = false;
+      }
+    }
+
+    function setStatus(msg, type = "") {
+      const el = document.getElementById("status-msg");
+      el.textContent = msg;
+      el.className = `status-msg ${type}`;
+    }
+
+    function escVal(s) {
+      if (s == null) return "";
+      return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+  </script>
+</body>
+</html>

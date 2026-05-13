@@ -31,6 +31,7 @@ export interface CaseStudyRow {
   opening_paragraph_2: string | null;
   why_matters_heading: string | null;
   why_matters_prose: string | null;          // HTML
+  body_html: string | null;                  // When set, replaces structured prose
   equipment_list_html: string | null;        // HTML
   installation_days: number | null;
   installation_timeline_prose: string | null;
@@ -604,31 +605,21 @@ ${faqJsonLd(row)}
 </script>
 ${FONTS_AND_STYLE}`;
 
-  const propertyTable = renderPropertyTable(row.property_spec);
-  const performanceTable = renderPerformanceTable(row.performance_data);
-  const costTable = renderCostTable(row.cost_data);
+  // Two render paths:
+  //  (a) body_html is set → render it directly (paste-and-go mode)
+  //  (b) body_html is null → render the structured prose + tables (legacy Lytham mode)
+  let articleInner: string;
+  if (row.body_html && row.body_html.trim()) {
+    articleInner = `${renderHeroFigure(row)}
 
-  const body = `${BODY_OPEN_AND_NAV}
+        ${rawHtml(row.body_html)}
 
-<main id="top">
-  <header class="article-header">
-    <div class="shell">
-      <ol class="article-breadcrumb" aria-label="Breadcrumb">
-        <li><a href="/">Home</a></li>
-        <li><a href="/blog/">Case studies</a></li>
-        <li aria-current="page">${escText(row.breadcrumb_label)}</li>
-      </ol>
-      <p class="section-label">Case study</p>
-      <h1>${escText(row.title)}</h1>
-      <p class="article-meta">By <strong>${escText(row.author_name)}</strong> · ${escText(fmtDateUK(row.published_date))} · ${row.read_time_minutes} min read · ${escText(row.location)}</p>
-    </div>
-  </header>
-
-  <article class="section section-dark">
-    <div class="shell">
-      <div class="article-body">
-
-${renderHeroFigure(row)}
+${renderGallery(row)}`;
+  } else {
+    const propertyTable = renderPropertyTable(row.property_spec);
+    const performanceTable = renderPerformanceTable(row.performance_data);
+    const costTable = renderCostTable(row.cost_data);
+    articleInner = `${renderHeroFigure(row)}
 
         <p>${rawHtml(row.opening_paragraph_1)}</p>
 ${row.opening_paragraph_2 ? `\n        <p>${rawHtml(row.opening_paragraph_2)}</p>\n` : ""}
@@ -659,7 +650,30 @@ ${row.cost_narrative_prose ? `        ${rawHtml(row.cost_narrative_prose)}\n` : 
 
 ${row.winter_performance_html ? `        <h2>How the heat pump performed in the Lancashire winter</h2>\n\n        ${rawHtml(row.winter_performance_html)}\n` : ""}
 
-${renderGallery(row)}
+${renderGallery(row)}`;
+  }
+
+  const body = `${BODY_OPEN_AND_NAV}
+
+<main id="top">
+  <header class="article-header">
+    <div class="shell">
+      <ol class="article-breadcrumb" aria-label="Breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Case studies</a></li>
+        <li aria-current="page">${escText(row.breadcrumb_label)}</li>
+      </ol>
+      <p class="section-label">Case study</p>
+      <h1>${escText(row.title)}</h1>
+      <p class="article-meta">By <strong>${escText(row.author_name)}</strong> · ${escText(fmtDateUK(row.published_date))} · ${row.read_time_minutes} min read · ${escText(row.location)}</p>
+    </div>
+  </header>
+
+  <article class="section section-dark">
+    <div class="shell">
+      <div class="article-body">
+
+${articleInner}
 
 ${renderFaqAccordion(row.faq_items)}
 

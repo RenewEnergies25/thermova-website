@@ -114,6 +114,18 @@
     <form id="cs-form" autocomplete="off">
 
       <fieldset class="section">
+        <legend>📋 Paste & import</legend>
+        <p style="font-size:0.86rem;color:var(--text-muted);margin-bottom:12px;">Paste a full case study from your writer (Title tag header + body + FAQs). The Import button fills the meta fields, the body field and the FAQ editor automatically. Review, upload images, then Publish.</p>
+        <div class="field">
+          <textarea id="paste-input" class="prose" rows="10" placeholder="Paste the entire case study here — including the 'Title tag:', 'Meta description:', 'URL slug:' header lines at the top."></textarea>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="btn-primary" id="paste-import-btn">Import from paste</button>
+          <button type="button" class="btn-small" id="paste-clear-btn">Clear paste</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
         <legend>Meta</legend>
         <div class="field-row">
           <div class="field">
@@ -202,10 +214,21 @@
       </fieldset>
 
       <fieldset class="section">
-        <legend>Opening</legend>
+        <legend>Body content (HTML)</legend>
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:10px;">The full article body — paste-imported or pasted directly. HTML allowed (&lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;table&gt;, &lt;strong&gt;, &lt;a&gt;, &lt;img&gt;). When this field is set, the legacy structured fields below are ignored.</p>
+        <div class="field">
+          <textarea class="prose" name="body_html" rows="20" placeholder="Auto-filled by Paste & import, or hand-author HTML here."></textarea>
+        </div>
+      </fieldset>
+
+      <details style="margin-bottom:20px;">
+        <summary style="cursor:pointer;color:var(--text-muted);font-size:0.9rem;padding:8px;">▸ Show legacy structured fields (used when Body content is blank — Lytham case study only)</summary>
+
+      <fieldset class="section">
+        <legend>Opening (legacy)</legend>
         <div class="field">
           <label>Opening paragraph 1 <span class="hint">(HTML allowed)</span></label>
-          <textarea class="prose" name="opening_paragraph_1" required></textarea>
+          <textarea class="prose" name="opening_paragraph_1"></textarea>
         </div>
         <div class="field">
           <label>Opening paragraph 2</label>
@@ -272,12 +295,14 @@
       </fieldset>
 
       <fieldset class="section">
-        <legend>Winter performance</legend>
+        <legend>Winter performance (legacy)</legend>
         <div class="field">
           <label>Bullets / prose <span class="hint">(HTML)</span></label>
           <textarea class="prose" name="winter_performance_html"></textarea>
         </div>
       </fieldset>
+
+      </details>
 
       <fieldset class="section">
         <legend>FAQs</legend>
@@ -389,6 +414,11 @@
 
       document.getElementById("add-faq").addEventListener("click", () => { faqItems.push({q:"",a:""}); renderFaqList(); });
 
+      document.getElementById("paste-import-btn").addEventListener("click", handlePasteImport);
+      document.getElementById("paste-clear-btn").addEventListener("click", () => {
+        document.getElementById("paste-input").value = "";
+      });
+
       // Auto-slug: title → slug, until user manually edits the slug field
       const titleEl = document.querySelector('[name="title"]');
       const slugEl  = document.querySelector('[name="slug"]');
@@ -435,7 +465,7 @@
       document.getElementById("page-title").textContent = `Edit: ${data.title}`;
       // populate top-level scalar fields
       const form = document.getElementById("cs-form");
-      ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","read_time_minutes","hero_image_url","hero_image_alt","hero_image_caption","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_days","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
+      ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","read_time_minutes","hero_image_url","hero_image_alt","hero_image_caption","body_html","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_days","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
         if (form.elements[k] !== undefined && data[k] != null) form.elements[k].value = data[k];
       });
       // Editing an existing row → user has previously committed to this slug; lock auto-sync
@@ -562,6 +592,278 @@
       return (document.querySelector('[name="slug"]').value || "").trim();
     }
 
+    // ─────────────────────────── Paste & import ───────────────────────────
+    // Parses a writer's full case study (Title tag header + body + FAQs)
+    // into structured fields. Best-effort — review the result.
+
+    function handlePasteImport() {
+      const raw = document.getElementById("paste-input").value;
+      if (!raw.trim()) { setStatus("Nothing pasted", "error"); return; }
+      try {
+        const parsed = parseCaseStudy(raw);
+        applyParsed(parsed);
+        setStatus(`Imported: ${parsed.summary}`, "success");
+      } catch (e) {
+        setStatus(`Import failed: ${e.message}`, "error");
+      }
+    }
+
+    function parseCaseStudy(text) {
+      const lines = text.replace(/\r\n/g, "\n").split("\n");
+
+      // 1. Extract top-of-file meta header (Title tag:, Meta description:, URL slug:, Focus/Secondary keywords:, Schema:)
+      const meta = {};
+      let i = 0;
+      const headerKeys = {
+        "title tag":            "title",
+        "meta description":     "meta_description",
+        "url slug":             "slug",
+        "focus keyword":        "focus_keyword",
+        "secondary keywords":   "secondary_keywords",
+        "schema":               "schema_hint",
+      };
+      while (i < lines.length) {
+        const m = lines[i].match(/^([A-Za-z][A-Za-z ]+?):\s*(.+)$/);
+        if (m) {
+          const key = m[1].trim().toLowerCase();
+          if (headerKeys[key]) {
+            meta[headerKeys[key]] = m[2].trim();
+            i++;
+            continue;
+          }
+        }
+        if (lines[i].trim() === "") { i++; continue; }
+        break;
+      }
+
+      // 2. Body starts at first non-blank line after header. Detect first H1 (the article title).
+      while (i < lines.length && !lines[i].trim()) i++;
+      let h1Title = "";
+      if (i < lines.length) {
+        h1Title = lines[i].trim();
+        // If meta.title wasn't set, use the H1
+        if (!meta.title) meta.title = h1Title;
+        i++;
+      }
+
+      // 3. Cut tail: anything from "Notes for the Thermova SEO team" onwards
+      let bodyEnd = lines.length;
+      for (let j = i; j < lines.length; j++) {
+        if (/^notes for (the )?thermova/i.test(lines[j].trim())) { bodyEnd = j; break; }
+      }
+
+      const bodyLines = lines.slice(i, bodyEnd);
+
+      // 4. Find FAQ section heading inside the body
+      let faqStart = -1;
+      for (let j = 0; j < bodyLines.length; j++) {
+        if (/^frequently asked questions/i.test(bodyLines[j].trim())) { faqStart = j; break; }
+      }
+
+      // 5. Find CTA section near the end (after FAQ) — anything from "Get a free" or "Is your" CTA-like heading
+      let ctaStart = -1;
+      const ctaSearchStart = faqStart === -1 ? 0 : faqStart;
+      for (let j = ctaSearchStart; j < bodyLines.length; j++) {
+        const t = bodyLines[j].trim();
+        if (/^(get a free|book your|is your |get your )/i.test(t) && t.length < 90 && !t.endsWith("?")) {
+          ctaStart = j; break;
+        }
+      }
+
+      // FAQ block bounds
+      const faqEnd = ctaStart !== -1 ? ctaStart : bodyLines.length;
+      const faqs = faqStart !== -1 ? extractFaqs(bodyLines.slice(faqStart + 1, faqEnd)) : [];
+
+      // Main body = everything before FAQ heading (or whole thing if no FAQ found)
+      const mainBodyLines = faqStart !== -1 ? bodyLines.slice(0, faqStart) : bodyLines.slice(0, ctaStart === -1 ? bodyLines.length : ctaStart);
+      const bodyHtml = linesToHtml(mainBodyLines);
+
+      // Extract keywords
+      const keywords = [];
+      if (meta.focus_keyword) keywords.push(meta.focus_keyword);
+      if (meta.secondary_keywords) {
+        meta.secondary_keywords.split(",").forEach(k => { const v = k.trim(); if (v) keywords.push(v); });
+      }
+
+      return {
+        title:            meta.title || h1Title,
+        meta_description: meta.meta_description || "",
+        slug:             extractSlug(meta.slug || ""),
+        keywords,
+        body_html:        bodyHtml,
+        faqs,
+        summary: `${meta.title ? "title ✓ " : ""}${meta.meta_description ? "desc ✓ " : ""}${meta.slug ? "slug ✓ " : ""}${faqs.length ? `${faqs.length} FAQs ✓` : ""}`,
+      };
+    }
+
+    function extractSlug(s) {
+      // Accept "/blog/x-y-z" or "x-y-z"
+      return (s || "")
+        .replace(/^\/?blog\//, "")
+        .replace(/^\/+|\/+$/g, "")
+        .trim();
+    }
+
+    function extractFaqs(lines) {
+      // Walk lines. A question is a line ending with "?". The answer is the
+      // collected following paragraphs until the next question or blank-then-non-Q.
+      const items = [];
+      let i = 0;
+      while (i < lines.length) {
+        const t = lines[i].trim();
+        if (!t) { i++; continue; }
+        if (t.endsWith("?") && t.length < 200) {
+          const q = t;
+          // Collect answer until next "?" line, end, or section break
+          const answerLines = [];
+          i++;
+          while (i < lines.length) {
+            const at = lines[i].trim();
+            if (at.endsWith("?") && at.length < 200 && answerLines.length) break;
+            if (at === "" && answerLines.length && lines[i+1] && lines[i+1].trim().endsWith("?")) { i++; break; }
+            answerLines.push(at);
+            i++;
+            // Stop if we've collected ~6 paragraphs (typical FAQ answer)
+            if (answerLines.filter(l => l).length >= 8) break;
+          }
+          const a = answerLines.join(" ").replace(/\s+/g, " ").trim();
+          if (q && a) items.push({ q, a });
+        } else {
+          i++;
+        }
+      }
+      return items;
+    }
+
+    function linesToHtml(lines) {
+      // Convert plain-text blocks to HTML.
+      // Strategy: walk lines, classify each block, emit HTML.
+      const out = [];
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i];
+        const trimmed = line.trim();
+        if (!trimmed) { i++; continue; }
+
+        // Bullet list block
+        if (/^[•\-\*]\s+/.test(trimmed)) {
+          const items = [];
+          while (i < lines.length && /^[•\-\*]\s+/.test(lines[i].trim())) {
+            items.push(inlineFmt(lines[i].trim().replace(/^[•\-\*]\s+/, "")));
+            i++;
+          }
+          out.push("<ul>\n" + items.map(t => `  <li>${t}</li>`).join("\n") + "\n</ul>");
+          continue;
+        }
+
+        // Table block: 2+ consecutive lines that look table-shaped (2+ whitespace-separated columns)
+        if (looksLikeTableRow(trimmed) && i + 1 < lines.length && looksLikeTableRow(lines[i + 1].trim())) {
+          const rows = [];
+          while (i < lines.length && looksLikeTableRow(lines[i].trim())) {
+            rows.push(splitTableRow(lines[i].trim()));
+            i++;
+          }
+          out.push(rowsToTableHtml(rows));
+          continue;
+        }
+
+        // Heading detection: short, no period at end, no comma, looks like a heading
+        if (looksLikeHeading(trimmed, lines[i + 1])) {
+          out.push(`<h2>${inlineFmt(trimmed)}</h2>`);
+          i++;
+          continue;
+        }
+
+        // Otherwise: paragraph (collect contiguous non-blank, non-special lines)
+        const paraLines = [trimmed];
+        i++;
+        while (i < lines.length) {
+          const t2 = lines[i].trim();
+          if (!t2) break;
+          if (/^[•\-\*]\s+/.test(t2)) break;
+          if (looksLikeTableRow(t2) && i + 1 < lines.length && looksLikeTableRow(lines[i + 1]?.trim() || "")) break;
+          if (looksLikeHeading(t2, lines[i + 1])) break;
+          paraLines.push(t2);
+          i++;
+        }
+        out.push(`<p>${inlineFmt(paraLines.join(" "))}</p>`);
+      }
+      return out.join("\n\n");
+    }
+
+    function looksLikeTableRow(s) {
+      // Two or more columns separated by tabs OR ≥2 spaces in a row
+      if (!s) return false;
+      if (s.length > 300) return false;
+      const parts = s.split(/\t|\s{2,}/).map(p => p.trim()).filter(Boolean);
+      return parts.length >= 2 && parts.length <= 8;
+    }
+
+    function splitTableRow(s) {
+      return s.split(/\t|\s{2,}/).map(p => p.trim()).filter(Boolean);
+    }
+
+    function rowsToTableHtml(rows) {
+      if (!rows.length) return "";
+      const head = rows[0];
+      const body = rows.slice(1);
+      const thead = `<thead><tr>${head.map(c => `<th>${inlineFmt(c)}</th>`).join("")}</tr></thead>`;
+      const tbody = `<tbody>${body.map(r => `<tr>${r.map((c, idx) => idx === 0 ? `<th scope="row">${inlineFmt(c)}</th>` : `<td>${inlineFmt(c)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+      return `<table class="data-table">${thead}${tbody}</table>`;
+    }
+
+    function looksLikeHeading(line, nextLine) {
+      if (!line) return false;
+      if (line.length > 110) return false;
+      if (/[.!]$/.test(line)) return false;
+      if (/[?]$/.test(line)) return false;
+      if (/^[•\-\*]\s/.test(line)) return false;
+      if (looksLikeTableRow(line)) return false;
+      // Has at least one capital letter, not a continuation of a sentence
+      if (!/[A-Z]/.test(line[0])) return false;
+      // Typically followed by blank line or content
+      // Heading-ish if it's a known label OR mostly title case
+      const headingHints = /^(Why |What |How |The |Year-one|Frequently |Is your |Get a |Book your)/i;
+      return headingHints.test(line) || (line.length < 80);
+    }
+
+    function inlineFmt(s) {
+      // Convert **bold**, [text](url), URLs and emails to HTML. Escape HTML chars first.
+      let out = (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      // [text](url)
+      out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, txt, url) => `<a href="${url}">${txt}</a>`);
+      // **bold**
+      out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      // Auto-link bare URLs (limited — avoid mangling URLs inside attributes)
+      out = out.replace(/(^|\s)((?:https?:\/\/)[^\s<]+)/g, '$1<a href="$2">$2</a>');
+      return out;
+    }
+
+    function applyParsed(p) {
+      if (p.title) {
+        document.querySelector('[name="title"]').value = p.title;
+        // Trigger slug auto-derive
+        const slugEl = document.querySelector('[name="slug"]');
+        if (!slugEl.dataset.touched && !p.slug) slugEl.value = slugify(p.title);
+      }
+      if (p.slug) {
+        document.querySelector('[name="slug"]').value = p.slug;
+        document.querySelector('[name="slug"]').dataset.touched = "1";
+      }
+      if (p.meta_description) document.querySelector('[name="meta_description"]').value = p.meta_description;
+      if (p.body_html)        document.querySelector('[name="body_html"]').value = p.body_html;
+      if (p.keywords?.length) document.querySelector('[name="keywords_csv"]').value = p.keywords.join(", ");
+      if (p.faqs?.length) {
+        faqItems = p.faqs;
+        renderFaqList();
+      }
+      // Default a few fields if blank
+      const breadcrumbEl = document.querySelector('[name="breadcrumb_label"]');
+      if (!breadcrumbEl.value && p.title) breadcrumbEl.value = p.title.split(":")[0] || p.title.slice(0, 40);
+      const dateEl = document.querySelector('[name="published_date"]');
+      if (!dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
+    }
+
     function slugify(s) {
       return (s || "")
         .toLowerCase()
@@ -578,7 +880,7 @@
     function collectFormData() {
       const f = document.getElementById("cs-form");
       const payload = {};
-      ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","hero_image_url","hero_image_alt","hero_image_caption","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
+      ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","hero_image_url","hero_image_alt","hero_image_caption","body_html","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
         const v = f.elements[k]?.value ?? "";
         payload[k] = v === "" ? null : v;
       });
@@ -604,6 +906,10 @@
         const payload = collectFormData();
         if (!payload.slug || !payload.title || !payload.meta_description || !payload.published_date) {
           throw new Error("Slug, title, meta description and published date are required");
+        }
+        // Body or legacy structured fields required
+        if (!payload.body_html && !payload.opening_paragraph_1) {
+          throw new Error("Body content (HTML) is required — paste your case study and click Import, or write HTML directly.");
         }
         setStatus(action === "publish" ? "Saving + publishing…" : "Saving draft…");
 

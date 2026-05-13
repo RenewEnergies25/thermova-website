@@ -1125,72 +1125,2018 @@ fbq('track', 'PageView');
                 padding: 56px 20px;
             }
         }
+        /* ── SHARED CHROME STYLES (from index.html) ── */
+  :root {
+    --color-brand: #FF6A1A;
+    --color-brand-hover: #FF7F3A;
+    --color-brand-glow: rgba(255, 106, 26, 0.25);
+    --color-glow-soft: rgba(255, 106, 26, 0.06);
+    --color-bg: #050B14;
+    --color-surface: #0A1420;
+    --color-surface-2: #0F1C2A;
+    --color-surface-3: #121F2E;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #B8C4D2;
+    --color-text-muted: #7A8A99;
+    --color-border: rgba(184, 196, 210, 0.14);
+    --color-divider: rgba(184, 196, 210, 0.18);
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 32px;
+    --space-6: 48px;
+    --space-7: 64px;
+    --space-8: 80px;
+    --space-9: 96px;
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 28px;
+    --shadow-sm: 0 18px 40px rgba(0, 0, 0, 0.22);
+    --shadow-md: 0 28px 70px rgba(0, 0, 0, 0.34);
+    --font-display: "Sora", system-ui, sans-serif;
+    --font-body: "DM Sans", system-ui, sans-serif;
+    --max-width: 1200px;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255, 106, 26, 0.15), transparent 60%),
+      linear-gradient(180deg, #07111d 0%, var(--color-bg) 32%, #06101a 100%);
+    color: var(--color-text-secondary);
+    font: 400 16px/1.6 var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(255, 106, 26, 0.72);
+    outline-offset: 3px;
+  }
+
+  .shell {
+    width: min(calc(100% - 40px), var(--max-width));
+    margin: 0 auto;
+  }
+
+  .section {
+    position: relative;
+    isolation: isolate;
+    padding: var(--space-8) 0;
+  }
+
+  .section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 10%, rgba(255, 106, 26, 0.08), transparent 60%);
+    opacity: 0.72;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .section-dark {
+    background: transparent;
+  }
+
+  .section-mid {
+    background: linear-gradient(180deg, rgba(15, 28, 42, 0.58), rgba(10, 20, 32, 0.72));
+  }
+
+  .section-contrast {
+    background: linear-gradient(180deg, rgba(18, 31, 46, 0.88), rgba(15, 28, 42, 0.84));
+  }
+
+  .section-label {
+    margin: 0 0 12px;
+    color: var(--color-brand);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    opacity: 0.85;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    line-height: 1.06;
+  }
+
+  h1 {
+    max-width: 680px;
+    font-size: 64px;
+    letter-spacing: -0.05em;
+  }
+
+  h2 {
+    max-width: 760px;
+    font-size: clamp(34px, 4vw, 46px);
+    letter-spacing: -0.04em;
+  }
+
+  h3 {
+    font-size: 1.22rem;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .section-intro,
+  .lede {
+    max-width: 560px;
+    color: var(--color-text-secondary);
+    font-size: 1.02rem;
+  }
+
+  .section-head {
+    display: grid;
+    gap: 14px;
+    margin-bottom: var(--space-6);
+  }
+
+  .section-head.center {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .button,
+  .button-secondary,
+  .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 0 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+
+  .button {
+    background: var(--color-brand);
+    color: #fff;
+    box-shadow: 0 16px 38px rgba(255, 106, 26, 0.2);
+  }
+
+  .button:hover,
+  .submit-btn:hover {
+    background: var(--color-brand-hover);
+    box-shadow: 0 18px 44px var(--color-brand-glow);
+    transform: translateY(-2px);
+  }
+
+  .button-secondary {
+    border: 1px solid var(--color-divider);
+    color: var(--color-text-primary);
+    background: transparent;
+  }
+
+  .button-secondary:hover {
+    border-color: rgba(255, 106, 26, 0.45);
+    transform: translateY(-2px);
+  }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(5, 11, 20, 0.82);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(184, 196, 210, 0.09);
+  }
+
+  .site-nav-inner {
+    width: min(calc(100% - 40px), var(--max-width));
+    margin: 0 auto;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .brand-logo {
+    width: 244px;
+    height: auto;
+  }
+
+  .brand-logo.mobile {
+    width: 220px;
+  }
+
+  .brand-logo.footer {
+    width: 264px;
+  }
+
+  .nav-links,
+  .mobile-links,
+  .compare-table,
+  .hero-points,
+  .trust-list,
+  .footer-list,
+  .contact-list,
+  .diagram-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-links a,
+  .mobile-links a,
+  .menu-toggle,
+  .close-menu {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover,
+  .mobile-links a:hover {
+    color: var(--color-text-primary);
+  }
+
+  .nav-links .nav-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: var(--color-brand);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .menu-toggle {
+    display: none;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--color-divider);
+    font-size: 1.25rem;
+  }
+
+  .social-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-divider);
+    text-decoration: none;
+    transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .social-icons a:hover {
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+    transform: translateY(-1px);
+  }
+
+  .social-icons svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .social-icons.in-footer {
+    margin-top: 18px;
+  }
+
+  .social-icons.in-mobile-nav {
+    margin-top: 16px;
+    justify-content: flex-start;
+  }
+
+  @media (max-width: 960px) {
+    .social-icons.in-header {
+      display: none;
+    }
+  }
+
+  .mobile-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 140;
+    pointer-events: none;
+  }
+
+  .mobile-nav[aria-hidden="false"] {
+    pointer-events: auto;
+  }
+
+  .mobile-nav-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 7, 13, 0.72);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .mobile-nav-panel {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(92vw, 360px);
+    padding: 24px;
+    background: linear-gradient(180deg, #0C1520 0%, #08111B 100%);
+    transform: translateX(100%);
+    transition: transform 0.22s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .mobile-nav[aria-hidden="false"] .mobile-nav-backdrop {
+    opacity: 1;
+  }
+
+  .mobile-nav[aria-hidden="false"] .mobile-nav-panel {
+    transform: translateX(0);
+  }
+
+  .mobile-nav-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .close-menu {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--color-divider);
+    font-size: 1.5rem;
+  }
+
+  .mobile-links {
+    display: grid;
+    gap: 14px;
+  }
+
+  .mobile-links a {
+    display: block;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(184, 196, 210, 0.14);
+  }
+
+  .hero {
+    padding: 92px 0 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-video-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-video-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(to right, rgba(5,11,20,0.92) 40%, rgba(5,11,20,0.65));
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    max-width: 680px;
+  }
+
+  .hero-subhead {
+    max-width: 680px;
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--color-text-primary);
+  }
+
+  .hero-sub {
+    max-width: 520px;
+    color: var(--color-text-secondary);
+    font-size: 1.08rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .hero-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .hero-points li {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+  }
+
+  .hero-side {
+    min-height: 100%;
+  }
+
+  .hero-panel {
+    height: 100%;
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at top left, rgba(255, 106, 26, 0.12), transparent 52%),
+      linear-gradient(180deg, rgba(18, 31, 46, 0.96), rgba(10, 20, 32, 0.96));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      inset 0 0 46px rgba(255, 106, 26, 0.08),
+      var(--shadow-md);
+  }
+
+  .hero-video-wrap {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(255, 106, 26, 0.12), var(--shadow-md);
+    height: 100%;
+    min-height: 320px;
+  }
+
+  .hero-video-wrap video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .hero-panel-kicker {
+    color: var(--color-brand);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .hero-panel-amount {
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 3rem;
+    letter-spacing: -0.05em;
+  }
+
+  .hero-panel p {
+    color: var(--color-text-secondary);
+  }
+
+  .trust-list {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0 22px;
+  }
+
+  .trust-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--color-text-secondary);
+  }
+
+  .trust-list li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-top: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 8px rgba(255, 106, 26, 0.08);
+  }
+
+  .claim-disclaimer {
+    margin-top: 12px;
+    color: rgba(184, 196, 210, 0.68);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .trust-strip {
+    padding-top: 0;
+  }
+
+  .trust-strip-panel {
+    padding: 20px 24px;
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(circle at top center, rgba(255, 106, 26, 0.12), transparent 48%),
+      rgba(10, 20, 32, 0.84);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .trust-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .trust-strip-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .trust-strip-item .decision-icon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 0;
+    flex: 0 0 42px;
+  }
+
+  .trust-strip-item span {
+    color: var(--color-text-primary);
+    font-size: 0.94rem;
+    line-height: 1.45;
+  }
+
+  .decision-wrap {
+    display: grid;
+    gap: 24px;
+  }
+
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .decision-card {
+    min-height: 184px;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, #0A1420 0%, #0D1826 100%);
+    text-decoration: none;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), 0 0 40px var(--color-glow-soft);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  }
+
+  .decision-card:hover,
+  .decision-card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 28px 58px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 106, 26, 0.18), 0 0 36px rgba(255, 106, 26, 0.18);
+    background: #122133;
+  }
+
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-box svg {
+    display: block;
+    width: 26px;
+    height: 26px;
+    margin: auto;
+    transform: translateY(-0.5px);
+  }
+
+  .decision-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(255, 106, 26, 0.15), rgba(255, 106, 26, 0.05));
+    border: 1px solid rgba(255, 106, 26, 0.25);
+    color: var(--color-brand);
+    box-shadow: 0 0 12px rgba(255, 106, 26, 0.25);
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .decision-card:hover .decision-icon,
+  .decision-card:focus-visible .decision-icon {
+    box-shadow: 0 0 18px rgba(255, 106, 26, 0.32);
+    transform: translateY(-1px);
+  }
+
+  .decision-card strong {
+    display: block;
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 1.16rem;
+    line-height: 1.14;
+    font-weight: 650;
+  }
+
+  .decision-card span {
+    display: block;
+    margin-top: 10px;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .offer-card {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(15, 28, 42, 0.96), rgba(10, 20, 32, 0.96));
+    text-decoration: none;
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.24), 0 0 40px var(--color-glow-soft);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .offer-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .offer-card.featured {
+    transform: scale(1.04);
+    background:
+      linear-gradient(180deg, rgba(255, 106, 26, 0.08), transparent 34%),
+      linear-gradient(180deg, rgba(18, 31, 46, 0.98), rgba(10, 20, 32, 0.98));
+    box-shadow: 0 26px 52px rgba(0, 0, 0, 0.32), 0 0 28px rgba(255, 106, 26, 0.18);
+    outline: 1px solid rgba(255, 106, 26, 0.4);
+  }
+
+  .offer-card h3 {
+    font-weight: 650;
+  }
+
+  .offer-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 12px;
+    margin-bottom: 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .offer-card p {
+    margin-top: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  .offer-link {
+    display: inline-flex;
+    margin-top: 18px;
+    color: var(--color-brand);
+    font-weight: 700;
+  }
+
+  .process-wrap {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .process-copy {
+    display: grid;
+    gap: 16px;
+  }
+
+  .process-line {
+    display: grid;
+    gap: 32px;
+    padding-left: 28px;
+    border-left: 1px solid transparent;
+    border-image: linear-gradient(to bottom, rgba(255, 106, 26, 0.65), rgba(255, 106, 26, 0.08)) 1;
+  }
+
+  .process-step {
+    display: grid;
+    gap: 10px;
+    position: relative;
+  }
+
+  .process-step::before {
+    content: "";
+    position: absolute;
+    left: -34px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 7px rgba(255, 106, 26, 0.08), 0 0 12px rgba(255, 106, 26, 0.25);
+  }
+
+  .process-step-number {
+    color: var(--color-brand);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+  }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .audience-card {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.76);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .audience-tag {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--color-brand);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    opacity: 0.85;
+    text-transform: uppercase;
+  }
+
+  .audience-card h3 {
+    font-weight: 650;
+  }
+
+  .audience-card p {
+    margin-top: 14px;
+  }
+
+  .audience-list,
+  .diagram-list,
+  .contact-list {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    margin-top: 16px;
+    padding-left: 0;
+    align-self: stretch;
+  }
+
+  .audience-list li,
+  .diagram-list li,
+  .contact-list li {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    text-align: left;
+  }
+
+  .list-arrow {
+    width: 14px;
+    flex: 0 0 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-brand);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .list-copy {
+    flex: 1;
+    max-width: 100%;
+    color: #D6E2F0;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .compare-wrap {
+    display: grid;
+    gap: 28px;
+  }
+
+  .comparison-tool {
+    display: grid;
+    gap: 18px;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.82);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .comparison-tool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .comparison-tool-output {
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--color-surface-2);
+    color: var(--color-text-secondary);
+  }
+
+  .comparison-tool-output p {
+    margin: 0;
+  }
+
+  .comparison-tool-output p + p {
+    margin-top: 10px;
+  }
+
+  .comparison-cta {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md), 0 0 40px var(--color-glow-soft);
+  }
+
+  .compare-column {
+    padding: 24px;
+    background: var(--color-surface);
+  }
+
+  .compare-column.thermova {
+    background: linear-gradient(180deg, rgba(18, 31, 46, 0.98), rgba(15, 28, 42, 0.98));
+    position: relative;
+  }
+
+  .compare-column.thermova::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--color-brand);
+  }
+
+  .compare-column-head {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .compare-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-text-secondary);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .compare-table {
+    display: grid;
+  }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 18px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(184, 196, 210, 0.24);
+  }
+
+  .compare-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .compare-row span {
+    color: var(--color-text-muted);
+  }
+
+  .compare-row strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .stat-block {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.72);
+    box-shadow: 0 0 40px var(--color-glow-soft);
+  }
+
+  .stat-block strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-brand);
+    font-family: var(--font-display);
+    font-size: 2rem;
+  }
+
+  /* ── Live fuel price table ──────────────────────────────────────────── */
+
+  .price-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 8px;
+  }
+
+  .price-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .price-status--live .price-status__dot { background: #22c55e; }
+  .price-status--cached .price-status__dot { background: #f59e0b; }
+
+  .cost-table {
+    width: 100%;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 24px;
+  }
+
+  .cost-table__head,
+  .cost-table__row {
+    display: grid;
+    grid-template-columns: 2fr 1.1fr 1fr 1.2fr 1.3fr 2fr;
+    gap: 0;
+    align-items: center;
+  }
+
+  .cost-table__head {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--color-divider);
+  }
+
+  .cost-table__head span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .cost-table__row {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s;
+  }
+
+  .cost-table__row:last-child { border-bottom: 0; }
+
+  .cost-table__row--hp {
+    background: var(--color-brand-glow);
+    border-left: 3px solid var(--color-brand);
+    padding-left: 17px;
+  }
+
+  .cost-table__cell { font-size: 0.875rem; color: var(--color-text-secondary); }
+  .cost-table__cell--name { font-weight: 600; color: var(--color-text-primary); }
+  .cost-table__cell--eff { color: var(--color-text-muted); font-size: 0.8rem; }
+
+  .cost-table__cell--effective {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .cost-table__row--hp .cost-table__cell--effective { color: var(--color-brand); }
+
+  .cost-bar-wrap {
+    height: 8px;
+    background: var(--color-surface-3);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .cost-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--color-text-muted);
+    transition: width 0.6s ease;
+  }
+
+  .cost-table__row--hp .cost-bar { background: var(--color-brand); }
+
+  .cost-table__row--thermova {
+    background: linear-gradient(90deg, rgba(255,106,26,0.14), rgba(255,106,26,0.04));
+    border-left: 3px solid var(--color-brand);
+    padding-left: 17px;
+  }
+
+  .cost-table__cell--annual {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+  }
+
+  .cost-table__row--hp .cost-table__cell--annual { color: var(--color-brand); }
+  .cost-table__row--thermova .cost-table__cell--annual { color: var(--color-brand); font-size: 1.0rem; }
+
+  .cost-table__cell--annual small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #22c55e;
+    margin-top: 2px;
+  }
+
+  .thermova-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-brand);
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* Loading skeleton shimmer */
+  @keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+
+  .cost-skeleton {
+    display: inline-block;
+    width: 60px;
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-surface-3) 25%, var(--color-surface-2) 50%, var(--color-surface-3) 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  /* LPG custom rate notice */
+  .lpg-custom-wrap {
+    padding: 10px 20px 14px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+
+  .lpg-custom-label {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lpg-custom-input {
+    width: 70px;
+    padding: 4px 8px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    text-align: center;
+  }
+
+  .lpg-custom-input:focus {
+    outline: 2px solid rgba(255, 106, 26, 0.72);
+    outline-offset: 2px;
+  }
+
+  .lpg-custom-error {
+    font-size: 0.72rem;
+    color: #f87171;
+    display: none;
+    width: 100%;
+    margin-top: 2px;
+  }
+
+  .lpg-clear-btn {
+    background: none;
+    border: none;
+    color: var(--color-brand);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    display: none;
+  }
+
+  .annual-demand-wrap {
+    padding: 8px 20px 12px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .annual-kwh-input {
+    width: 80px;
+    padding: 4px 8px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    text-align: center;
+  }
+
+  .annual-kwh-input:focus {
+    outline: 2px solid rgba(255, 106, 26, 0.72);
+    outline-offset: 2px;
+  }
+
+  .cost-footnote {
+    margin-top: 16px;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .cost-footnote p { margin: 2px 0; }
+
+  /* Responsive: stack table on small screens */
+  @media (max-width: 640px) {
+    .cost-table__head { display: none; }
+
+    .cost-table__row {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 4px 12px;
+      padding: 12px 16px;
+    }
+
+    .cost-table__row--hp { padding-left: 13px; }
+
+    .cost-table__cell--name { grid-column: 1 / -1; font-size: 0.9rem; }
+    .cost-table__cell--raw::before { content: "Raw: "; color: var(--color-text-muted); font-size: 0.7rem; }
+    .cost-table__cell--eff::before { content: "Eff: "; color: var(--color-text-muted); font-size: 0.7rem; }
+    .cost-table__cell--effective::before { content: "Cost/kWh heat: "; color: var(--color-text-muted); font-size: 0.7rem; font-weight: 400; }
+    .cost-table__cell--annual { grid-column: 1 / -1; }
+    .cost-table__cell--annual::before { content: "Annual est: "; color: var(--color-text-muted); font-size: 0.7rem; font-weight: 400; }
+    .cost-table__cell--bar { grid-column: 1 / -1; }
+    .cost-table__row--thermova { padding-left: 13px; }
+    .cost-bar-wrap { height: 6px; }
+  }
+
+  /* ── End live fuel price table ──────────────────────────────────────── */
+
+  .solar-wrap {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .diagram-card,
+  .solar-panel,
+  .contact-card,
+  .form-wrap,
+  .cta-panel {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.82);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .diagram-card {
+    display: grid;
+    gap: 20px;
+  }
+
+  .diagram-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .diagram-node {
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--color-surface-2);
+    text-align: center;
+    box-shadow: 0 0 40px var(--color-glow-soft);
+    display: grid;
+    justify-items: center;
+  }
+
+  .diagram-node strong {
+    display: block;
+    color: var(--color-text-primary);
+    font-size: 1.02rem;
+    font-weight: 650;
+    margin-top: 0;
+  }
+
+  .diagram-node span {
+    display: block;
+    margin-top: 10px;
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+    max-width: 16ch;
+  }
+
+  .solar-panel + .solar-panel {
+    margin-top: 20px;
+  }
+
+  .solar-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(255, 106, 26, 0.16), rgba(255, 106, 26, 0.05));
+    border: 1px solid rgba(255, 106, 26, 0.22);
+    box-shadow: 0 0 18px rgba(255, 106, 26, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .solar-icon::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 12px;
+    background: radial-gradient(circle at 50% 35%, rgba(255, 127, 58, 0.14), transparent 68%);
+    pointer-events: none;
+  }
+
+  .solar-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .solar-stat {
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--color-surface-2);
+  }
+
+  .solar-stat strong {
+    display: block;
+    color: var(--color-brand);
+    font-family: var(--font-display);
+    font-size: 28px;
+  }
+
+  .scheme-wrap {
+    display: grid;
+    grid-template-columns: 1fr 0.95fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .scheme-panel,
+  .scheme-rail {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.82);
+    box-shadow: var(--shadow-sm), 0 0 40px var(--color-glow-soft);
+  }
+
+  .scheme-amount {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 54px;
+    padding: 0 18px;
+    margin: 18px 0;
+    border-radius: 999px;
+    background: rgba(255, 106, 26, 0.12);
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .scheme-amount strong {
+    color: var(--color-brand);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+  }
+
+  .scheme-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .scheme-steps {
+    display: grid;
+    gap: 20px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .scheme-steps li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+  }
+
+  .step-pill {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .testimonials-grid {
+    display: flex;
+    justify-content: center;
+  }
+
+  .reviews-widget-container {
+    min-height: 280px;
+  }
+
+  .testimonial {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 20, 32, 0.74);
+    box-shadow: 0 0 40px var(--color-glow-soft);
+  }
+
+  .testimonial-feature {
+    max-width: 720px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .testimonial-logo {
+    display: block;
+    height: 36px;
+    max-width: 160px;
+    object-fit: contain;
+    margin: 0 auto 20px;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+
+  .testimonial-context {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 106, 26, 0.1);
+    color: var(--color-brand);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .testimonial-quote {
+    margin: 18px 0 22px;
+    color: var(--color-text-primary);
+    font-size: 1.02rem;
+    line-height: 1.72;
+  }
+
+  .testimonial-meta strong {
+    display: block;
+    font-size: 1rem;
+  }
+
+  .testimonial-meta span {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+  }
+
+  .testimonial-meta-line {
+    display: block;
+    margin-top: 6px;
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .faq-group h3 {
+    margin-bottom: 18px;
+  }
+
+  .faq-list {
+    display: grid;
+  }
+
+  details {
+    border-top: 1px solid var(--color-divider);
+  }
+
+  details:last-child {
+    border-bottom: 1px solid var(--color-divider);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 68px;
+    padding: 20px 0;
+    color: var(--color-text-primary);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: "+";
+    color: var(--color-brand);
+    font-size: 1.4rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+
+  details[open] summary::after {
+    content: "−";
+  }
+
+  .faq-body {
+    max-height: 0;
+    overflow: hidden;
+    padding-right: 36px;
+    color: var(--color-text-secondary);
+    transition: max-height 0.28s ease, padding-bottom 0.28s ease;
+  }
+
+  details[open] .faq-body {
+    max-height: 280px;
+    padding-bottom: 20px;
+  }
+
+  .faq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .cta-panel {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    align-items: center;
+    background:
+      radial-gradient(circle at top center, rgba(255, 106, 26, 0.16), transparent 42%),
+      linear-gradient(180deg, rgba(18, 31, 46, 0.96), rgba(10, 20, 32, 0.96));
+  }
+
+  .form-layout {
+    display: grid;
+    gap: 28px;
+    justify-items: center;
+  }
+
+  .contact-card {
+    width: min(100%, 760px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .form-wrap {
+    width: min(100%, 520px);
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .field {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .field.full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    color: var(--color-text-primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  input,
+  select {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    background: #0F1C2A;
+    color: var(--color-text-primary);
+  }
+
+  input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: rgba(255, 106, 26, 0.42);
+    box-shadow: 0 0 0 4px rgba(255, 106, 26, 0.08);
+  }
+
+  .field-error {
+    min-height: 18px;
+    color: #ff9a88;
+    font-size: 0.82rem;
+  }
+
+  .form-actions {
+    display: grid;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .submit-btn {
+    border: 0;
+    background: var(--color-brand);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 16px 38px rgba(255, 106, 26, 0.2);
+  }
+
+  .submit-btn[disabled] {
+    opacity: 0.82;
+    cursor: wait;
+  }
+
+  .form-status {
+    display: none;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(15, 28, 42, 0.88);
+    color: var(--color-text-secondary);
+  }
+
+  .form-status.is-visible {
+    display: block;
+  }
+
+  .form-status.success {
+    border: 1px solid rgba(255, 106, 26, 0.26);
+  }
+
+  .form-status.error {
+    border: 1px solid rgba(255, 154, 136, 0.28);
+    color: #ffd4cd;
+  }
+
+  .form-small {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+  }
+
+  .footer {
+    padding: 64px 0 32px;
+    background: rgba(5, 11, 20, 0.9);
+    border-top: 1px solid rgba(184, 196, 210, 0.1);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(184, 196, 210, 0.12);
+  }
+
+  .footer h4 {
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .footer-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .footer-list a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .footer-list a:hover {
+    color: var(--color-text-primary);
+  }
+
+  .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 20px;
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 1120px) {
+    .decision-grid,
+    .audience-grid,
+    .testimonials-grid,
+    .stats-grid,
+    .footer-grid,
+    .trust-strip-grid,
+    .comparison-tool-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .offers-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 940px) {
+    .nav-links {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+
+    .hero-grid,
+    .process-wrap,
+    .compare-grid,
+    .solar-wrap,
+    .scheme-wrap,
+    .faq-grid,
+    .cta-panel,
+    .contact-card {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      padding-top: 72px;
+    }
+
+    .hero-panel {
+      max-width: 420px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .shell,
+    .site-nav-inner {
+      width: min(calc(100% - 28px), var(--max-width));
+    }
+
+    .section {
+      padding: 32px 0;
+    }
+
+    h1 {
+      font-size: 38px;
+      max-width: 100%;
+    }
+
+    h2 {
+      font-size: 30px;
+      max-width: 100%;
+    }
+
+    .hero-grid,
+    .decision-grid,
+    .offers-grid,
+    .audience-grid,
+    .stats-grid,
+    .trust-strip-grid,
+    .diagram-flow,
+    .solar-stats,
+    .testimonials-grid,
+    .footer-grid,
+    .field-grid,
+    .comparison-tool-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .button,
+    .button-secondary,
+    .submit-btn,
+    .nav-links .nav-cta {
+      width: 100%;
+    }
+
+    .mobile-nav .button {
+      white-space: nowrap;
+    }
+
+    .hero-actions,
+    .faq-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hero-panel,
+    .decision-card,
+    .offer-card,
+    .audience-card,
+    .diagram-card,
+    .solar-panel,
+    .scheme-panel,
+    .scheme-rail,
+    .contact-card,
+    .form-wrap,
+    .cta-panel {
+      padding: 24px;
+    }
+
+    .compare-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .brand-logo {
+      width: 204px;
+    }
+
+    .brand-logo.mobile {
+      width: 188px;
+    }
+  }
+
+  /* ───── ANIMATIONS ───── */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes fadeUp  { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.75); }      to { opacity: 1; transform: scale(1); } }
+
+    /* Hero page-load stagger */
+    .hero-copy h1                { animation: fadeUp 0.55s ease-out 0ms   both; }
+    .hero-copy .hero-subhead     { animation: fadeUp 0.55s ease-out 80ms  both; }
+    .hero-copy .hero-sub         { animation: fadeUp 0.55s ease-out 130ms both; }
+    .hero-copy .claim-disclaimer { animation: fadeUp 0.55s ease-out 200ms both; }
+    .hero-copy .hero-actions     { animation: fadeUp 0.55s ease-out 280ms both; }
+    .hero-copy .hero-points      { animation: fadeUp 0.55s ease-out 400ms both; }
+    .hero-side                   { animation: fadeUp 0.6s  ease-out 200ms both; }
+
+    /* Scroll-reveal: hidden until JS activates (graceful: no JS = always visible) */
+    body.js-loaded .will-animate {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      transition-delay: var(--anim-delay, 0ms);
+    }
+    body.js-loaded .will-animate.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+  }
     </style>
 </head>
 <body>
 
     <!-- ═══════════════ HEADER ═══════════════ -->
-    <header class="header">
-        <div class="header-inner">
-            <a href="/" class="logo" aria-label="Thermova home">
-                <!-- Sun icon: 16 tapered pill rays (8 long, 8 short, alternating), halo ring, radial gradient amber disc -->
-                <svg class="logo-icon" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <defs>
-                        <radialGradient id="disc" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stop-color="#FFCB6A"/>
-                            <stop offset="55%" stop-color="#F5A623"/>
-                            <stop offset="100%" stop-color="#C47D0E"/>
-                        </radialGradient>
-                    </defs>
-                    <!-- Long rays (every 45deg) -->
-                    <g fill="#F5A623">
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(0 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(45 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(90 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(135 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(180 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(225 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(270 26 26)"/>
-                        <rect x="24.6" y="1" width="2.8" height="10" rx="1.4" transform="rotate(315 26 26)"/>
-                    </g>
-                    <!-- Short rays (every 45deg, offset 22.5deg) -->
-                    <g fill="#F5A623">
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(22.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(67.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(112.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(157.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(202.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(247.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(292.5 26 26)"/>
-                        <rect x="24.9" y="3" width="2.2" height="7" rx="1.1" transform="rotate(337.5 26 26)"/>
-                    </g>
-                    <!-- Halo ring -->
-                    <circle cx="26" cy="26" r="13.5" fill="none" stroke="#F5A623" stroke-width="1" opacity="0.35"/>
-                    <!-- Disc -->
-                    <circle cx="26" cy="26" r="11" fill="url(#disc)"/>
-                </svg>
-                <div class="logo-text">THERM<span>OVA</span></div>
-            </a>
-            <nav class="header-nav" aria-label="Page navigation">
-                <a href="#how">How it works</a>
-                <a href="#faq">FAQ</a>
-                <a href="/blog/">Case studies</a>
-                <a href="#contact">Get in touch</a>
-                <a href="/" class="nav-cta">Back to Thermova</a>
-            </nav>
-            <div class="header-contact">
-                07976 015890<br>
-                <a href="mailto:info@thermova.uk">info@thermova.uk</a>
-            </div>
-        </div>
-    </header>
+<svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute; width:0; height:0; overflow:hidden">
+  <defs>
+    <symbol id="icon-flame" viewBox="0 0 24 24">
+      <rect x="5" y="6" width="6.5" height="9" rx="2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8.25 9V12" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13 10.5C14.5 8.5 16.5 8 18.5 8" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16.5 6.5L19 8L17.5 10.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M13.2 15C14.5 16.5 16 17 18 17" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16.5 14.5L19 17L16.5 19.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-pound" viewBox="0 0 24 24">
+      <path d="M12 4.5V19.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15.2 7.5C14.2 6.5 12.5 6.2 11.2 6.5C9.8 6.8 8.8 7.7 8.8 9C8.8 10.2 9.8 10.9 11.8 11.3C13.8 11.7 14.8 12.4 14.8 13.8C14.8 15.2 13.5 16 11.5 16C10.2 16 9 15.6 8 14.7" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M18 6.5L16 8.5L14 6.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 8.5V5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-property" viewBox="0 0 24 24">
+      <path d="M4.5 10L12 5L19.5 10" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="6" y="10" width="12" height="8" rx="2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9 18V20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15 18V20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-solar" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 4V6.5M12 17.5V20M4 12H6.5M17.5 12H20" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6.5 6.5L8 8M16 16L17.5 17.5M6.5 17.5L8 16M16 8L17.5 6.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-battery" viewBox="0 0 24 24">
+      <rect x="4" y="7" width="14" height="10" rx="2" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="18.5" y="10" width="1.5" height="4" rx="0.5" fill="#FF6A1A"/>
+      <path d="M7 12H15" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-heat-pump" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="6" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 6.5C14.5 6.5 16 8.5 16 10.5C16 13 13.5 14.5 12 14.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 17.5C9.5 17.5 8 15.5 8 13.5C8 11 10.5 9.5 12 9.5" stroke="#FF6A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="12" cy="12" r="3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="17" cy="7" r="0.9" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M8 10.5V16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="8" cy="7.8" r="0.9" fill="currentColor"/>
+      <path d="M12 16.5V10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 13C12 11.6 13 10.5 14.5 10.5C16 10.5 16.5 11.6 16.5 13V16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </symbol>
+    <symbol id="icon-facebook" viewBox="0 0 24 24">
+      <path d="M19.5 4.5H15.5C13.567 4.5 12 6.067 12 8V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M9 11.5H15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+<nav class="site-nav" aria-label="Primary">
+  <div class="site-nav-inner">
+    <a class="brand" href="#top" aria-label="Thermova home">
+      <img class="brand-logo" src="assets/thermova-logo.svg" alt="Thermova">
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="/air-source-heat-pumps">Heat pumps</a></li>
+      <li><a href="/solar-panels">Solar &amp; battery</a></li>
+      <li><a href="/landlord-services">Landlords</a></li>
+      <li><a href="/epc-compliance" aria-current="page">EPC C compliance</a></li>
+      <li><a href="/blog/">Case studies</a></li>
+      <li><a href="https://thermova.heatio.app/" target="_blank" rel="noopener noreferrer">Calculate my savings</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a class="nav-cta" href="#assessment">Book assessment</a></li>
+    </ul>
+    <div class="social-icons in-header">
+      <a href="https://www.instagram.com/thermovauk/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Instagram"><svg aria-hidden="true" focusable="false"><use href="#icon-instagram"/></svg></a>
+      <a href="https://www.linkedin.com/company/113232935" target="_blank" rel="noopener noreferrer" aria-label="Thermova on LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#icon-linkedin"/></svg></a>
+      <a href="https://www.facebook.com/share/17UE6euCC2/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Facebook"><svg aria-hidden="true" focusable="false"><use href="#icon-facebook"/></svg></a>
+    </div>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav-panel" aria-label="Open menu">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <button class="mobile-nav-backdrop" type="button" aria-label="Close menu"></button>
+  <aside class="mobile-nav-panel" id="mobile-nav-panel" tabindex="-1">
+    <div class="mobile-nav-head">
+      <img class="brand-logo mobile" src="assets/thermova-logo.svg" alt="Thermova">
+      <button class="close-menu" type="button" aria-label="Close menu">×</button>
+    </div>
+    <ul class="mobile-links" role="list">
+      <li><a href="/air-source-heat-pumps">Heat pumps</a></li>
+      <li><a href="/solar-panels">Solar &amp; battery</a></li>
+      <li><a href="/landlord-services">Landlord services</a></li>
+      <li><a href="/about">About Graham</a></li>
+      <li><a href="/epc-compliance" aria-current="page">EPC C compliance</a></li>
+      <li><a href="/blog/">Case studies</a></li>
+      <li><a href="/boiler-upgrade-scheme">£7,500 grant</a></li>
+      <li><a href="https://thermova.heatio.app/" target="_blank" rel="noopener noreferrer">Calculate my savings</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="button mobile-nav-cta" href="#assessment">Book assessment</a>
+    <div class="social-icons in-mobile-nav">
+      <a href="https://www.instagram.com/thermovauk/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Instagram"><svg aria-hidden="true" focusable="false"><use href="#icon-instagram"/></svg></a>
+      <a href="https://www.linkedin.com/company/113232935" target="_blank" rel="noopener noreferrer" aria-label="Thermova on LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#icon-linkedin"/></svg></a>
+      <a href="https://www.facebook.com/share/17UE6euCC2/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Facebook"><svg aria-hidden="true" focusable="false"><use href="#icon-facebook"/></svg></a>
+    </div>
+  </aside>
+</div>
+
 
     <!-- ═══════════════ SOCIAL PROOF ═══════════════ -->
     <section class="social-proof">
         <div class="social-proof-inner">
             <div class="testimonial-banner">
                 <div class="testimonial-banner-logo">
-                    <img class="agent-logo" src="https://harrisandcoestates.co.uk/wp-content/uploads/2025/05/Primary-Logo-Transparent-1.png" alt="Harris &amp; Co Estates">
+                    <picture>
+                        <source srcset="/assets/partners/harris-co-logo.webp" type="image/webp">
+                        <img class="agent-logo" src="/assets/partners/harris-co-logo.png" alt="Harris &amp; Co Estates" width="400" height="152" loading="lazy" decoding="async">
+                    </picture>
                 </div>
                 <div class="testimonial-banner-divider"></div>
                 <div class="testimonial-banner-body">
@@ -1513,10 +3459,68 @@ fbq('track', 'PageView');
     </section>
 
     <!-- ═══════════════ FOOTER ═══════════════ -->
-    <footer>
-        Thermova &middot; Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF &middot; <a href="https://thermova.uk">thermova.uk</a><br>
-        Estate agents &mdash; <a href="mailto:info@thermova.uk?subject=Referral%20Programme">referral programme available</a>
-    </footer>
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="Thermova home">
+          <img class="brand-logo footer" src="assets/thermova-logo.svg" alt="Thermova">
+        </a>
+        <p style="margin-top: 18px; max-width: 30ch;">Heat pumps, solar and battery systems for homeowners and landlords who are ready to move on from gas.</p>
+        <div class="social-icons in-footer">
+          <a href="https://www.instagram.com/thermovauk/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Instagram"><svg aria-hidden="true" focusable="false"><use href="#icon-instagram"/></svg></a>
+          <a href="https://www.linkedin.com/company/113232935" target="_blank" rel="noopener noreferrer" aria-label="Thermova on LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#icon-linkedin"/></svg></a>
+          <a href="https://www.facebook.com/share/17UE6euCC2/" target="_blank" rel="noopener noreferrer" aria-label="Thermova on Facebook"><svg aria-hidden="true" focusable="false"><use href="#icon-facebook"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="footer-list">
+          <li><a href="/air-source-heat-pumps">Air source heat pumps</a></li>
+          <li><a href="/solar-panels">Solar panels</a></li>
+          <li><a href="/battery-storage">Battery storage</a></li>
+          <li><a href="/landlord-services">Landlord upgrades</a></li>
+          <li><a href="/epc-compliance">EPC C compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Information</h4>
+        <ul class="footer-list">
+          <li><a href="/about">About Graham</a></li>
+          <li><a href="/blog/">Case studies</a></li>
+          <li><a href="/boiler-upgrade-scheme">£7,500 Boiler Upgrade Scheme</a></li>
+          <li><a href="/air-source-heat-pumps">Heat pumps</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://www.gov.uk/apply-boiler-upgrade-scheme" target="_blank" rel="noopener">GOV.UK Boiler Upgrade Scheme guidance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="footer-list">
+          <li><a href="#assessment">Book an assessment</a></li>
+          <li><a href="tel:+447976015890">07976 015890</a></li>
+          <li><a href="mailto:info@thermova.uk">info@thermova.uk</a></li>
+          <li>Harbury, 33 Derby Road, Poulton-le-Fylde, FY6 7AF</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-map" style="margin-top: 32px;">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2353.5164277562913!2d-2.9946536233796137!3d53.85146427244012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487b436b0a330011%3A0x1fcb36ec03d39d6!2sThermova%20Ltd!5e0!3m2!1sen!2suk!4v1777017674763!5m2!1sen!2suk"
+        width="100%"
+        height="300"
+        style="border:0; border-radius: 12px;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Thermova Ltd location on Google Maps"></iframe>
+    </div>
+    <div class="footer-meta">
+      <span>© 2025 Thermova Ltd. Company number 17135215. Grant amounts per GOV.UK. Eligible properties in England and Wales only.</span>
+      <span><a href="/privacy">Privacy policy</a> • <a href="/terms">Terms</a> • <a href="/cookies">Cookies</a></span>
+    </div>
+  </div>
+</footer>
 
     <script>
     /* ── EPC enquiry form ─────────────────────────────────────── */
@@ -1677,6 +3681,46 @@ fbq('track', 'PageView');
         reg(document.querySelector('.callout'), null, 0);
     }());
     </script>
+
+<script>
+  /* shared mobile nav toggle (from index.html) */
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mobileNav = document.getElementById("mobile-nav");
+    const mobilePanel = document.getElementById("mobile-nav-panel");
+    const closeButtons = document.querySelectorAll(".close-menu, .mobile-nav-backdrop");
+    const mobileLinks = document.querySelectorAll(".mobile-links a");
+    let lastFocusedElement = null;
+  
+    function openMenu() {
+      lastFocusedElement = document.activeElement;
+      mobileNav.setAttribute("aria-hidden", "false");
+      menuToggle.setAttribute("aria-expanded", "true");
+      document.body.classList.add("menu-open");
+      mobilePanel.focus();
+    }
+  
+    function closeMenu() {
+      mobileNav.setAttribute("aria-hidden", "true");
+      menuToggle.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("menu-open");
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+  
+    menuToggle.addEventListener("click", () => {
+      const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+      if (expanded) closeMenu();
+      else openMenu();
+    });
+  
+    closeButtons.forEach((button) => button.addEventListener("click", closeMenu));
+    mobileLinks.forEach((link) => link.addEventListener("click", closeMenu));
+  
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && mobileNav.getAttribute("aria-hidden") === "false") {
+        closeMenu();
+      }
+    });
+</script>
 
 </body>
 </html>

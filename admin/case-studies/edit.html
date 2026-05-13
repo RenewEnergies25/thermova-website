@@ -623,6 +623,7 @@
         ["slug",               /URL slug\s*:/i],
         ["focus_keyword",      /Focus keyword\s*:/i],
         ["secondary_keywords", /Secondary keywords?\s*:/i],
+        ["about_topics",       /About topics?\s*:/i],
         ["schema_hint",        /Schema\s*:/i],
       ];
 
@@ -749,18 +750,57 @@
         meta.secondary_keywords.split(",").forEach(k => { const v = k.trim(); if (v) keywords.push(v); });
       }
 
+      // Extract about_topics: explicit "About topics:" header wins; otherwise
+      // fall back to derived topics from the focus + secondary keywords so the
+      // JSON-LD `about` array is never empty.
+      let aboutTopics = [];
+      if (meta.about_topics) {
+        aboutTopics = meta.about_topics.split(",").map(s => s.trim()).filter(Boolean);
+      } else {
+        aboutTopics = deriveAboutTopics(meta.focus_keyword, meta.secondary_keywords);
+      }
+
       return {
         title:            meta.title || h1Title,
         meta_description: meta.meta_description || "",
         slug:             extractSlug(meta.slug || ""),
         keywords,
+        about_topics:     aboutTopics,
         body_html:        bodyHtml,
         faqs,
         cta_heading:      ctaHeading,
         cta_body:         ctaBody,
         methodology_footnote: methodologyFootnote,
-        summary: `${meta.title ? "title ✓ " : ""}${meta.meta_description ? "desc ✓ " : ""}${meta.slug ? "slug ✓ " : ""}${keywords.length ? `${keywords.length} keywords ✓ ` : ""}${faqs.length ? `${faqs.length} FAQs ✓ ` : ""}${ctaHeading ? "CTA ✓" : ""}`,
+        summary: `${meta.title ? "title ✓ " : ""}${meta.meta_description ? "desc ✓ " : ""}${meta.slug ? "slug ✓ " : ""}${keywords.length ? `${keywords.length} keywords ✓ ` : ""}${aboutTopics.length ? `${aboutTopics.length} topics ✓ ` : ""}${faqs.length ? `${faqs.length} FAQs ✓ ` : ""}${ctaHeading ? "CTA ✓" : ""}`,
       };
+    }
+
+    function deriveAboutTopics(focus, secondary) {
+      // Build a small set of distinct thematic phrases from the keyword inputs.
+      // Strips location qualifiers (Blackpool, Lancashire, UK, Fylde Coast, etc.)
+      // and dedupes near-identical entries.
+      const STOP_LOC = /\b(blackpool|lancashire|preston|lytham|fleetwood|fylde\s*coast|uk|north\s*west|cleveleys|poulton)\b/gi;
+      const STOP_GENERIC = /\b(case study|installer|installation|cost|payback|certified|mcs)\b/gi;
+
+      const raw = [];
+      if (focus) raw.push(focus);
+      if (secondary) secondary.split(",").forEach(s => raw.push(s.trim()));
+
+      const cleaned = raw
+        .map(s => s.replace(STOP_LOC, "").replace(STOP_GENERIC, "").replace(/\s+/g, " ").trim())
+        .filter(s => s.length > 2)
+        // Title-case first letter for nicer JSON-LD output
+        .map(s => s.charAt(0).toUpperCase() + s.slice(1));
+
+      // Dedupe by lowercased text
+      const seen = new Set();
+      const out = [];
+      for (const t of cleaned) {
+        const k = t.toLowerCase();
+        if (!seen.has(k)) { seen.add(k); out.push(t); }
+        if (out.length >= 5) break;
+      }
+      return out;
     }
 
     function extractSlug(s) {
@@ -920,6 +960,7 @@
       if (p.meta_description)     document.querySelector('[name="meta_description"]').value = p.meta_description;
       if (p.body_html)            document.querySelector('[name="body_html"]').value = p.body_html;
       if (p.keywords?.length)     document.querySelector('[name="keywords_csv"]').value = p.keywords.join(", ");
+      if (p.about_topics?.length) document.querySelector('[name="about_topics_csv"]').value = p.about_topics.join(", ");
       if (p.cta_heading)          document.querySelector('[name="cta_heading"]').value = p.cta_heading;
       if (p.cta_body)             document.querySelector('[name="cta_body"]').value = p.cta_body;
       if (p.methodology_footnote) document.querySelector('[name="methodology_footnote"]').value = p.methodology_footnote;

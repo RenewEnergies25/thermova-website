@@ -1,96 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+<!-- Auto-generated. Static URLs: supabase/functions/publish-case-study/sitemap-static-pages.json. Case studies: case_studies table where status='published'. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://thermova.uk/</loc>
-    <lastmod>2026-04-21T06:55:29+00:00</lastmod>
-    <priority>1.00</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/epc-compliance</loc>
-    <lastmod>2026-04-21T06:55:29+00:00</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/blog/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/blog/air-source-heat-pump-case-study-lytham-lancashire</loc>
-    <lastmod>2026-05-12</lastmod>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/about</loc>
-    <lastmod>2026-04-24</lastmod>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/privacy</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.30</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/terms</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.30</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/cookies</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.30</priority>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://thermova.uk/air-source-heat-pumps</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.90</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://thermova.uk/solar-panels</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://thermova.uk/battery-storage</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://thermova.uk/boiler-upgrade-scheme</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.90</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://thermova.uk/landlord-services</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/boiler-upgrade-scheme</loc>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/epc-compliance</loc>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://thermova.uk/heat-pump-installers-blackpool</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thermova.uk/heat-pump-installers-preston</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thermova.uk/heat-pump-installers-lytham</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thermova.uk/heat-pump-installers-fleetwood</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thermova.uk/solar-installers-fylde-coast</loc>
-    <lastmod>2026-05-13</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/blog/</loc>
+    <lastmod>2026-05-13T19:55:25+00:00</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/about</loc>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/privacy</loc>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/terms</loc>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/cookies</loc>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://thermova.uk/blog/air-source-heat-pump-case-study-lytham-lancashire</loc>
+    <lastmod>2026-05-12T00:00:00+00:00</lastmod>
+    <priority>0.8</priority>
   </url>
 </urlset>

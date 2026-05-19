@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
+# Sitemap is auto-generated on case-study publish (publish-case-study Edge
+# Function). For static-page changes, run `node scripts/generate-sitemap.mjs`.
 Sitemap: https://thermova.uk/sitemap.xml

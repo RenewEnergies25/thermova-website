@@ -13,6 +13,7 @@
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { CaseStudyRow, renderCaseStudyHtml } from "./template.ts";
 import { regenerateBlogIndex } from "./regenerate-index.ts";
+import { regenerateSitemap } from "./regenerate-sitemap.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -203,12 +204,14 @@ async function handleRequest(req: Request): Promise<Response> {
         .select("*")
         .eq("status", "published")
         .neq("id", row.id);
-      const publishedRows = [...(others ?? []), { ...row, status: "published" }] as CaseStudyRow[];
+      const publishedRows = [...(others ?? []), { ...row, status: "published", last_published_at: new Date().toISOString() }] as CaseStudyRow[];
       const newIndex = regenerateBlogIndex(currentIndex, publishedRows);
+      const newSitemap = regenerateSitemap(publishedRows);
 
       const changes: FileChange[] = [
         { path: pagePath, content: pageHtml },
         { path: "blog/index.html", content: newIndex },
+        { path: "sitemap.xml", content: newSitemap },
       ];
       commitSha = await commitFiles(
         changes,
@@ -234,11 +237,14 @@ async function handleRequest(req: Request): Promise<Response> {
         .select("*")
         .eq("status", "published")
         .neq("id", row.id);
-      const newIndex = regenerateBlogIndex(currentIndex, (others ?? []) as CaseStudyRow[]);
+      const remainingRows = (others ?? []) as CaseStudyRow[];
+      const newIndex = regenerateBlogIndex(currentIndex, remainingRows);
+      const newSitemap = regenerateSitemap(remainingRows);
 
       const changes: FileChange[] = [
         { path: `blog/${row.slug}.html`, content: null }, // delete
         { path: "blog/index.html", content: newIndex },
+        { path: "sitemap.xml", content: newSitemap },
       ];
       commitSha = await commitFiles(
         changes,

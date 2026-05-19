@@ -46,6 +46,7 @@ export interface CaseStudyRow {
   faq_items: FaqItem[];
   cta_heading: string;
   cta_body: string | null;
+  last_published_at?: string | null;
 }
 
 // ─────────────────────────── helpers ───────────────────────────

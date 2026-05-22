@@ -75,7 +75,7 @@ function fmtDateUK(iso: string): string {
 }
 
 function canonical(slug: string): string {
-  return `${SITE}/blog/${slug}`;
+  return `${SITE}/blog/${slug}/`;
 }
 
 // ─────────────────────────── JSON-LD blocks ───────────────────────────

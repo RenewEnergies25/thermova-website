@@ -226,7 +226,7 @@ async function handleRequest(req: Request): Promise<Response> {
         published_by_user_id: userId,
       }).eq("id", row.id);
 
-      return json({ ok: true, action: "publish", commit_sha: commitSha, blog_url: `https://thermova.uk/blog/${row.slug}` });
+      return json({ ok: true, action: "publish", commit_sha: commitSha, blog_url: `https://thermova.uk/blog/${row.slug}/` });
     }
 
     if (body.action === "unpublish" || body.action === "delete") {

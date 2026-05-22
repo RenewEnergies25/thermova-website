@@ -27,7 +27,7 @@ export interface CaseStudyRow {
   published_date: string; // ISO yyyy-mm-dd
   read_time_minutes: number;
   location: string;
-  opening_paragraph_1: string;
+  opening_paragraph_1: string | null;
   opening_paragraph_2: string | null;
   why_matters_heading: string | null;
   why_matters_prose: string | null;          // HTML
@@ -622,7 +622,7 @@ ${renderGallery(row)}`;
     const costTable = renderCostTable(row.cost_data);
     articleInner = `${renderHeroFigure(row)}
 
-        <p>${rawHtml(row.opening_paragraph_1)}</p>
+${row.opening_paragraph_1 ? `        <p>${rawHtml(row.opening_paragraph_1)}</p>\n` : ""}
 ${row.opening_paragraph_2 ? `\n        <p>${rawHtml(row.opening_paragraph_2)}</p>\n` : ""}
 ${row.why_matters_heading ? `        <h2>${escText(row.why_matters_heading)}</h2>\n` : ""}
 ${row.why_matters_prose ? `        ${rawHtml(row.why_matters_prose)}\n` : ""}

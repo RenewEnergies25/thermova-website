@@ -1040,7 +1040,21 @@
         let saved;
         if (!row) {
           const { data, error } = await sb.from("case_studies").insert(payload).select().single();
-          if (error) throw error;
+          if (error) {
+            const isSlugClash = error.code === "23505" || /case_studies_slug_key/.test(error.message || "");
+            if (isSlugClash) {
+              const { data: existing } = await sb
+                .from("case_studies")
+                .select("id, status")
+                .eq("slug", payload.slug)
+                .maybeSingle();
+              if (existing) {
+                setSlugClashMessage(payload.slug, existing.id, existing.status);
+                return;
+              }
+            }
+            throw error;
+          }
           saved = data; row = saved;
           history.replaceState({}, "", `?id=${saved.id}`);
         } else {
@@ -1077,6 +1091,14 @@
       const el = document.getElementById("status-msg");
       el.textContent = msg;
       el.className = `status-msg ${type}`;
+    }
+
+    function setSlugClashMessage(slug, existingId, existingStatus) {
+      const el = document.getElementById("status-msg");
+      el.className = "status-msg error";
+      el.innerHTML =
+        `A case study with slug "${escVal(slug)}" already exists (status: ${escVal(existingStatus)}). ` +
+        `<a href="?id=${encodeURIComponent(existingId)}" style="color:inherit;text-decoration:underline;">Open existing →</a>`;
     }
 
     function escVal(s) {

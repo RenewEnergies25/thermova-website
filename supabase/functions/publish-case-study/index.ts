@@ -230,7 +230,18 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     if (body.action === "unpublish" || body.action === "delete") {
-      // Remove the HTML file and regenerate index without this row
+      // Drafts have never been committed to GitHub — no file/index/sitemap entry
+      // exists to remove. Skip the commit entirely and only touch the DB row.
+      if (row.status === "draft") {
+        if (body.action === "delete") {
+          await sb.from("case_studies").delete().eq("id", row.id);
+        } else {
+          await sb.from("case_studies").update({ status: "archived" }).eq("id", row.id);
+        }
+        return json({ ok: true, action: body.action, commit_sha: null });
+      }
+
+      // Published/archived: remove the HTML file and regenerate index without this row
       const currentIndex = await fetchCurrentFile("blog/index.html");
       const { data: others } = await sb
         .from("case_studies")
@@ -241,15 +252,31 @@ async function handleRequest(req: Request): Promise<Response> {
       const newIndex = regenerateBlogIndex(currentIndex, remainingRows);
       const newSitemap = regenerateSitemap(remainingRows);
 
-      const changes: FileChange[] = [
+      const fullChanges: FileChange[] = [
         { path: `blog/${row.slug}.html`, content: null }, // delete
         { path: "blog/index.html", content: newIndex },
         { path: "sitemap.xml", content: newSitemap },
       ];
-      commitSha = await commitFiles(
-        changes,
-        `Case study: ${body.action} "${row.title}" (${row.slug})`,
-      );
+      try {
+        commitSha = await commitFiles(
+          fullChanges,
+          `Case study: ${body.action} "${row.title}" (${row.slug})`,
+        );
+      } catch (e) {
+        // Defensive fallback: if the HTML file was already removed from the repo
+        // externally, GitHub returns 422 GitRPC::BadObjectState on the tree POST.
+        // Retry without the file-delete entry so index.html + sitemap still update.
+        const msg = e instanceof Error ? e.message : String(e);
+        if (/GitRPC::BadObjectState/.test(msg)) {
+          const fallback = fullChanges.filter(c => c.content !== null);
+          commitSha = await commitFiles(
+            fallback,
+            `Case study: ${body.action} "${row.title}" (${row.slug}) [file already absent]`,
+          );
+        } else {
+          throw e;
+        }
+      }
 
       if (body.action === "unpublish") {
         await sb.from("case_studies").update({

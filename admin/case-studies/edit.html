@@ -991,8 +991,13 @@
     function collectFormData() {
       const f = document.getElementById("cs-form");
       const payload = {};
+      // Keys whose DB column is NOT NULL but has a default — leave blank inputs
+      // out of the payload so the schema default applies on insert and the
+      // existing value is preserved on update.
+      const DEFAULTED_KEYS = new Set(["status", "author_name", "cta_heading"]);
       ["slug","status","title","meta_description","breadcrumb_label","location","author_name","published_date","hero_image_url","hero_image_alt","hero_image_caption","body_html","opening_paragraph_1","opening_paragraph_2","why_matters_heading","why_matters_prose","equipment_list_html","installation_timeline_prose","methodology_prose","co2_equivalence_prose","cost_narrative_prose","winter_performance_html","cta_heading","cta_body","methodology_footnote"].forEach(k => {
         const v = f.elements[k]?.value ?? "";
+        if (v === "" && DEFAULTED_KEYS.has(k)) return;
         payload[k] = v === "" ? null : v;
       });
       payload.read_time_minutes = parseInt(f.elements.read_time_minutes.value || "6", 10);
@@ -1015,8 +1020,16 @@
 
       try {
         const payload = collectFormData();
-        if (!payload.slug || !payload.title || !payload.meta_description || !payload.published_date) {
-          throw new Error("Slug, title, meta description and published date are required");
+        const REQUIRED_FIELDS = [
+          ["slug", "Slug"],
+          ["title", "Title"],
+          ["meta_description", "Meta description"],
+          ["breadcrumb_label", "Breadcrumb label"],
+          ["published_date", "Published date"],
+          ["location", "Location"],
+        ];
+        for (const [key, label] of REQUIRED_FIELDS) {
+          if (!payload[key]) throw new Error(`${label} is required`);
         }
         // Body or legacy structured fields required
         if (!payload.body_html && !payload.opening_paragraph_1) {

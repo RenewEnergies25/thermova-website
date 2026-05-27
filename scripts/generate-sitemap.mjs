@@ -115,7 +115,7 @@ async function main() {
     return da < db ? 1 : da > db ? -1 : 0;
   });
   const caseEntries = caseRows.map((r) => {
-    const loc = `${cfg.base_url}/blog/${r.slug}/`;
+    const loc = `${cfg.base_url}/blog/${r.slug}`;
     const lastmod = r.last_published_at ?? `${r.published_date}T00:00:00+00:00`;
     return urlBlock(loc, lastmod, cfg.case_study_priority);
   });

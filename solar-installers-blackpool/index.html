@@ -61,10 +61,10 @@ fbq('track', 'PageView');
     "postalCode": "FY6 7AF",
     "addressCountry": "GB"
   },
-  "areaServed": {
-    "@type": "City",
-    "name": "Blackpool"
-  },
+  "areaServed": [
+    { "@type": "City", "name": "Blackpool" },
+    { "@type": "AdministrativeArea", "name": "Lancashire" }
+  ],
   "geo": {
     "@type": "GeoCoordinates",
     "latitude": 53.8175,
@@ -116,10 +116,26 @@ fbq('track', 'PageView');
   "mainEntity": [
     {
       "@type": "Question",
+      "name": "Do you install solar in Blackpool?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Thermova's base is in Poulton-le-Fylde (FY6 7AF), a few minutes from Blackpool. We cover FY1, FY2, FY3 and FY4 — the same team surveys, designs and installs."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Is solar worth it in Blackpool?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes — Blackpool's coastal position gives it above-average UK sunshine (around 1,500–1,650 hours a year). A south-facing 4kWp array generates roughly 3,600–4,000 kWh annually. With 0% VAT, SEG export income and rising grid prices, payback is typically in the 7–10 year range, with panels rated for 25 years or more."
+        "text": "Yes — Blackpool's open coastal position gives it a healthy share of annual sunshine (around 1,430 hours a year). A south-facing 4kWp array generates roughly 3,600–4,000 kWh annually. With 0% VAT and rising grid prices, the more of that generation you use at home the better the return, and panels are rated for 25 years or more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does solar actually generate enough this far north?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Blackpool gets around 1,430 hours of sunshine a year — among the higher figures in the North West — and panels generate from daylight, not just direct sun. A well-oriented Blackpool roof typically yields around 850–950 kWh for every kWp installed in its first year."
       }
     },
     {
@@ -140,10 +156,18 @@ fbq('track', 'PageView');
     },
     {
       "@type": "Question",
-      "name": "What grants or incentives apply to solar?",
+      "name": "Will salt air near the seafront damage the panels?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Solar isn't covered by the £7,500 Boiler Upgrade Scheme — that's for heat pumps. Solar benefits from 0% VAT on eligible residential installs (until 31 March 2027) and ongoing SEG payments for exported electricity. Some low-income households may qualify for ECO4. We explain what applies to you at survey."
+        "text": "Not with the right specification. On exposed Blackpool and seafront roofs we use marine-grade aluminium mounting and stainless fixings, corrosion-resistant connectors, and site the inverter away from direct salt spray. Wind loading on exposed roofs is calculated at survey."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a grant for solar panels?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There's no Boiler Upgrade Scheme grant for solar — that scheme is heat-pump only. Domestic solar and battery storage are currently zero-rated for VAT (0%) until 31 March 2027."
       }
     },
     {
@@ -164,10 +188,26 @@ fbq('track', 'PageView');
     },
     {
       "@type": "Question",
+      "name": "Can you fit solar to a Blackpool guest house, B&B or hotel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Hospitality buildings are a strong fit: daytime laundry, hot water and housekeeping loads mean a high share of generation is used on site rather than exported, which improves payback. Installs qualify for 0% VAT, and we can pair solar with battery storage to cover evening guest demand."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Who handles the grid paperwork?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "We do. The DNO application (G98 or G99) to Electricity North West and your SEG tariff set-up are both handled as part of the install — no forms for you."
+        "text": "We do. The DNO application (G98 or G99) to Electricity North West is handled as part of the install — no forms for you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I've had a solar quote elsewhere already?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bring it. We're happy to second-opinion an existing quote — usually free, no obligation. The most common issues we see are an undersized inverter, shading that hasn't been modelled, and an array sized for the roof rather than for how much of the generation you'll actually use."
       }
     }
   ]
@@ -545,7 +585,7 @@ fbq('track', 'PageView');
       <div class="article-body">
 
         <h2>Solar in Blackpool: better placed than most of the UK</h2>
-        <p>Blackpool and the Fylde Coast get around <strong>1,500–1,650 hours of sunshine a year</strong> — above the UK average, thanks to the open coastal position and low surrounding terrain. A south-facing 4kWp array on a Blackpool roof typically generates roughly <strong>3,600–4,000 kWh a year</strong>.</p>
+        <p>Blackpool and the Fylde Coast get around <strong>1,430 hours of sunshine a year</strong> — among the higher figures in the North West, thanks to the open coastal position and low surrounding terrain. A south-facing 4kWp array on a Blackpool roof typically generates roughly <strong>3,600–4,000 kWh a year</strong>.</p>
         <p>The coastal setting cuts both ways. Less shading than inland Lancashire means more usable daylight on the roof. But more wind exposure and salt-laden air mean roof-fixings, panel clamps and inverter siting need a <strong>coastal-grade specification</strong> — something a national installer working off a desk estimate often misses. We design for it as standard.</p>
 
         <h2>Why most solar quotes in Blackpool leave money on the table</h2>
@@ -630,8 +670,16 @@ fbq('track', 'PageView');
         <h2>Frequently asked questions</h2>
         <div class="article-faq">
           <details>
+            <summary>Do you install solar in Blackpool?</summary>
+            <div class="faq-body">Yes. Thermova's base is in Poulton-le-Fylde (FY6 7AF), a few minutes from Blackpool. We cover FY1, FY2, FY3 and FY4 — the same team surveys, designs and installs.</div>
+          </details>
+          <details>
             <summary>Is solar worth it in Blackpool?</summary>
-            <div class="faq-body">Yes — Blackpool's coastal position gives it above-average UK sunshine (around 1,500–1,650 hours a year). A south-facing 4kWp array generates roughly 3,600–4,000 kWh annually. With 0% VAT, SEG export income and rising grid prices, payback is typically in the 7–10 year range, with panels rated for 25 years or more.</div>
+            <div class="faq-body">Yes — Blackpool's open coastal position gives it a healthy share of annual sunshine (around 1,430 hours a year). A south-facing 4kWp array generates roughly 3,600–4,000 kWh annually. With 0% VAT and rising grid prices, the more of that generation you use at home the better the return, and panels are rated for 25 years or more.</div>
+          </details>
+          <details>
+            <summary>Does solar actually generate enough this far north?</summary>
+            <div class="faq-body">Yes. Blackpool gets around 1,430 hours of sunshine a year — among the higher figures in the North West — and panels generate from daylight, not just direct sun. A well-oriented Blackpool roof typically yields around 850–950 kWh for every kWp installed in its first year.</div>
           </details>
           <details>
             <summary>Do solar panels work in winter on the Fylde Coast?</summary>
@@ -642,8 +690,12 @@ fbq('track', 'PageView');
             <div class="faq-body">A typical three-bed Blackpool home needs a 3.5kWp–6.5kWp array — around 9 to 16 panels depending on wattage and roof space. We size to your actual electricity use, not a one-size estimate.</div>
           </details>
           <details>
-            <summary>What grants or incentives apply to solar?</summary>
-            <div class="faq-body">Solar isn't covered by the £7,500 Boiler Upgrade Scheme — that's for heat pumps. Solar benefits from 0% VAT on eligible residential installs (until 31 March 2027) and ongoing SEG payments for exported electricity. Some low-income households may qualify for ECO4. We explain what applies to you at survey.</div>
+            <summary>Will salt air near the seafront damage the panels?</summary>
+            <div class="faq-body">Not with the right specification. On exposed Blackpool and seafront roofs we use marine-grade aluminium mounting and stainless fixings, corrosion-resistant connectors, and site the inverter away from direct salt spray. Wind loading on exposed roofs is calculated at survey.</div>
+          </details>
+          <details>
+            <summary>Is there a grant for solar panels?</summary>
+            <div class="faq-body">There's no Boiler Upgrade Scheme grant for solar — that scheme is heat-pump only. Domestic solar and battery storage are currently zero-rated for VAT (0%) until 31 March 2027.</div>
           </details>
           <details>
             <summary>Do I need planning permission for solar in Blackpool?</summary>
@@ -654,8 +706,16 @@ fbq('track', 'PageView');
             <div class="faq-body">Yes, provided you have a hybrid (battery-ready) inverter from day one. We fit hybrid inverters as standard so adding a battery later is plug-and-play, not a refit.</div>
           </details>
           <details>
+            <summary>Can you fit solar to a Blackpool guest house, B&amp;B or hotel?</summary>
+            <div class="faq-body">Yes. Hospitality buildings are a strong fit: daytime laundry, hot water and housekeeping loads mean a high share of generation is used on site rather than exported, which improves payback. Installs qualify for 0% VAT, and we can pair solar with battery storage to cover evening guest demand.</div>
+          </details>
+          <details>
             <summary>Who handles the grid paperwork?</summary>
-            <div class="faq-body">We do. The DNO application (G98 or G99) to Electricity North West and your SEG tariff set-up are both handled as part of the install — no forms for you.</div>
+            <div class="faq-body">We do. The DNO application (G98 or G99) to Electricity North West is handled as part of the install — no forms for you.</div>
+          </details>
+          <details>
+            <summary>What if I've had a solar quote elsewhere already?</summary>
+            <div class="faq-body">Bring it. We're happy to second-opinion an existing quote — usually free, no obligation. The most common issues we see are an undersized inverter, shading that hasn't been modelled, and an array sized for the roof rather than for how much of the generation you'll actually use.</div>
           </details>
         </div>
 
@@ -671,6 +731,7 @@ fbq('track', 'PageView');
 
         <h2>Explore further</h2>
         <div class="related-cards">
+          <a class="related-card" href="/solar-installers-lancashire/"><strong>Solar installers — Lancashire</strong>See the county hub</a>
           <a class="related-card" href="/solar-panels/"><strong>Solar panels — full service overview</strong>See the page</a>
           <a class="related-card" href="/solar-installers-fylde-coast/"><strong>Solar — Fylde Coast</strong>See the page</a>
           <a class="related-card" href="/battery-storage/"><strong>Battery storage</strong>See the page</a>
@@ -705,6 +766,7 @@ fbq('track', 'PageView');
         <ul class="footer-list">
           <li><a href="/air-source-heat-pumps/">Air source heat pumps</a></li>
           <li><a href="/solar-panels/">Solar panels</a></li>
+          <li><a href="/solar-installers-lancashire/">Solar installers — Lancashire</a></li>
           <li><a href="/battery-storage/">Battery storage</a></li>
           <li><a href="/landlord-services/">Landlord upgrades</a></li>
           <li><a href="/epc-compliance/">EPC C compliance</a></li>

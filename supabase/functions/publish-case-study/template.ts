@@ -514,6 +514,7 @@ const FOOTER_AND_JS = `<footer class="footer">
         <ul class="footer-list">
           <li><a href="/air-source-heat-pumps">Air source heat pumps</a></li>
           <li><a href="/solar-panels">Solar panels</a></li>
+          <li><a href="/solar-installers-lancashire/">Solar installers — Lancashire</a></li>
           <li><a href="/battery-storage">Battery storage</a></li>
           <li><a href="/landlord-services">Landlord upgrades</a></li>
           <li><a href="/epc-compliance">EPC C compliance</a></li>
